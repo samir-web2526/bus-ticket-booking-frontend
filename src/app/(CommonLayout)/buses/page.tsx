@@ -1,7 +1,11 @@
+import AllBusesPage from '@/src/components/Pages/AllBusesPage/AllBusesPage'
 import React from 'react'
 
 export default function BusesPage() {
   return (
-    <div>BusesPage</div>
+    <div>
+        <p>All buses</p>
+        <AllBusesPage></AllBusesPage>
+    </div>
   )
 }
