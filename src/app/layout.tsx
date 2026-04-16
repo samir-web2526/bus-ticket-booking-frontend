@@ -1,7 +1,8 @@
-import { Geist, Geist_Mono, Nunito_Sans, Outfit } from "next/font/google"
+import { Geist_Mono, Nunito_Sans, Outfit } from "next/font/google"
 
-import "./globals.css"
+import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 const outfitHeading = Outfit({subsets:['latin'],variable:'--font-heading'});
@@ -25,7 +26,11 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", nunitoSans.variable, outfitHeading.variable)}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+         <TooltipProvider>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+        </TooltipProvider>
       </body>
     </html>
   )
