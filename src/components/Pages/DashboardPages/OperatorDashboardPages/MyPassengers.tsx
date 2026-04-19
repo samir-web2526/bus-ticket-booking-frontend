@@ -1,7 +1,12 @@
+import { getOperatorBookings } from '@/src/services/dashboard-services/bookings'
 import React from 'react'
 
-export default function MyPassengers() {
+export default async function MyPassengers() {
+  const bookings = await getOperatorBookings();
+  console.log(bookings);
   return (
-    <div>MyPassengers</div>
+    <div>
+      <h1>My Passengers:{bookings.data?.data?.length ?? 0}</h1>
+    </div>
   )
 }
