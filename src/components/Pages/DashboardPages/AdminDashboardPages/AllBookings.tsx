@@ -1,8 +1,11 @@
- import React from 'react'
+ import { getAllBookings } from '@/src/services/dashboard-services/bookings'
+import React from 'react'
  
- export default function AllBookings() {
+ export default async function AllBookings() {
+  const bookings = await getAllBookings();
+  console.log(bookings);
    return (
-     <div>AllBookings</div>
+     <div>AllBookings: {bookings.data?.data?.length}</div>
    )
  }
  
