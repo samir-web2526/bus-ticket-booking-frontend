@@ -1,7 +1,10 @@
+import { getAllBuses } from '@/src/services/buses.service'
 import React from 'react'
 
-export default function AllBuses() {
+export default async function AllBuses() {
+  const buses = await getAllBuses();
+  console.log(buses);
   return (
-    <div>AllBuses</div>
+    <div>AllBuses:{buses.data?.data?.length}</div>
   )
 }
