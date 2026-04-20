@@ -1,6 +1,9 @@
+
+
 "use client";
 
-import {Menu,} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
 
 import {
   Accordion,
@@ -71,7 +74,7 @@ const Navbar = ({
     },
     {
       title: "Find Buses",
-      url: "/buses",
+      url: "/find-buses",
     },
     {
       title: "Routes",
@@ -84,6 +87,13 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
+  // ✅ FIX: Hydration mismatch - only render Sheet after hydration
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
   return (
     <section className={cn("py-4", className)}>
       <div className="container">
@@ -130,44 +140,56 @@ const Navbar = ({
                 alt={logo.alt}
               />
             </a>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="size-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
-                      <img
-                        src={logo.src}
-                        className="max-h-8 dark:invert"
-                        alt={logo.alt}
-                      />
-                    </a>
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col gap-6 p-4">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="flex w-full flex-col gap-4"
-                  >
-                    {menu.map((item) => renderMobileMenuItem(item))}
-                  </Accordion>
+            {/* ✅ FIX: Only render Sheet after hydration to prevent ID mismatch */}
+            {isHydrated && (
+              <Sheet>
+                <SheetTrigger asChild suppressHydrationWarning>
+                  <Button variant="outline" size="icon">
+                    <Menu className="size-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent 
+                  className="overflow-y-auto"
+                  suppressHydrationWarning
+                >
+                  <SheetHeader suppressHydrationWarning>
+                    <SheetTitle>
+                      <a href={logo.url} className="flex items-center gap-2">
+                        <img
+                          src={logo.src}
+                          className="max-h-8 dark:invert"
+                          alt={logo.alt}
+                        />
+                      </a>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col gap-6 p-4">
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="flex w-full flex-col gap-4"
+                    >
+                      {menu.map((item) => renderMobileMenuItem(item))}
+                    </Accordion>
 
-                  <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
-                    </Button>
-                    <Button asChild>
-                      <a href={auth.register.url}>{auth.register.title}</a>
-                    </Button>
+                    <div className="flex flex-col gap-3">
+                      <Button asChild variant="outline">
+                        <a href={auth.login.url}>{auth.login.title}</a>
+                      </Button>
+                      <Button asChild>
+                        <a href={auth.register.url}>{auth.register.title}</a>
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+                </SheetContent>
+              </Sheet>
+            )}
+            {/* ✅ Show button skeleton on server to prevent layout shift */}
+            {!isHydrated && (
+              <Button variant="outline" size="icon" disabled>
+                <Menu className="size-4" />
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -20,6 +20,23 @@ export async function getAllBuses(){
     }
 }
 
+export async function getBusById(id:string){
+    try{
+        const result = await fetch(`${API}/api/v1/buses/${id}`,{
+            method:"GET",
+            headers:{"Content-Type":"application/json"}
+        })
+        const json = await result.json();
+        console.log(json);
+        if(!result.ok) return {error:json.message ?? "Something went wrong"};
+        return {data:json.data};
+    }catch(err:unknown){
+        const message = err instanceof Error ? err.message:"Something went wrong";
+        console.error("[getBusById]",message);
+        return {error:message};
+    }
+}
+
 export async function getOperatorBuses(){
     try{
         const cookieStore = cookies();
