@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { MapPin, Clock, Users, Star, ArrowRight, AlertCircle } from 'lucide-react';
+import { Clock, Star, ArrowRight, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -58,7 +58,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
     >
       <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
         {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-cyan-50/50 pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-br from-blue-50/50 to-cyan-50/50 pointer-events-none" />
 
         {/* Status Badge */}
         <div className="absolute top-4 right-4 z-10">
@@ -101,9 +101,9 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
 
             <div className="flex flex-col items-center gap-2 px-4">
               <div className="flex items-center gap-2">
-                <div className="h-1 w-12 bg-gradient-to-r from-blue-400 to-cyan-400" />
+                <div className="h-1 w-12 bg-linear-to-r from-blue-400 to-cyan-400" />
                 <Clock className="w-4 h-4 text-blue-500" />
-                <div className="h-1 w-12 bg-gradient-to-r from-cyan-400 to-blue-400" />
+                <div className="h-1 w-12 bg-linear-to-r from-cyan-400 to-blue-400" />
               </div>
               <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
                 {route.estimatedTimeMinutes}m
@@ -130,7 +130,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
             </div>
             <div className="text-right">
               <p className="text-xs text-gray-600">From</p>
-              <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">
+              <p className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-600">
                 ৳{price || bus.pricePerSeat}
               </p>
             </div>
@@ -151,7 +151,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
                 initial={{ width: 0 }}
                 animate={{ width: `${occupancyPercentage}%` }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
-                className="h-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                className="h-full bg-linear-to-r from-blue-500 to-cyan-500"
               />
             </div>
           </div>
@@ -173,7 +173,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
               className={`w-full h-11 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 ${
                 !isActive || isFull
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 hover:shadow-lg hover:shadow-blue-500/30'
+                  : 'bg-linear-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 hover:shadow-lg hover:shadow-blue-500/30'
               }`}
             >
               Book Now
@@ -183,7 +183,7 @@ const ScheduleCard: React.FC<ScheduleCardProps> = ({
         </div>
 
         {/* Bottom accent line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500" />
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-blue-500 via-cyan-500 to-blue-500" />
       </div>
     </motion.div>
   );

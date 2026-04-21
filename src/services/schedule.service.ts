@@ -1,6 +1,10 @@
 // src/services/schedule.service.ts
 
-const API= process.env.NEXT_PUBLIC_BACKEND_URL;
+import { ServiceResponse } from './booking.service';
+
+const API = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface SearchQuery {
   from?: string;
@@ -44,6 +48,12 @@ export interface SearchResponse {
   error?: string | null;
 }
 
+// ─── Services ─────────────────────────────────────────────────────────────────
+
+/**
+ * Search schedules with filters
+ * GET /api/v1/schedules?sourceCity=...&destinationCity=...&date=...
+ */
 export const searchSchedules = async (
   query: SearchQuery
 ): Promise<SearchResponse> => {
@@ -74,7 +84,7 @@ export const searchSchedules = async (
       };
     }
 
-    const schedules = json?.data?.data ?? [];
+    const schedules = json?.data?.data ?? json?.data ?? [];
 
     console.log(
       "[searchSchedules] Extracted:",
@@ -84,7 +94,7 @@ export const searchSchedules = async (
 
     return {
       data: schedules,
-      meta: json?.data?.meta,
+      meta: json?.data?.meta || json?.meta,
       error: null,
     };
   } catch (error) {
@@ -99,19 +109,24 @@ export const searchSchedules = async (
     };
   }
 };
+
 /**
  * Get all schedules without filters
+ * GET /api/v1/schedules?page=...&limit=...
  */
-export const getAllSchedules = async (page = 1, limit = 12): Promise<SearchResponse> => {
+export const getAllSchedules = async (
+  page = 1,
+  limit = 12
+): Promise<SearchResponse> => {
   try {
-    const url = `${API}/schedules?page=${page}&limit=${limit}`;
+    const url = `${API}/api/v1/schedules?page=${page}&limit=${limit}`;
 
-    console.log('[getAllSchedules] URL:', url);
+    console.log("[getAllSchedules] URL:", url);
 
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
@@ -120,26 +135,20 @@ export const getAllSchedules = async (page = 1, limit = 12): Promise<SearchRespo
     if (!response.ok) {
       return {
         data: [],
-        error: json.message || 'Failed to fetch schedules',
+        error: json.message || "Failed to fetch schedules",
       };
     }
 
-    let schedules: Schedule[] = [];
-
-    if (Array.isArray(json.data.data)) {
-      schedules = json.data.data;
-    } else if (json.data?.data && Array.isArray(json.data.data)) {
-      schedules = json.data.data;
-    }
+    const schedules = json?.data?.data ?? json?.data ?? [];
 
     return {
       data: schedules,
-      meta: json.meta,
+      meta: json?.data?.meta || json?.meta,
       error: null,
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Network error';
-    console.error('[getAllSchedules] Error:', message);
+    const message = error instanceof Error ? error.message : "Network error";
+    console.error("[getAllSchedules] Error:", message);
 
     return {
       data: [],
@@ -150,37 +159,57 @@ export const getAllSchedules = async (page = 1, limit = 12): Promise<SearchRespo
 
 /**
  * Get schedule by ID
+ * GET /api/v1/schedules/:id
  */
-export const getScheduleById = async (id: string): Promise<{ data: Schedule | null; error: string | null }> => {
+export const getScheduleById = async (
+  id: string
+): Promise<ServiceResponse<Schedule>> => {
   try {
-    const url = `${API}/schedules/${id}`;
+    // ✅ Fixed: Use /api/v1/schedules/:id
+    const url = `${API}/api/v1/schedules/${id}`;
+
+    console.log("[getScheduleById] URL:", url);
+    console.log("[getScheduleById] Schedule ID:", id);
 
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
     const json = await response.json();
 
+    console.log("[getScheduleById] Raw Response:", {
+      status: response.status,
+      ok: response.ok,
+      data: json,
+    });
+
     if (!response.ok) {
       return {
         data: null,
-        error: json.message || 'Failed to fetch schedule',
+        error: json?.message || `Failed to fetch schedule (${response.status})`,
       };
     }
 
     // Extract schedule (could be direct or nested)
     const schedule = Array.isArray(json.data) ? json.data[0] : json.data;
 
+    if (!schedule) {
+      return {
+        data: null,
+        error: "Schedule data is empty",
+      };
+    }
+
     return {
-      data: schedule || null,
+      data: schedule,
       error: null,
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Network error';
-    console.error('[getScheduleById] Error:', message);
+    const message = error instanceof Error ? error.message : "Network error";
+    console.error("[getScheduleById] Error:", message);
 
     return {
       data: null,
