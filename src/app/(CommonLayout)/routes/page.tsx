@@ -1,10 +1,10 @@
-import AllRoutesPage from '@/src/components/Pages/AllRoutesPage/AllRoutesPage'
+
+import AllRoutesPage from '@/src/components/Pages/RoutePage/Routes'
 import React from 'react'
 
 export default function RoutesPage() {
   return (
     <div>
-        <h1>RoutesPage</h1>
        <AllRoutesPage></AllRoutesPage>
     </div>
   )

@@ -1,22 +1,38 @@
+
 import { Bus, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { getAllRoutes } from '@/src/services/routes.service';
+
 
 const footerLinks = {
   Company: ['About Us', 'Careers', 'Press', 'Blog'],
   Support: ['Help Center', 'Contact Us', 'Refund Policy', 'Terms of Service'],
-  Routes: ['Dhaka → Chittagong', 'Dhaka → Sylhet', "Dhaka → Cox's Bazar", 'Dhaka → Rajshahi'],
 };
 
-// const socials = [
-//   { icon: <Facebook className="h-4 w-4" />, href: '#' },
-//   { icon: <Twitter className="h-4 w-4" />, href: '#' },
-//   { icon: <Instagram className="h-4 w-4" />, href: '#' },
-//   { icon: <YoutubeLogo className="h-4 w-4" />, href: '#' },
-// ];
+export default async function Footer() {
+  let routeLinks: string[] = [];
 
-export default function Footer() {
+  try {
+    const result = await getAllRoutes({ limit: 4 });
+    
+    if (result.data && result.data.length > 0) {
+      routeLinks = result.data.map(
+        (route) => `${route.sourceCity} → ${route.destinationCity}`
+      );
+    }
+  } catch (err) {
+    console.error('Failed to fetch routes for footer:', err);
+    // Fallback routes
+    routeLinks = [
+      'Dhaka → Chittagong',
+      'Dhaka → Sylhet',
+      "Dhaka → Cox's Bazar",
+      'Dhaka → Rajshahi',
+    ];
+  }
+
   return (
     <footer className="bg-[#030810] border-t border-white/10">
       {/* Newsletter bar */}
@@ -41,7 +57,6 @@ export default function Footer() {
 
       {/* Main footer */}
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
-
         {/* Brand */}
         <div className="lg:col-span-2">
           <div className="flex items-center gap-2 mb-5">
@@ -72,19 +87,6 @@ export default function Footer() {
               </div>
             ))}
           </div>
-
-          {/* Socials */}
-          {/* <div className="flex gap-3 mt-6">
-            {socials.map(({ icon, href }, i) => (
-              <a
-                key={i}
-                href={href}
-                className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-amber-400 hover:border-amber-400/40 transition-colors"
-              >
-                {icon}
-              </a>
-            ))}
-          </div> */}
         </div>
 
         {/* Links */}
@@ -105,6 +107,23 @@ export default function Footer() {
             </ul>
           </div>
         ))}
+
+        {/* Dynamic Routes */}
+        <div>
+          <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Routes</h4>
+          <ul className="flex flex-col gap-3">
+            {routeLinks.map((route) => (
+              <li key={route}>
+                <a
+                  href="#"
+                  className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
+                >
+                  {route}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <Separator className="bg-white/10" />

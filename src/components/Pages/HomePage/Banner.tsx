@@ -1,69 +1,179 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Calendar, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, MapPin, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { getAllRoutes } from '@/src/services/routes.service';
 
-const slides = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80',
-    city: 'Dhaka → Chittagong',
-    tag: 'Most Popular Route',
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=1200&q=80',
-    city: 'Dhaka → Cox\'s Bazar',
-    tag: 'Beach Getaway',
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&q=80',
-    city: 'Dhaka → Sylhet',
-    tag: 'Tea Garden Route',
-  },
-];
+
+interface Route {
+  id: string;
+  sourceCity: string;
+  destinationCity: string;
+  distanceKm: number;
+  estimatedTimeMinutes: number;
+  stops: string[];
+  createdAt: string;
+  updatedAt: string;
+  schedules: unknown[];
+}
+
+interface SlideRoute extends Route {
+  image: string;
+  tag: string;
+}
+
+const defaultImage = 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80';
+
+const getRouteImage = (distance: number, index: number): string => {
+  const images = [
+    'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80',
+    'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=1200&q=80',
+    'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=1200&q=80',
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80',
+  ];
+  return images[index % images.length];
+};
+
+const getRouteTag = (distance: number): string => {
+  if (distance < 100) return 'Quick Getaway';
+  if (distance < 300) return 'Popular Route';
+  if (distance < 500) return 'Long Journey';
+  return 'Epic Adventure';
+};
 
 export default function HeroSection() {
   const [current, setCurrent] = useState(0);
+  const [slides, setSlides] = useState<SlideRoute[]>([]);
+  const [loading, setLoading] = useState(true);
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [date, setDate] = useState('');
 
   useEffect(() => {
+    const fetchRoutes = async () => {
+      try {
+        setLoading(true);
+        const result = await getAllRoutes({ limit: 10 });
+
+        if (result.error || !result.data || result.data.length === 0) {
+          console.error('Error fetching routes');
+          // Set default slides if error
+          setSlides([
+            {
+              id: '1',
+              sourceCity: 'Dhaka',
+              destinationCity: 'Chittagong',
+              distanceKm: 250,
+              estimatedTimeMinutes: 300,
+              stops: [],
+              createdAt: '',
+              updatedAt: '',
+              schedules: [],
+              image:
+                'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80',
+              tag: 'Most Popular Route',
+            },
+            {
+              id: '2',
+              sourceCity: 'Dhaka',
+              destinationCity: "Cox's Bazar",
+              distanceKm: 400,
+              estimatedTimeMinutes: 600,
+              stops: [],
+              createdAt: '',
+              updatedAt: '',
+              schedules: [],
+              image:
+                'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=1200&q=80',
+              tag: 'Beach Getaway',
+            },
+          ]);
+          return;
+        }
+
+        const slidesData: SlideRoute[] = result.data.slice(0, 5).map((route, index) => ({
+          ...route,
+          image: getRouteImage(route.distanceKm, index),
+          tag: getRouteTag(route.distanceKm),
+        }));
+
+        setSlides(slidesData);
+      } catch (err) {
+        console.error('Failed to fetch routes:', err);
+        // Set default slides on error
+        setSlides([
+          {
+            id: '1',
+            sourceCity: 'Dhaka',
+            destinationCity: 'Chittagong',
+            distanceKm: 250,
+            estimatedTimeMinutes: 300,
+            stops: [],
+            createdAt: '',
+            updatedAt: '',
+            schedules: [],
+            image:
+              'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80',
+            tag: 'Most Popular Route',
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoutes();
+  }, []);
+
+  useEffect(() => {
+    if (slides.length === 0) return;
+
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 4500);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const prev = () => setCurrent((c) => (c - 1 + slides.length) % slides.length);
   const next = () => setCurrent((c) => (c + 1) % slides.length);
 
+  if (loading) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center bg-[#050d1a]">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-12 w-12 text-amber-400 animate-spin" />
+          <p className="text-slate-400">Loading routes...</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#050d1a]">
-
       {/* Slider background */}
       <AnimatePresence mode="wait">
-        <motion.div
-          key={slides[current].id}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1, ease: 'easeInOut' }}
-          className="absolute inset-0 z-0"
-        >
-          <img
-            src={slides[current].image}
-            alt={slides[current].city}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#050d1a] via-[#050d1acc] to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050d1a] via-transparent to-transparent" />
-        </motion.div>
+        {slides.length > 0 && (
+          <motion.div
+            key={slides[current].id}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: 'easeInOut' }}
+            className="absolute inset-0 z-0"
+          >
+            <img
+              src={slides[current].image}
+              alt={`${slides[current].sourceCity} to ${slides[current].destinationCity}`}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#050d1a] via-[#050d1acc] to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050d1a] via-transparent to-transparent" />
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Animated grid overlay */}
@@ -78,7 +188,6 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-16 items-center py-24">
-
         {/* LEFT — Text + Search */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -190,47 +299,57 @@ export default function HeroSection() {
         >
           {/* Slide info */}
           <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4 }}
-              className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-right"
-            >
-              <p className="text-amber-400 text-xs font-semibold tracking-widest uppercase mb-1">
-                {slides[current].tag}
-              </p>
-              <p className="text-white text-xl font-bold">{slides[current].city}</p>
-            </motion.div>
+            {slides.length > 0 && (
+              <motion.div
+                key={slides[current].id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-right max-w-xs"
+              >
+                <p className="text-amber-400 text-xs font-semibold tracking-widest uppercase mb-1">
+                  {slides[current].tag}
+                </p>
+                <p className="text-white text-xl font-bold">
+                  {slides[current].sourceCity} → {slides[current].destinationCity}
+                </p>
+                <p className="text-slate-400 text-sm mt-2">
+                  {slides[current].distanceKm} km • {Math.floor(slides[current].estimatedTimeMinutes / 60)}h{' '}
+                  {slides[current].estimatedTimeMinutes % 60}m
+                </p>
+              </motion.div>
+            )}
           </AnimatePresence>
 
           {/* Slider controls */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={prev}
-              className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-amber-400 hover:text-amber-400 transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <div className="flex gap-2">
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrent(i)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === current ? 'w-8 bg-amber-400' : 'w-2 bg-white/30'
-                  }`}
-                />
-              ))}
+          {slides.length > 0 && (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={prev}
+                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-amber-400 hover:text-amber-400 transition-colors"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <div className="flex gap-2">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrent(i)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      i === current ? 'w-8 bg-amber-400' : 'w-2 bg-white/30'
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={next}
+                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-amber-400 hover:text-amber-400 transition-colors"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
-            <button
-              onClick={next}
-              className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-amber-400 hover:text-amber-400 transition-colors"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
+          )}
         </motion.div>
       </div>
 

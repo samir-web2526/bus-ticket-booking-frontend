@@ -1,92 +1,58 @@
+
+
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Bus, Star, Wifi, Wind, Zap, ArrowRight, SlidersHorizontal } from 'lucide-react';
+import { Star, ArrowRight, SlidersHorizontal, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { getAllBuses } from '@/src/services/buses.service';
 
-const buses = [
-  {
-    id: 1,
-    name: 'Green Line Paribahan',
-    type: 'AC Sleeper',
-    rating: 4.8,
-    reviews: 2340,
-    amenities: ['wifi', 'ac', 'charging'],
-    routes: 24,
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80',
-    tag: 'Top Rated',
-    price: 800,
-  },
-  {
-    id: 2,
-    name: 'Shyamoli NR',
-    type: 'AC Chair',
-    rating: 4.6,
-    reviews: 1890,
-    amenities: ['ac', 'charging'],
-    routes: 18,
-    image: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&q=80',
-    tag: 'Popular',
-    price: 600,
-  },
-  {
-    id: 3,
-    name: 'Hanif Enterprise',
-    type: 'Non-AC',
-    rating: 4.3,
-    reviews: 3120,
-    amenities: [],
-    routes: 32,
-    image: 'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=400&q=80',
-    tag: 'Budget',
-    price: 350,
-  },
-  {
-    id: 4,
-    name: 'S.Alam Super Luxury',
-    type: 'AC Sleeper',
-    rating: 4.7,
-    reviews: 1560,
-    amenities: ['wifi', 'ac', 'charging'],
-    routes: 12,
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',
-    tag: 'Luxury',
-    price: 1100,
-  },
-  {
-    id: 5,
-    name: 'Ena Transport',
-    type: 'AC Chair',
-    rating: 4.4,
-    reviews: 980,
-    amenities: ['ac'],
-    routes: 15,
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80',
-    tag: 'Popular',
-    price: 550,
-  },
-  {
-    id: 6,
-    name: 'Royal Coach',
-    type: 'AC Sleeper',
-    rating: 4.9,
-    reviews: 450,
-    amenities: ['wifi', 'ac', 'charging'],
-    routes: 8,
-    image: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&q=80',
-    tag: 'Premium',
-    price: 1400,
-  },
-];
 
-const filters = ['All', 'AC Sleeper', 'AC Chair', 'Non-AC'];
+interface Bus {
+  id: string;
+  operatorId: string;
+  name: string;
+  number: string;
+  type: 'AC_SLEEPER' | 'AC_CHAIR' | 'NON_AC';
+  totalSeats: number;
+  pricePerSeat: number;
+  isDeleted: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  operator: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    profileImage: string;
+  };
+}
 
-const amenityIcons: Record<string, React.ReactNode> = {
-  wifi: <Wifi className="h-3.5 w-3.5" />,
-  ac: <Wind className="h-3.5 w-3.5" />,
-  charging: <Zap className="h-3.5 w-3.5" />,
+const typeMapping: Record<string, string> = {
+  AC_SLEEPER: 'AC Sleeper',
+  AC_CHAIR: 'AC Chair',
+  NON_AC: 'Non-AC',
+};
+
+const getBusImage = (type: string): string => {
+  const images: Record<string, string> = {
+    AC_SLEEPER: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80',
+    AC_CHAIR: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&q=80',
+    NON_AC: 'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=400&q=80',
+  };
+  return images[type] || images.NON_AC;
+};
+
+const getBusTag = (type: string): string => {
+  const tags: Record<string, string> = {
+    AC_SLEEPER: 'Luxury',
+    AC_CHAIR: 'Premium',
+    NON_AC: 'Budget',
+  };
+  return tags[type] || 'Standard';
 };
 
 const tagColors: Record<string, string> = {
@@ -97,18 +63,52 @@ const tagColors: Record<string, string> = {
   Premium: 'bg-rose-400/10 text-rose-400 border-rose-400/30',
 };
 
+const filters = ['All', 'AC Sleeper', 'AC Chair', 'Non-AC'];
+
 export default function BusesSection() {
+  const [buses, setBuses] = useState<Bus[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [active, setActive] = useState('All');
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
 
+  useEffect(() => {
+    const fetchBuses = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const result = await getAllBuses();
+
+        if (result.error) {
+          setError(result.error);
+          console.error('Error fetching buses:', result.error);
+          return;
+        }
+
+        if (result.data?.data) {
+          setBuses(result.data.data);
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Failed to fetch buses';
+        setError(message);
+        console.error('Failed to fetch buses:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBuses();
+  }, []);
+
   const filtered =
-    active === 'All' ? buses : buses.filter((b) => b.type === active);
+    active === 'All'
+      ? buses
+      : buses.filter((b) => typeMapping[b.type] === active);
 
   return (
     <section ref={ref} className="bg-[#07111f] py-24 px-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -147,82 +147,136 @@ export default function BusesSection() {
           </div>
         </motion.div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <Loader2 className="h-12 w-12 text-amber-400 animate-spin mx-auto mb-4" />
+              <p className="text-slate-400">Loading buses...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <p className="text-red-400 text-lg mb-2">Failed to load buses</p>
+              <p className="text-slate-400 text-sm">{error}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && filtered.length === 0 && (
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <p className="text-slate-400 text-lg">No buses found for this category</p>
+            </div>
+          </div>
+        )}
+
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((bus, i) => (
-            <motion.div
-              key={bus.id}
-              layout
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="group bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-amber-400/30 transition-colors duration-300"
-            >
-              {/* Image */}
-              <div className="relative h-44 overflow-hidden">
-                <img
-                  src={bus.image}
-                  alt={bus.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07111f] via-transparent to-transparent" />
-                <Badge
-                  className={`absolute top-3 left-3 border text-xs font-semibold ${tagColors[bus.tag] ?? ''}`}
+        {!loading && filtered.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map((bus, i) => {
+              const tag = getBusTag(bus.type);
+              const displayType = typeMapping[bus.type];
+
+              return (
+                <motion.div
+                  key={bus.id}
+                  layout
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  className="group bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-amber-400/30 transition-colors duration-300"
                 >
-                  {bus.tag}
-                </Badge>
-              </div>
+                  {/* Image */}
+                  <div className="relative h-44 overflow-hidden">
+                    <img
+                      src={getBusImage(bus.type)}
+                      alt={bus.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#07111f] via-transparent to-transparent" />
+                    <Badge
+                      className={`absolute top-3 left-3 border text-xs font-semibold ${tagColors[tag] ?? ''}`}
+                    >
+                      {tag}
+                    </Badge>
 
-              {/* Body */}
-              <div className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-white font-bold text-lg leading-tight">{bus.name}</h3>
-                    <p className="text-slate-400 text-sm mt-0.5">{bus.type}</p>
-                  </div>
-                  <div className="flex items-center gap-1 bg-amber-400/10 border border-amber-400/20 rounded-lg px-2.5 py-1">
-                    <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                    <span className="text-amber-400 text-sm font-bold">{bus.rating}</span>
-                  </div>
-                </div>
-
-                {/* Amenities */}
-                {bus.amenities.length > 0 && (
-                  <div className="flex gap-2 mb-4">
-                    {bus.amenities.map((a) => (
-                      <div
-                        key={a}
-                        className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-md px-2 py-1 text-slate-300"
-                      >
-                        {amenityIcons[a]}
-                        <span className="text-xs capitalize">{a}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                  <div>
-                    <p className="text-slate-400 text-xs">{bus.routes} routes • {bus.reviews.toLocaleString()} reviews</p>
-                    <div className="flex items-baseline gap-1 mt-0.5">
-                      <span className="text-amber-400 font-black text-xl">৳{bus.price}</span>
-                      <span className="text-slate-500 text-xs">/ seat</span>
+                    {/* Seats badge */}
+                    <div className="absolute top-3 right-3 bg-black/50 backdrop-blur text-white px-3 py-1 rounded-lg text-xs font-medium">
+                      {bus.totalSeats} seats
                     </div>
                   </div>
-                  <Button
-                    size="sm"
-                    className="bg-amber-400 hover:bg-amber-300 text-black font-bold group/btn"
-                  >
-                    Book
-                    <ArrowRight className="ml-1 h-3.5 w-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+
+                  {/* Body */}
+                  <div className="p-5">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="text-white font-bold text-lg leading-tight">
+                          {bus.name}
+                        </h3>
+                        <p className="text-slate-400 text-sm mt-0.5">{displayType}</p>
+                      </div>
+                      <div className="flex items-center gap-1 bg-amber-400/10 border border-amber-400/20 rounded-lg px-2.5 py-1">
+                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                        <span className="text-amber-400 text-sm font-bold">4.5</span>
+                      </div>
+                    </div>
+
+                    {/* Operator Info */}
+                    <div className="mb-4 p-3 bg-white/5 border border-white/10 rounded-lg">
+                      <p className="text-slate-400 text-xs mb-1">Operator</p>
+                      <p className="text-white font-semibold text-sm">{bus.operator.name}</p>
+                      <p className="text-slate-500 text-xs mt-1 flex items-center gap-1">
+                        <span>📱</span> {bus.operator.phone}
+                      </p>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                      <div>
+                        <p className="text-slate-400 text-xs">Bus No. {bus.number}</p>
+                        <div className="flex items-baseline gap-1 mt-0.5">
+                          <span className="text-amber-400 font-black text-xl">
+                            ৳{bus.pricePerSeat}
+                          </span>
+                          <span className="text-slate-500 text-xs">/ seat</span>
+                        </div>
+                      </div>
+                      <Button
+                        size="sm"
+                        className="bg-amber-400 hover:bg-amber-300 text-black font-bold group/btn"
+                      >
+                        Book
+                        <ArrowRight className="ml-1 h-3.5 w-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Results count */}
+        {!loading && buses.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-center mt-12"
+          >
+            <p className="text-slate-400 text-sm">
+              Showing <span className="text-amber-400 font-semibold">{filtered.length}</span> of{' '}
+              <span className="text-amber-400 font-semibold">{buses.length}</span> buses
+            </p>
+          </motion.div>
+        )}
       </div>
     </section>
   );
