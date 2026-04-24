@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, MapPin, Calendar} from 'lucide-react';
+import { Search, Filter, MapPin, Calendar, Loader2, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,9 +16,10 @@ import {
 } from '@/components/ui/select';
 import { motion } from 'framer-motion';
 
-import { getAllRoutes } from '@/src/services/routes.service';
+
 import { searchSchedules } from '@/src/services/schedule.service';
 import ScheduleCard from './ScheduleCard';
+import { getAllRoutes } from '@/src/services/routes.service';
 
 interface Schedule {
   id: string;
@@ -50,15 +51,6 @@ interface Route {
   sourceCity: string;
   destinationCity: string;
 }
-
-// interface SearchResponse {
-//   data: Schedule[];
-//   meta?: {
-//     page: number;
-//     limit: number;
-//     total: number;
-//   };
-// }
 
 const ScheduleSearchPage: React.FC = () => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -92,7 +84,6 @@ const ScheduleSearchPage: React.FC = () => {
           console.error('[loadRoutes] Error:', result.error);
           setRoutes([]);
         } else {
-          // ✅ FIX: Extract array properly
           let routesData: Route[] = [];
 
           if (Array.isArray(result.data)) {
@@ -147,7 +138,6 @@ const ScheduleSearchPage: React.FC = () => {
           setSchedules([]);
           setFilteredSchedules([]);
         } else {
-          // ✅ FIX: Properly extract schedule array
           let schedulesData: Schedule[] = [];
 
           if (Array.isArray(result.data)) {
@@ -172,7 +162,6 @@ const ScheduleSearchPage: React.FC = () => {
       }
     };
 
-    // Only search if at least one filter is set
     if (filters.from || filters.to || filters.date || busType) {
       const timer = setTimeout(performSearch, 500);
       return () => clearTimeout(timer);
@@ -240,134 +229,191 @@ const ScheduleSearchPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#050d1a]">
       {/* HEADER */}
-      <div className="bg-linear-to-r from-blue-600 to-cyan-600 text-white p-10">
-        <h1 className="text-4xl font-bold">Find Your Bus</h1>
-        <p className="text-blue-100 mt-2">Search and book buses by route</p>
+      <div className="relative overflow-hidden bg-gradient-to-b from-[#0a1628] to-[#050d1a] border-b border-white/10 py-20 px-6 lg:px-12">
+        {/* Background grid */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,180,0,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.15) 1px, transparent 1px)',
+            backgroundSize: '60px 60px',
+          }}
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative z-10 max-w-7xl mx-auto"
+        >
+          <div className="mb-8">
+            <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">
+              — Search Schedules
+            </p>
+            <h1
+              className="text-5xl lg:text-6xl font-black text-white leading-tight"
+              style={{ fontFamily: "'Sora', sans-serif" }}
+            >
+              Find Your
+              <br />
+              <span className="text-amber-400">Perfect Bus</span>
+            </h1>
+            <p className="text-slate-400 text-lg mt-4 max-w-2xl">
+              Search schedules by route, date, and bus type. Book instantly with real-time seat availability.
+            </p>
+          </div>
+        </motion.div>
       </div>
 
-      {/* FILTERS */}
-      <div className="max-w-6xl mx-auto p-6 bg-white shadow rounded-xl -mt-10">
-        <div className="grid md:grid-cols-4 gap-4 mb-4">
-          {/* FROM */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              <MapPin className="w-4 h-4 inline mr-2" />
-              From
-            </label>
-            <Select
-  value={filters.from}
-  onValueChange={(value) => handleFilterChange('from', value)}
->
-  <SelectTrigger className="rounded-lg border-gray-300">
-    <SelectValue placeholder="Select departure" />
-  </SelectTrigger>
+      {/* FILTERS CARD */}
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-12 -mt-16 mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl"
+        >
+          <div className="grid md:grid-cols-4 gap-4 mb-6">
+            {/* FROM */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-amber-400" />
+                From
+              </label>
+              <Select value={filters.from} onValueChange={(value) => handleFilterChange('from', value)}>
+                <SelectTrigger className="bg-white/5 border-white/20 text-white hover:border-amber-400/50 rounded-xl h-11">
+                  <SelectValue placeholder="Select departure" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#0a1628] border-white/20">
+                  <SelectItem value="ALL" className="text-white hover:bg-white/10">
+                    All Cities
+                  </SelectItem>
+                  {sourceCities.map((city) => (
+                    <SelectItem key={city} value={city} className="text-white hover:bg-white/10">
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-  <SelectContent>
-    <SelectItem value="ALL">All Cities</SelectItem>
-    {sourceCities.map((city) => (
-      <SelectItem key={city} value={city}>
-        {city}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+            {/* TO */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-amber-400" />
+                To
+              </label>
+              <Select value={filters.to} onValueChange={(value) => handleFilterChange('to', value)}>
+                <SelectTrigger className="bg-white/5 border-white/20 text-white hover:border-amber-400/50 rounded-xl h-11">
+                  <SelectValue placeholder="Select destination" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#0a1628] border-white/20">
+                  <SelectItem value="ALL" className="text-white hover:bg-white/10">
+                    All Cities
+                  </SelectItem>
+                  {destinationCities.map((city) => (
+                    <SelectItem key={city} value={city} className="text-white hover:bg-white/10">
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* DATE */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-amber-400" />
+                Date
+              </label>
+              <Input
+                type="date"
+                value={filters.date}
+                onChange={(e) => handleFilterChange('date', e.target.value)}
+                className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
+              />
+            </div>
+
+            {/* BUS TYPE */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                <Filter className="w-4 h-4 text-amber-400" />
+                Bus Type
+              </label>
+              <Select value={busType} onValueChange={(v) => setBusType(v)}>
+                <SelectTrigger className="bg-white/5 border-white/20 text-white hover:border-amber-400/50 rounded-xl h-11">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#0a1628] border-white/20">
+                  <SelectItem value="ALL" className="text-white hover:bg-white/10">
+                    All Types
+                  </SelectItem>
+                  <SelectItem value="AC" className="text-white hover:bg-white/10">
+                    AC
+                  </SelectItem>
+                  <SelectItem value="NON_AC" className="text-white hover:bg-white/10">
+                    Non-AC
+                  </SelectItem>
+                  <SelectItem value="SEMI_SLEEPER" className="text-white hover:bg-white/10">
+                    Semi-Sleeper
+                  </SelectItem>
+                  <SelectItem value="SLEEPER" className="text-white hover:bg-white/10">
+                    Sleeper
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          {/* TO */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              <MapPin className="w-4 h-4 inline mr-2" />
-              To
-            </label>
-            <Select
-  value={filters.to}
-  onValueChange={(value) => handleFilterChange('to', value)}
->
-  <SelectTrigger className="rounded-lg border-gray-300">
-    <SelectValue placeholder="Select destination" />
-  </SelectTrigger>
+          {/* SEARCH ROW */}
+          <div className="flex gap-3 flex-col sm:flex-row">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400" />
+              <Input
+                placeholder="Search bus name or route..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
+              />
+            </div>
 
-  <SelectContent>
-    <SelectItem value="ALL">All Cities</SelectItem>
-    {destinationCities.map((city) => (
-      <SelectItem key={city} value={city}>
-        {city}
-      </SelectItem>
-    ))}
-  </SelectContent>
-</Select>
+            <Button
+              onClick={handleSearch}
+              className="bg-amber-400 hover:bg-amber-300 text-black font-bold rounded-xl h-11 px-6 flex items-center gap-2 transition-all duration-200 group"
+            >
+              <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              Search
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={clearFilters}
+              className="border-white/20 text-white hover:bg-white/5 hover:border-amber-400 rounded-xl h-11 px-6 transition-all duration-200"
+            >
+              Clear
+            </Button>
           </div>
-
-          {/* DATE */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              <Calendar className="w-4 h-4 inline mr-2" />
-              Date
-            </label>
-            <Input
-              type="date"
-              value={filters.date}
-              onChange={(e) => handleFilterChange('date', e.target.value)}
-            />
-          </div>
-
-          {/* BUS TYPE */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              <Filter className="w-4 h-4 inline mr-2" />
-              Bus Type
-            </label>
-            <Select value={busType} onValueChange={(v) => setBusType(v)}>
-  <SelectTrigger>
-    <SelectValue placeholder="Select type" />
-  </SelectTrigger>
-
-  <SelectContent>
-    <SelectItem value="ALL">All Types</SelectItem>
-    <SelectItem value="AC">AC</SelectItem>
-    <SelectItem value="NON_AC">Non-AC</SelectItem>
-    <SelectItem value="SEMI_SLEEPER">Semi-Sleeper</SelectItem>
-    <SelectItem value="SLEEPER">Sleeper</SelectItem>
-  </SelectContent>
-</Select>
-          </div>
-        </div>
-
-        {/* SEARCH ROW */}
-        <div className="flex gap-3">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <Input
-              placeholder="Search bus name..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-
-          <Button onClick={handleSearch} className="bg-blue-600 text-white">
-            Search
-          </Button>
-
-          <Button variant="outline" onClick={clearFilters}>
-            Clear
-          </Button>
-        </div>
+        </motion.div>
       </div>
 
       {/* RESULTS */}
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 pb-24">
         {/* Loading State */}
         {searching && (
-          <div className="flex items-center justify-center py-20">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-              className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full"
-            />
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center justify-center py-32"
+          >
+            <div className="text-center">
+              <Loader2 className="h-12 w-12 text-amber-400 animate-spin mx-auto mb-4" />
+              <p className="text-slate-400">Searching schedules...</p>
+            </div>
+          </motion.div>
         )}
 
         {/* Error State */}
@@ -375,24 +421,22 @@ const ScheduleSearchPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-red-50 border border-red-200 rounded-lg p-6 text-center"
+            className="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 text-center"
           >
-            <p className="text-red-700 font-semibold">{error}</p>
+            <p className="text-red-400 font-semibold text-lg">{error}</p>
           </motion.div>
         )}
 
-        {/* Empty State */}
+        {/* Empty State - After Search */}
         {!searching && hasSearched && filteredSchedules.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20"
+            className="text-center py-32"
           >
             <div className="text-6xl mb-4">🚌</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              No schedules found
-            </h3>
-            <p className="text-gray-600">Try adjusting your search filters</p>
+            <h3 className="text-2xl font-bold text-white mb-2">No schedules found</h3>
+            <p className="text-slate-400">Try adjusting your search filters</p>
           </motion.div>
         )}
 
@@ -401,34 +445,30 @@ const ScheduleSearchPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-20"
+            className="text-center py-32"
           >
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              Start your search
-            </h3>
-            <p className="text-gray-600">
-              Select a route and date to find available buses
-            </p>
+            <h3 className="text-2xl font-bold text-white mb-2">Start your search</h3>
+            <p className="text-slate-400">Select a route and date to find available buses</p>
           </motion.div>
         )}
 
         {/* Results Grid */}
         {!searching && filteredSchedules.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-6"
-          >
-            <div className="mb-6">
-              <p className="text-gray-700 font-semibold">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8"
+            >
+              <p className="text-slate-300 font-semibold text-lg">
                 Found{' '}
-                <span className="text-blue-600">{filteredSchedules.length}</span>{' '}
-                schedules
+                <span className="text-amber-400 text-xl font-black">{filteredSchedules.length}</span>{' '}
+                schedule{filteredSchedules.length !== 1 ? 's' : ''}
               </p>
-            </div>
+            </motion.div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredSchedules.map((schedule, index) => (
                 <motion.div
                   key={schedule.id}
@@ -459,3 +499,4 @@ const ScheduleSearchPage: React.FC = () => {
 };
 
 export default ScheduleSearchPage;
+
