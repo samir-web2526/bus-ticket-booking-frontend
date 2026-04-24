@@ -13,8 +13,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Seat } from '@/src/services/seat.service';
-import { createSeatLock, releaseAllLocks } from '@/src/services/seatlock.service';
+import { createSeatLock, releaseAllLocks, SeatLock } from '@/src/services/seatlock.service';
 import { getAvailableSeats } from '@/src/services/seat.service';
+import { toast } from 'sonner';
 
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -147,17 +148,25 @@ interface Props {
   scheduleId: string;
   schedule: any;
   initialSeats: Seat[];
+   initialLocks: SeatLock[];
 }
 
-export default function ScheduleDetailClient({ scheduleId, schedule, initialSeats }: Props) {
+export default function ScheduleDetailClient({ scheduleId, schedule, initialSeats, initialLocks }: Props) {
   const router = useRouter();
 
   const [seats, setSeats] = useState<Seat[]>(initialSeats);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [lockExpiry, setLockExpiry] = useState<string | null>(null);
+    const [selectedIds, setSelectedIds] = useState<string[]>(
+    () => initialLocks.map((l) => l.seatId)
+  );
+  const [lockExpiry, setLockExpiry] = useState<string | null>(
+    () => initialLocks[0]?.expiresAt ?? null
+  );
+  const [step, setStep] = useState<'select' | 'locked'>(
+    () => initialLocks.length > 0 ? 'locked' : 'select'
+  );
+
   const [locking, setLocking] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [step, setStep] = useState<'select' | 'locked'>('select');
 
   const handleToggle = (seat: Seat) => {
     if (!seat.isAvailable) return;
@@ -166,26 +175,46 @@ export default function ScheduleDetailClient({ scheduleId, schedule, initialSeat
     );
   };
 
-  const handleLock = async () => {
-    if (selectedIds.length === 0) return;
-    setLocking(true);
-    setError(null);
+  React.useEffect(() => {
+  if (initialLocks.length > 0) {
+    toast('আপনার locked seats আছে!', {
+      description: 'Booking complete করুন অথবা seats release করুন।',
+      duration: Infinity,
+      action: {
+        label: 'Proceed to Book',
+        onClick: () => router.push(`/schedules/${scheduleId}/booking`),
+      },
+    });
+  }
+}, []);
 
-    // ✅ এখন সঠিকভাবে কল করছি
-    const res = await createSeatLock(selectedIds, scheduleId);
+const handleLock = async () => {
+  if (selectedIds.length === 0) return;
+  setLocking(true);
+  setError(null);
 
-    setLocking(false);
-    if (res.error) { 
-      setError(res.error); 
-      return; 
-    }
-    
-    // ✅ null check সঠিকভাবে
-    if (res.data && res.data.length > 0) {
-      setLockExpiry(res.data[0].expiresAt);
-    }
-    setStep('locked');
-  };
+  const res = await createSeatLock(selectedIds, scheduleId);
+
+  setLocking(false);
+  if (res.error) {
+    setError(res.error);
+    toast.error('Seat lock failed', {
+      description: res.error,
+    });
+    return;
+  }
+
+  if (res.data && res.data.length > 0) {
+    setLockExpiry(res.data[0].expiresAt);
+  }
+  setStep('locked');
+
+  // ✅ Success toast
+  toast.success(`${selectedIds.length} seat${selectedIds.length !== 1 ? 's' : ''} locked!`, {
+    description: 'Reserved for 10 minutes. Please complete your booking.',
+    duration: 5000,
+  });
+};
 
   const handleRelease = useCallback(async () => {
     // ✅ সঠিক ফাংশন নাম
@@ -206,7 +235,9 @@ export default function ScheduleDetailClient({ scheduleId, schedule, initialSeat
     }
   }, [scheduleId]);
 
-  const selectedSeats = seats.filter((s) => selectedIds.includes(s.id));
+  const selectedSeats = seats.filter((s) => selectedIds.includes(s.id)).length > 0
+  ? seats.filter((s) => selectedIds.includes(s.id))
+  : initialLocks.map((l) => l.seat);
   const totalPrice = selectedSeats.reduce((sum, s) => sum + s.price, 0);
 
   return (

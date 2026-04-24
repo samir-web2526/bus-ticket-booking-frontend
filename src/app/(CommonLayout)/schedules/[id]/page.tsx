@@ -4,7 +4,9 @@
 import ScheduleDetailClient from '@/src/components/Pages/AllBusesPage/ScheduleDetailClient';
 import { getScheduleById } from '@/src/services/schedule.service';
 import { getAvailableSeats } from '@/src/services/seat.service';
+import { getActiveLocks } from '@/src/services/seatlock.service';
 import { AlertCircle } from 'lucide-react';
+import { redirect } from 'next/navigation';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -16,10 +18,21 @@ export default async function ScheduleDetailPage({ params }: Props) {
 
   console.log('[ScheduleDetailPage] Loading schedule:', { scheduleId: id });
 
-  const [scheduleRes, seatsRes] = await Promise.all([
+  const [scheduleRes, seatsRes, locksRes] = await Promise.all([
     getScheduleById(id),
     getAvailableSeats(id),
+    getActiveLocks(id),
   ]);
+
+  console.log('[ScheduleDetailPage] Active locks:', {
+  data: locksRes.data,
+  error: locksRes.error,
+});
+
+
+  if (locksRes.data && locksRes.data.length > 0) {
+  redirect(`/schedules/${id}/booking`);
+}
 
   // ✅ Debug: Log all responses
   console.log('[ScheduleDetailPage] Response:', {
@@ -100,6 +113,7 @@ export default async function ScheduleDetailPage({ params }: Props) {
       scheduleId={id}
       schedule={scheduleRes.data}
       initialSeats={seatsRes.data}
+      initialLocks={locksRes.data ?? []}
     />
   );
 }

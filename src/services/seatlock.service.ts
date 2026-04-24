@@ -73,6 +73,39 @@ export async function createSeatLock(
 }
 
 /**
+ * Get active seat locks for current user on a schedule
+ * GET /api/v1/seat-locks/:scheduleId
+ */
+export async function getActiveLocks(
+  scheduleId: string
+): Promise<ServiceResponse<SeatLock[]>> {
+  try {
+    const accessToken = await getAccessToken();
+
+    const result = await fetch(`${API}/api/v1/seat-locks/${scheduleId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: 'no-store',
+    });
+
+    const json = await result.json();
+
+    if (!result.ok) {
+      return { data: null, error: json?.message ?? 'Failed to get active locks' };
+    }
+
+    return { data: json?.data ?? [], error: null };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Something went wrong';
+    console.error('[getActiveLocks]', message);
+    return { data: null, error: message };
+  }
+}
+
+/**
  * Release a single seat lock
  * DELETE /api/v1/seat-locks/:id
  */
