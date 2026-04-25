@@ -55,13 +55,15 @@ export function SigninForm({
     }
     
     // ✅ Success toast based on role
-    const toastMessage = result.role === "ADMIN" 
+    const role = result.role ?? "PASSENGER";
+
+    const toastMessage = role === "ADMIN" 
       ? "Welcome Admin" 
-      : result.role === "OPERATOR" 
+      : role === "OPERATOR" 
       ? "Welcome Operator"
       : "Welcome Passenger"
     
-    const toastDescription = `You logged in successfully as ${result.role.toLowerCase()}`
+    const toastDescription = `You logged in successfully as ${role.toLowerCase()}`
 
     toast.success(toastMessage, {
       description: toastDescription,
@@ -71,9 +73,9 @@ export function SigninForm({
 
     // Redirect after short delay
     setTimeout(() => {
-      if (result.role === "ADMIN") router.push("/admin-dashboard")
-      else if (result.role === "OPERATOR") router.push("/operator-dashboard")
-      else if (result.role === "PASSENGER") router.push("/passenger-dashboard")
+      if (role === "ADMIN") router.push("/admin-dashboard")
+      else if (role === "OPERATOR") router.push("/operator-dashboard")
+      else if (role === "PASSENGER") router.push("/passenger-dashboard")
     }, 500)
   }
 

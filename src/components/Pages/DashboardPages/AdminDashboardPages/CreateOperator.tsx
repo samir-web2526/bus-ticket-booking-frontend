@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -12,41 +13,66 @@ import { createOperator } from "@/src/services/user.service";
 
 // ─── Zod Schema ──────────────────────────────────────────────────────────────
 
+// const operatorSchema = z.object({
+//   name: z.string().min(1, "Operator name is required"),
+//   email: z.string().email("Valid email is required"),
+//   password: z.string().min(6, "Password must be at least 6 characters"),
+//   phone: z.string().min(10, "Valid phone number is required"),
+//   profileImage: z.string().optional().default(""),
+//   companyName: z.string().min(1, "Company name is required"),
+//   tradeLicense: z.string().min(1, "Trade license is required"),
+//   nid: z.string().min(1, "NID is required"),
+//   address: z.string().min(1, "Address is required"),
+// });
 const operatorSchema = z.object({
-  name: z.string().min(1, "Operator name is required"),
-  email: z.string().email("Valid email is required"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  phone: z.string().min(10, "Valid phone number is required"),
-  profileImage: z.string().optional().default(""),
-  companyName: z.string().min(1, "Company name is required"),
-  tradeLicense: z.string().min(1, "Trade license is required"),
-  nid: z.string().min(1, "NID is required"),
-  address: z.string().min(1, "Address is required"),
+  name: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(6),
+  phone: z.string().min(10),
+
+  profileImage: z.string().default(""),
+
+  companyName: z.string().min(1),
+  tradeLicense: z.string().min(1),
+  nid: z.string().min(1),
+  address: z.string().min(1),
 });
 
-type OperatorFormValues = z.infer<typeof operatorSchema>;
+type OperatorFormValues = {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  profileImage: string;
+  companyName: string;
+  tradeLicense: string;
+  nid: string;
+  address: string;
+};
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function CreateOperator() {
   const form = useForm<OperatorFormValues>({
-    resolver: zodResolver(operatorSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      phone: "",
-      profileImage: "",
-      companyName: "",
-      tradeLicense: "",
-      nid: "",
-      address: "",
-    },
+  resolver: zodResolver(operatorSchema) as any,
+  defaultValues: {
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    profileImage: "",
+    companyName: "",
+    tradeLicense: "",
+    nid: "",
+    address: "",
+  },
+});
+
+   const { handleSubmit, register, formState, control } = form;
+  
+  const values = useWatch({
+    control,
   });
-
-  const { handleSubmit, register, formState, watch } = form;
-  const values = watch();
-
   const onSubmit = async (data: OperatorFormValues) => {
     const res = await createOperator(data);
     if (res.error) {

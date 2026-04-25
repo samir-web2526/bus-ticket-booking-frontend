@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import AllBookings from '@/src/components/Pages/DashboardPages/AdminDashboardPages/AllBookings'
 import React from 'react'
 

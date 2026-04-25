@@ -64,11 +64,29 @@ export default function HeroSection() {
         setLoading(true);
         const result = await getAllRoutes({ limit: 10 });
 
-        const slidesData: SlideRoute[] = result.data.slice(0, 5).map((route, index) => ({
-          ...route,
-          image: getRouteImage(route.distanceKm, index),
-          tag: getRouteTag(route.distanceKm),
-        }));
+        // const slidesData: SlideRoute[] = result.data.slice(0, 5).map((route, index) => ({
+        //   ...route,
+        //   stops: route.stops ?? [],
+        //   image: getRouteImage(route.distanceKm, index),
+        //   tag: getRouteTag(route.distanceKm),
+        // }));
+
+ const slidesData: SlideRoute[] = result.data.slice(0, 5).map((route, index) => ({
+  id: route.id,
+  sourceCity: route.sourceCity,
+  destinationCity: route.destinationCity,
+  distanceKm: route.distanceKm,
+  estimatedTimeMinutes: route.estimatedTimeMinutes,
+
+  stops: route.stops ?? [],
+  schedules: route.schedules ?? [],
+
+  createdAt: route.createdAt ?? "",   // ✅ FIX
+  updatedAt: route.updatedAt ?? "",   // ✅ FIX
+
+  image: getRouteImage(route.distanceKm, index),
+  tag: getRouteTag(route.distanceKm),
+}));
 
         setSlides(slidesData);
       } catch (err) {

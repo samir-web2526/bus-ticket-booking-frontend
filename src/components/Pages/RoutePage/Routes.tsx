@@ -1,44 +1,46 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowRight, Clock, TrendingUp, Loader2, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getAllRoutes } from '@/src/services/routes.service';
+import {Route} from '../../../services/routes.service'
+import { Schedule } from '@/src/services/schedule.service';
 
-interface Schedule {
-  id: string;
-  departure: string;
-  arrival: string;
-  status: string;
-  bus: {
-    id: string;
-    name: string;
-    type: string;
-    totalSeats: number;
-    operator: {
-      id: string;
-      name: string;
-      email: string;
-      phone: string;
-      profileImage: string;
-    };
-  };
-}
+// interface Schedule {
+//   id: string;
+//   departure: string;
+//   arrival: string;
+//   status: string;
+//   bus: {
+//     id: string;
+//     name: string;
+//     type: string;
+//     totalSeats: number;
+//     operator: {
+//       id: string;
+//       name: string;
+//       email: string;
+//       phone: string;
+//       profileImage: string;
+//     };
+//   };
+// }
 
-interface Route {
-  id: string;
-  sourceCity: string;
-  destinationCity: string;
-  distanceKm: number;
-  estimatedTimeMinutes: number;
-  stops: string[];
-  createdAt: string;
-  updatedAt: string;
-  schedules: Schedule[];
-}
+// interface Route {
+//   id: string;
+//   sourceCity: string;
+//   destinationCity: string;
+//   distanceKm: number;
+//   estimatedTimeMinutes: number;
+//   stops: string[];
+//   createdAt: string;
+//   updatedAt: string;
+//   schedules: Schedule[];
+// }
 
 const getRouteTag = (distance: number, schedules: Schedule[]): string => {
   if (schedules.length === 0) return 'Available';
@@ -89,55 +91,90 @@ const getAveragePrice = (schedules: Schedule[]): number => {
 
 export default function AllRoutesPage() {
   const [routes, setRoutes] = useState<Route[]>([]);
-  const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
+  // const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
 
+
+
+  // useEffect(() => {
+  //   const fetchRoutes = async () => {
+  //     try {
+  //       setLoading(true);
+  //       setError(null);
+  //       const result = await getAllRoutes({ limit: 100 });
+
+  //       if (result.error) {
+  //         setError(result.error);
+  //         console.error('Error fetching routes:', result.error);
+  //         return;
+  //       }
+
+  //       setRoutes(result.data);
+  //       setFilteredRoutes(result.data);
+  //     } catch (err) {
+  //       const message = err instanceof Error ? err.message : 'Failed to fetch routes';
+  //       setError(message);
+  //       console.error('Failed to fetch routes:', err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchRoutes();
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!searchQuery.trim()) {
+  //     setFilteredRoutes(routes);
+  //     return;
+  //   }
+
+  //   const query = searchQuery.toLowerCase();
+  //   const filtered = routes.filter(
+  //     (route) =>
+  //       route.sourceCity.toLowerCase().includes(query) ||
+  //       route.destinationCity.toLowerCase().includes(query)
+  //   );
+
+  //   setFilteredRoutes(filtered);
+  // }, [searchQuery, routes]);
+
   useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const result = await getAllRoutes({ limit: 100 });
+  const fetchRoutes = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        if (result.error) {
-          setError(result.error);
-          console.error('Error fetching routes:', result.error);
-          return;
-        }
+      const result = await getAllRoutes({ limit: 100 });
 
-        setRoutes(result.data);
-        setFilteredRoutes(result.data);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to fetch routes';
-        setError(message);
-        console.error('Failed to fetch routes:', err);
-      } finally {
-        setLoading(false);
+      if (result.error) {
+        setError(result.error);
+        return;
       }
-    };
 
-    fetchRoutes();
-  }, []);
-
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredRoutes(routes);
-      return;
+      setRoutes(result.data); // ONLY this
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch routes');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const query = searchQuery.toLowerCase();
-    const filtered = routes.filter(
-      (route) =>
-        route.sourceCity.toLowerCase().includes(query) ||
-        route.destinationCity.toLowerCase().includes(query)
-    );
+  fetchRoutes();
+}, []);
 
-    setFilteredRoutes(filtered);
-  }, [searchQuery, routes]);
+  const filteredRoutes = useMemo(() => {
+  const query = searchQuery.toLowerCase();
+
+  return routes.filter((route) =>
+    route.sourceCity.toLowerCase().includes(query) ||
+    route.destinationCity.toLowerCase().includes(query)
+  );
+}, [routes, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#050d1a]">
@@ -268,6 +305,8 @@ export default function AllRoutesPage() {
                   const { color, border } = getRouteColor(tag);
                   const price = getAveragePrice(route.schedules);
 
+                    const stops = route.stops ?? [];
+
                   return (
                     <motion.div
                       key={route.id}
@@ -325,12 +364,18 @@ export default function AllRoutesPage() {
                         {/* Distance and Stops */}
                         <div className="text-xs text-slate-400">
                           <p>📍 {route.distanceKm} km</p>
-                          {route.stops.length > 0 && (
+                          {/* {route.stops.length > 0 && (
                             <p className="mt-1 text-slate-500">
                               {route.stops.length} stops • {route.stops.slice(0, 2).join(', ')}
                               {route.stops.length > 2 ? '...' : ''}
                             </p>
-                          )}
+                          )} */}
+                          {stops.length > 0 && (
+  <p className="mt-1 text-slate-500">
+    {stops.length} stops • {stops.slice(0, 2).join(', ')}
+    {stops.length > 2 ? '...' : ''}
+  </p>
+)}
                         </div>
 
                         {/* Available Schedules */}

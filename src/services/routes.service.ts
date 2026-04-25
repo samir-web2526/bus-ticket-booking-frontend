@@ -2,6 +2,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { Schedule } from "./schedule.service";
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -16,6 +17,7 @@ export interface Route {
   stops?: string[];
   createdAt?: string;
   updatedAt?: string;
+  schedules: Schedule[];
 }
 
 export interface CreateRoutePayload {
@@ -99,8 +101,6 @@ export const getAllRoutes = async (params?: {
     const response = await fetch(url);
 
     const json = await response.json();
-
-    console.log("[getAllRoutes] Raw Response:", json);
 
     if (!response.ok) {
       return {

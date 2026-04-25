@@ -15,27 +15,108 @@ export interface SearchQuery {
   limit?: number;
 }
 
+// export interface Schedule {
+//   id: string;
+//   busId: string;
+//   routeId: string;
+
+//   departure: string;
+//   arrival: string;
+//   status: string;
+
+//   bus: {
+//     id: string;
+//     operatorId: string;
+//     name: string;
+//     number: string;
+//     type: string;
+//     totalSeats: number;
+//     pricePerSeat: number;
+//     isDeleted: boolean;
+//     isActive: boolean;
+//     createdAt: string;
+//     updatedAt: string;
+//   };
+
+//   route: {
+//     id: string;
+//     sourceCity: string;
+//     destinationCity: string;
+//     distanceKm: number;
+//     estimatedTimeMinutes: number;
+//     stops: string[];
+//     createdAt: string;
+//     updatedAt: string;
+//   };
+// }
+
+// export interface Schedule {
+//   id: string;
+//   bus: {
+//     id: string;
+//     name: string;
+//     type: string;
+//     number: string;
+//     totalSeats: number;
+//     pricePerSeat: number;
+//   };
+//   route: {
+//     sourceCity: string;
+//     destinationCity: string;
+//     distanceKm: number;
+//     estimatedTimeMinutes: number;
+//   };
+//   departure: string;
+//   arrival: string;
+//   availableSeats: number;
+//   price?: number;
+//   isActive: boolean;
+// }
+
 export interface Schedule {
   id: string;
+  busId: string;
+  routeId: string;
+
+  departure: string;
+  arrival: string;
+  status: string;
+
   bus: {
     id: string;
+    operatorId: string;
+
     name: string;
-    type: string;
     number: string;
+    type: string;
     totalSeats: number;
     pricePerSeat: number;
+
+    isDeleted: boolean;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+
+    // ✅ IMPORTANT: now available from backend
+    operator: {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+      profileImage?: string;
+    };
   };
+
   route: {
+    id: string;
     sourceCity: string;
     destinationCity: string;
     distanceKm: number;
     estimatedTimeMinutes: number;
+    stops: string[];
+    createdAt: string;
+    updatedAt: string;
   };
-  departure: string;
-  arrival: string;
-  availableSeats: number;
-  price?: number;
-  isActive: boolean;
 }
 
 export interface SearchResponse {

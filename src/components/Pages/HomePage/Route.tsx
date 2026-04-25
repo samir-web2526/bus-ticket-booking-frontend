@@ -7,41 +7,42 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowRight, Clock, TrendingUp, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { getAllRoutes } from '@/src/services/routes.service';
+import { getAllRoutes,Route } from '@/src/services/routes.service';
 import { useRouter } from 'next/navigation';
+import { Schedule } from '@/src/services/schedule.service';
 
 
-interface Schedule {
-  id: string;
-  departure: string;
-  arrival: string;
-  status: string;
-  bus: {
-    id: string;
-    name: string;
-    type: string;
-    totalSeats: number;
-    operator: {
-      id: string;
-      name: string;
-      email: string;
-      phone: string;
-      profileImage: string;
-    };
-  };
-}
+// interface Schedule {
+//   id: string;
+//   departure: string;
+//   arrival: string;
+//   status: string;
+//   bus: {
+//     id: string;
+//     name: string;
+//     type: string;
+//     totalSeats: number;
+//     operator: {
+//       id: string;
+//       name: string;
+//       email: string;
+//       phone: string;
+//       profileImage: string;
+//     };
+//   };
+// }
 
-interface Route {
-  id: string;
-  sourceCity: string;
-  destinationCity: string;
-  distanceKm: number;
-  estimatedTimeMinutes: number;
-  stops: string[];
-  createdAt: string;
-  updatedAt: string;
-  schedules: Schedule[];
-}
+// interface Route {
+//   id: string;
+//   sourceCity: string;
+//   destinationCity: string;
+//   distanceKm: number;
+//   estimatedTimeMinutes: number;
+//   stops: string[];
+//   createdAt: string;
+//   updatedAt: string;
+//   schedules: Schedule[];
+// }
 
 // interface RoutesResponse {
 //   data: Route[];
@@ -207,6 +208,8 @@ setTotal(result.meta?.total ?? result.data.length);
               const tag = getRouteTag(route.distanceKm, route.schedules);
               const { color, border } = getRouteColor(tag);
               const price = getAveragePrice(route.schedules);
+               const stops = route.stops ?? [];
+              
 
               return (
                 <motion.div
@@ -262,13 +265,16 @@ setTotal(result.meta?.total ?? result.data.length);
 
                   {/* Distance and Stops */}
                   <div className="text-xs text-slate-400 mb-3 border-t border-white/10 pt-3">
-                    <p>📍 {route.distanceKm} km • {route.stops.length} stops</p>
-                    {route.stops.length > 0 && (
-                      <p className="mt-1 text-slate-500">
-                        {route.stops.slice(0, 2).join(', ')}
-                        {route.stops.length > 2 ? '...' : ''}
-                      </p>
-                    )}
+                   <p>
+  📍 {route.distanceKm} km • {stops.length} stops
+</p>
+
+{stops.length > 0 && (
+  <p className="mt-1 text-slate-500">
+    {stops.slice(0, 2).join(', ')}
+    {stops.length > 2 ? '...' : ''}
+  </p>
+)}
                   </div>
 
                   {/* Available Schedules */}
