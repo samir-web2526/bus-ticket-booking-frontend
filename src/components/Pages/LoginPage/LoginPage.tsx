@@ -1,202 +1,3 @@
-// "use client"
-
-// import { useState } from "react"
-// import { useForm } from "react-hook-form"
-// import { z } from "zod"
-// import { zodResolver } from "@hookform/resolvers/zod"
-
-// import { cn } from "@/lib/utils"
-// import { Button } from "@/components/ui/button"
-// import { Card, CardContent } from "@/components/ui/card"
-// import {
-//   Field,
-//   FieldDescription,
-//   FieldGroup,
-//   FieldLabel,
-//   FieldSeparator,
-// } from "@/components/ui/field"
-// import { Input } from "@/components/ui/input"
-
-// // ✅ Step 1: Define validation rules using a Zod schema
-// const signinSchema = z.object({
-//   email: z
-//     .string()
-//     .min(1, "Email is required")
-//     .email("Please enter a valid email address"),
-//   password: z
-//     .string()
-//     .min(1, "Password is required"),
-// })
-
-// // ✅ Step 2: Derive the TypeScript type from the schema
-// type SigninFormValues = z.infer<typeof signinSchema>
-
-// export function SigninForm({
-//   className,
-//   ...props
-// }: React.ComponentProps<"div">) {
-//   const [isLoading, setIsLoading] = useState(false)
-//   const [serverError, setServerError] = useState<string | null>(null)
-
-//   // ✅ Step 3: Set up the useForm hook with Zod as the resolver
-//   const {
-//     register,     // connects each input to the form
-//     handleSubmit, // wraps your submit handler with validation
-//     formState: { errors, isSubmitting }, // validation errors & submission state
-//   } = useForm<SigninFormValues>({
-//     resolver: zodResolver(signinSchema),
-//     defaultValues: {
-//       email: "",
-//       password: "",
-//     },
-//   })
-
-//   // ✅ Step 4: Submit handler — only runs when all validations pass
-//   const onSubmit = async (data: SigninFormValues) => {
-//     setServerError(null)
-//     setIsLoading(true)
-
-//     try {
-//       // Replace this with your actual API endpoint
-//       const response = await fetch("/api/auth/login", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       })
-
-//       const result = await response.json()
-
-//       if (!response.ok) {
-//         // Show error returned from the server (e.g. "Invalid credentials")
-//         setServerError(result.message || "Invalid email or password. Please try again.")
-//         return
-//       }
-
-//       // Success — redirect or update auth state here
-//       window.location.href = "/dashboard"
-
-//     } catch {
-//       setServerError("Network error. Please check your internet connection.")
-//     } finally {
-//       setIsLoading(false)
-//     }
-//   }
-
-//   return (
-//     <div className={cn("flex flex-col gap-6", className)} {...props}>
-//       <Card className="overflow-hidden p-0">
-//         <CardContent className="grid p-0 md:grid-cols-2">
-
-//           {/* ✅ Step 5: Attach handleSubmit to the form's onSubmit */}
-//           <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
-//             <FieldGroup>
-//               <div className="flex flex-col items-center gap-2 text-center">
-//                 <h1 className="text-2xl font-bold">Welcome back</h1>
-//                 <p className="text-balance text-muted-foreground">
-//                   Login to your Acme Inc account
-//                 </p>
-//               </div>
-
-//               {/* Server-side error banner */}
-//               {serverError && (
-//                 <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
-//                   {serverError}
-//                 </div>
-//               )}
-
-//               {/* Email Field */}
-//               <Field>
-//                 <FieldLabel htmlFor="email">Email</FieldLabel>
-//                 <Input
-//                   id="email"
-//                   type="email"
-//                   placeholder="m@example.com"
-//                   aria-invalid={!!errors.email}
-//                   {...register("email")}
-//                 />
-//                 {errors.email && (
-//                   <p className="text-sm text-destructive">{errors.email.message}</p>
-//                 )}
-//               </Field>
-
-//               {/* Password Field */}
-//               <Field>
-//                 <div className="flex items-center">
-//                   <FieldLabel htmlFor="password">Password</FieldLabel>
-//                   <a
-//                     href="#"
-//                     className="ml-auto text-sm underline-offset-2 hover:underline"
-//                   >
-//                     Forgot your password?
-//                   </a>
-//                 </div>
-//                 <Input
-//                   id="password"
-//                   type="password"
-//                   aria-invalid={!!errors.password}
-//                   {...register("password")}
-//                 />
-//                 {errors.password && (
-//                   <p className="text-sm text-destructive">{errors.password.message}</p>
-//                 )}
-//               </Field>
-
-//               {/* Submit Button */}
-//               <Field>
-//                 <Button type="submit" disabled={isSubmitting || isLoading} className="w-full">
-//                   {isLoading ? "Logging in..." : "Login"}
-//                 </Button>
-//               </Field>
-
-//               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
-//                 Or continue with
-//               </FieldSeparator>
-
-//               <Field className="grid grid-cols-3 gap-4">
-//                 <Button variant="outline" type="button">
-//                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-//                     <path
-//                       d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
-//                       fill="currentColor"
-//                     />
-//                   </svg>
-//                   <span className="sr-only">Login with Apple</span>
-//                 </Button>
-//                 <Button variant="outline" type="button">
-//                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-//                     <path
-//                       d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-//                       fill="currentColor"
-//                     />
-//                   </svg>
-//                   <span className="sr-only">Login with Google</span>
-//                 </Button>
-//               </Field>
-
-//               <FieldDescription className="text-center">
-//                 Don&apos;t have an account? <a href="/register">Sign up</a>
-//               </FieldDescription>
-//             </FieldGroup>
-//           </form>
-
-//           <div className="relative hidden bg-muted md:block">
-//             <img
-//               src="/placeholder.svg"
-//               alt="Image"
-//               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-//             />
-//           </div>
-//         </CardContent>
-//       </Card>
-
-//       <FieldDescription className="px-6 text-center">
-//         By clicking continue, you agree to our{" "}
-//         <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-//       </FieldDescription>
-//     </div>
-//   )
-// }
-
 "use client"
 
 import { useState } from "react"
@@ -204,18 +5,16 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
+import { AlertCircle, Loader2, LogIn } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { signIn } from "@/src/services/auth/action"
+import { toast } from "sonner"
+import Link from "next/link"
+import { Home } from "lucide-react"
 
 const signinSchema = z.object({
   email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
@@ -243,90 +42,313 @@ export function SigninForm({
   const onSubmit = async (data: SigninFormValues) => {
     setServerError(null)
 
-    const result = await signIn(data)  // ← server action call
+    const result = await signIn(data)
 
     if (result?.error) {
       setServerError(result.error)
+      toast.error("Login Failed", {
+        description: result.error,
+        duration: 4000,
+        position: "top-right",
+      })
       return
     }
-    console.log("login",result)
-  if (result.role === "ADMIN") router.push("/admin-dashboard");
-  else if (result.role === "OPERATOR") router.push("/operator-dashboard");
-  else if (result.role === "PASSENGER") router.push("/passenger-dashboard");
+    
+    // ✅ Success toast based on role
+    const toastMessage = result.role === "ADMIN" 
+      ? "Welcome Admin! 🎯" 
+      : result.role === "OPERATOR" 
+      ? "Welcome Operator! 🚌"
+      : "Welcome Passenger! 🎉"
+    
+    const toastDescription = `You logged in successfully as ${result.role.toLowerCase()}`
+
+    toast.success(toastMessage, {
+      description: toastDescription,
+      duration: 3000,
+      position: "top-right",
+    })
+
+    // Redirect after short delay
+    setTimeout(() => {
+      if (result.role === "ADMIN") router.push("/admin-dashboard")
+      else if (result.role === "OPERATOR") router.push("/operator-dashboard")
+      else if (result.role === "PASSENGER") router.push("/passenger-dashboard")
+    }, 500)
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
-            <FieldGroup>
-              <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
-                <p className="text-balance text-muted-foreground">
-                  Login to your account
-                </p>
-              </div>
+    <div className={cn("min-h-screen bg-[#050d1a] flex items-center justify-center p-4", className)} {...props}>
+      {/* Background grid */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,180,0,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.15) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
+      />
 
-              {serverError && (
-                <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                  {serverError}
+      {/* Animated background blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-full max-w-4xl"
+      >
+        {/* Back to Home Button */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-6 flex justify-start"
+        >
+          <Link href="/">
+            <Button
+              variant="outline"
+              className="border-white/20 text-slate-300 hover:bg-white/5 hover:border-amber-400 hover:text-amber-400 rounded-xl transition-all duration-200 flex items-center gap-2 group"
+            >
+              <Home className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+              Back to Home
+            </Button>
+          </Link>
+        </motion.div>
+        {/* Card with Two Columns */}
+        <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl grid lg:grid-cols-2">
+          {/* Form Column */}
+          <div className="flex flex-col">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#0a1628] to-[#050d1a] border-b border-white/10 px-8 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="flex flex-col items-center gap-3"
+              >
+                <div className="w-14 h-14 bg-amber-400/10 border border-amber-400/30 rounded-2xl flex items-center justify-center">
+                  <LogIn className="w-7 h-7 text-amber-400" />
                 </div>
+                <h1 className="text-3xl font-black text-white text-center">Welcome Back</h1>
+                <p className="text-slate-400 text-center text-sm">Login to your BusTicketBD account</p>
+              </motion.div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="px-8 py-8 space-y-6 flex-1">
+              {/* Error Banner */}
+              {serverError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl"
+                >
+                  <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                  <p className="text-red-300 text-sm flex-1">{serverError}</p>
+                </motion.div>
               )}
 
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
+              {/* Email Field */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="space-y-2"
+              >
+                <label htmlFor="email" className="block text-sm font-semibold text-slate-300">
+                  Email Address
+                </label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="you@example.com"
                   aria-invalid={!!errors.email}
                   {...register("email")}
+                  className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
                 />
                 {errors.email && (
-                  <p className="text-sm text-destructive">{errors.email.message}</p>
+                  <p className="text-xs text-red-400 font-semibold">{errors.email.message}</p>
                 )}
-              </Field>
+              </motion.div>
 
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a href="#" className="ml-auto text-sm underline-offset-2 hover:underline">
-                    Forgot your password?
+              {/* Password Field */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <label htmlFor="password" className="block text-sm font-semibold text-slate-300">
+                    Password
+                  </label>
+                  <a
+                    href="/forgot-password"
+                    className="text-xs text-amber-400 hover:text-amber-300 transition-colors"
+                  >
+                    Forgot password?
                   </a>
                 </div>
                 <Input
                   id="password"
                   type="password"
+                  placeholder="••••••••"
                   aria-invalid={!!errors.password}
                   {...register("password")}
+                  className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
                 />
                 {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password.message}</p>
+                  <p className="text-xs text-red-400 font-semibold">{errors.password.message}</p>
                 )}
-              </Field>
+              </motion.div>
 
-              <Field>
-                <Button type="submit" disabled={isSubmitting} className="w-full">
-                  {isSubmitting ? "Logging in..." : "Login"}
+              {/* Submit Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-11 rounded-xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 text-black transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-amber-500/30 group"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Logging in...
+                    </>
+                  ) : (
+                    <>
+                      <LogIn className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      Login
+                    </>
+                  )}
                 </Button>
-              </Field>
+              </motion.div>
 
-              <FieldDescription className="text-center">
-                Don&apos;t have an account? <a href="/register">Sign up</a>
-              </FieldDescription>
-            </FieldGroup>
-          </form>
+              {/* Divider */}
+              <div className="relative flex items-center gap-4 py-2">
+                <div className="flex-1 h-px bg-white/10"></div>
+                <span className="text-xs text-slate-400 font-semibold">OR</span>
+                <div className="flex-1 h-px bg-white/10"></div>
+              </div>
 
-          <div className="relative hidden bg-muted md:block">
-            {/* <img
-              src="/placeholder.svg"
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            /> */}
+              {/* Sign Up Link */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="text-center"
+              >
+                <p className="text-slate-400 text-sm">
+                  Don&apos;t have an account?{' '}
+                  <a
+                    href="/register"
+                    className="text-amber-400 hover:text-amber-300 font-semibold transition-colors"
+                  >
+                    Sign up here
+                  </a>
+                </p>
+              </motion.div>
+            </form>
+
+            {/* Footer */}
+            <div className="px-8 py-6 border-t border-white/10 bg-white/[0.02]">
+              <p className="text-xs text-slate-400 text-center">
+                By logging in, you agree to our{' '}
+                <a href="#" className="text-amber-400 hover:text-amber-300 transition-colors">
+                  Terms of Service
+                </a>
+                {' '}and{' '}
+                <a href="#" className="text-amber-400 hover:text-amber-300 transition-colors">
+                  Privacy Policy
+                </a>
+              </p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Image Column - Hidden on mobile, visible on lg screens */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="hidden lg:flex relative bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-l border-white/10 items-center justify-center p-8 overflow-hidden"
+          >
+            {/* Background gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] to-[#050d1a] opacity-60"></div>
+
+            {/* Bus Image Container */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="relative z-10 flex flex-col items-center gap-4"
+            >
+              {/* Image */}
+              <div className="relative w-full h-64">
+                <img
+                  src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&q=80"
+                  alt="Bus"
+                  className="w-full h-full object-cover rounded-2xl shadow-2xl border border-white/20"
+                />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/40 to-transparent"></div>
+              </div>
+
+              {/* Text Content */}
+              <div className="text-center space-y-2 relative z-10">
+                <h3 className="text-xl font-bold text-white">Ready to Travel?</h3>
+                <p className="text-slate-300 text-sm">
+                  Book your journey today with BusTicketBD
+                </p>
+                <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-white/10">
+                  <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                  <span className="text-xs text-slate-400">500+ routes available</span>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Additional Info - Mobile Only */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="mt-6 text-center lg:hidden"
+        >
+          <p className="text-slate-400 text-sm">
+            Ready to travel?{' '}
+            <span className="text-amber-400 font-semibold">500+ routes</span> available
+          </p>
+        </motion.div>
+      </motion.div>
+
+      <style>{`
+        @keyframes blob {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+        }
+        
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </div>
   )
 }

@@ -1,22 +1,19 @@
+
 "use client"
 
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { motion } from "framer-motion"
+import { AlertCircle, Loader2, UserPlus, CheckCircle2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-
+import { toast } from "sonner"
+import Link from "next/link"
+import { Home } from "lucide-react"
 
 const signupSchema = z
   .object({
@@ -33,26 +30,23 @@ const signupSchema = z
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
-    path: ["confirmPassword"], // show the error on this field
+    path: ["confirmPassword"],
   })
 
-// ✅ Step 2: Derive the TypeScript type from the schema
 type SignupFormValues = z.infer<typeof signupSchema>
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
   const [isSuccess, setIsSuccess] = useState(false)
 
-  // ✅ Step 3: Set up the useForm hook with Zod as the resolver
   const {
-    register,       // connects each input to the form
-    handleSubmit,   // wraps your submit handler with validation
-    formState: { errors, isSubmitting }, // validation errors & submission state
-    reset,          // resets all fields back to defaultValues
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -62,13 +56,10 @@ export function SignupForm({
     },
   })
 
-  // ✅ Step 4: Submit handler — only runs when all validations pass
   const onSubmit = async (data: SignupFormValues) => {
     setServerError(null)
-    setIsLoading(true)
 
     try {
-      // Replace this with your actual API endpoint
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -81,155 +72,343 @@ export function SignupForm({
       const result = await response.json()
 
       if (!response.ok) {
-        // Display any error message returned from the server
         setServerError(result.message || "Something went wrong. Please try again.")
+        toast.error("Registration Failed", {
+          description: result.message || "Something went wrong",
+          position: "top-right",
+        })
         return
       }
 
-      // Success — clear the form and show a confirmation message
       setIsSuccess(true)
       reset()
 
+      toast.success("Account Created! 🎉", {
+        description: "Please check your email to verify your account",
+        position: "top-right",
+        duration: 5000,
+      })
+
     } catch {
-      setServerError("Network error. Please check your internet connection.")
-    } finally {
-      setIsLoading(false)
+      const errorMsg = "Network error. Please check your internet connection."
+      setServerError(errorMsg)
+      toast.error("Network Error", {
+        description: errorMsg,
+        position: "top-right",
+      })
     }
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
+    <div className={cn("min-h-screen bg-[#050d1a] flex items-center justify-center p-4", className)} {...props}>
+      {/* Background grid */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,180,0,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.15) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
+      />
 
-          {/* ✅ Step 5: Attach handleSubmit to the form's onSubmit */}
-          <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
-            <FieldGroup>
-              <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Create your account</h1>
-                <p className="text-sm text-balance text-muted-foreground">
-                  Enter your email below to create your account
-                </p>
-              </div>
+      {/* Animated background blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+      </div>
 
-              {/* Server-side error banner */}
-              {serverError && (
-                <div className="rounded-md bg-destructive/10 px-4 py-3 text-sm text-destructive">
-                  {serverError}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative z-10 w-full max-w-4xl"
+      >
+        {/* Back to Home Button */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-6 flex justify-start"
+        >
+          <Link href="/">
+            <Button
+              variant="outline"
+              className="border-white/20 text-slate-300 hover:bg-white/5 hover:border-amber-400 hover:text-amber-400 rounded-xl transition-all duration-200 flex items-center gap-2 group"
+            >
+              <Home className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+              Back to Home
+            </Button>
+          </Link>
+        </motion.div>
+        {/* Card with Two Columns */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl grid lg:grid-cols-2"
+        >
+          {/* Form Column */}
+          <div className="flex flex-col">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-[#0a1628] to-[#050d1a] border-b border-white/10 px-8 py-8">
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+                className="flex flex-col items-center gap-3"
+              >
+                <div className="w-14 h-14 bg-amber-400/10 border border-amber-400/30 rounded-2xl flex items-center justify-center">
+                  <UserPlus className="w-7 h-7 text-amber-400" />
                 </div>
+                <h1 className="text-3xl font-black text-white text-center">Create Account</h1>
+                <p className="text-slate-400 text-center text-sm">Join BusTicketBD and start booking buses</p>
+              </motion.div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="px-8 py-8 space-y-6 flex-1">
+              {/* Server Error Banner */}
+              {serverError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl"
+                >
+                  <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+                  <p className="text-red-300 text-sm flex-1">{serverError}</p>
+                </motion.div>
               )}
 
-              {/* Success banner */}
+              {/* Success Banner */}
               {isSuccess && (
-                <div className="rounded-md bg-green-500/10 px-4 py-3 text-sm text-green-600">
-                  🎉 Account created! Please check your email to continue.
-                </div>
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start gap-3 p-4 bg-green-500/10 border border-green-500/30 rounded-xl"
+                >
+                  <CheckCircle2 className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                  <p className="text-green-300 text-sm flex-1">🎉 Account created! Please check your email to verify.</p>
+                </motion.div>
               )}
 
               {/* Email Field */}
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                {/* ✅ Spread register() to connect this input to the form */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="space-y-2"
+              >
+                <label htmlFor="email" className="block text-sm font-semibold text-slate-300">
+                  Email Address
+                </label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="you@example.com"
                   aria-invalid={!!errors.email}
                   {...register("email")}
+                  className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
                 />
-                {/* Show the validation error, or a hint if there is no error */}
                 {errors.email ? (
-                  <p className="text-sm text-destructive">{errors.email.message}</p>
+                  <p className="text-xs text-red-400 font-semibold">{errors.email.message}</p>
                 ) : (
-                  <FieldDescription>
-                    We&apos;ll use this to contact you. We will not share your
-                    email with anyone else.
-                  </FieldDescription>
+                  <p className="text-xs text-slate-400">We'll use this to contact you and verify your account</p>
                 )}
-              </Field>
+              </motion.div>
 
               {/* Password Fields */}
-              <Field>
-                <Field className="grid grid-cols-2 gap-4">
-                  <Field>
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="space-y-4"
+              >
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="password" className="block text-sm font-semibold text-slate-300">
+                      Password
+                    </label>
                     <Input
                       id="password"
                       type="password"
+                      placeholder="••••••••"
                       aria-invalid={!!errors.password}
                       {...register("password")}
+                      className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
                     />
                     {errors.password && (
-                      <p className="text-sm text-destructive">{errors.password.message}</p>
+                      <p className="text-xs text-red-400 font-semibold">{errors.password.message}</p>
                     )}
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="confirm-password">
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="confirm-password" className="block text-sm font-semibold text-slate-300">
                       Confirm Password
-                    </FieldLabel>
+                    </label>
                     <Input
                       id="confirm-password"
                       type="password"
+                      placeholder="••••••••"
                       aria-invalid={!!errors.confirmPassword}
                       {...register("confirmPassword")}
+                      className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
                     />
                     {errors.confirmPassword && (
-                      <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
+                      <p className="text-xs text-red-400 font-semibold">{errors.confirmPassword.message}</p>
                     )}
-                  </Field>
-                </Field>
-                {/* Show hint only when there are no password errors */}
+                  </div>
+                </div>
+
                 {!errors.password && !errors.confirmPassword && (
-                  <FieldDescription>
-                    Must be at least 8 characters, include one uppercase letter and one number.
-                  </FieldDescription>
+                  <p className="text-xs text-slate-400">
+                    ✓ Min 8 characters • ✓ 1 uppercase letter • ✓ 1 number
+                  </p>
                 )}
-              </Field>
+              </motion.div>
 
               {/* Submit Button */}
-              <Field>
-                {/* ✅ Disable the button while submitting to prevent duplicate requests */}
-                <Button type="submit" disabled={isSubmitting || isLoading} className="w-full">
-                  {isLoading ? "Creating account..." : "Create Account"}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-11 rounded-xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 text-black transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-amber-500/30 group"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      Create Account
+                    </>
+                  )}
                 </Button>
-              </Field>
+              </motion.div>
 
-              <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
-                Or continue with
-              </FieldSeparator>
+              {/* Divider */}
+              <div className="relative flex items-center gap-4 py-2">
+                <div className="flex-1 h-px bg-white/10"></div>
+                <span className="text-xs text-slate-400 font-semibold">OR</span>
+                <div className="flex-1 h-px bg-white/10"></div>
+              </div>
 
-              <Field className="grid grid-cols-3 gap-4">
-                <Button variant="outline" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path
-                      d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  <span className="sr-only">Sign up with Google</span>
-                </Button>
-              </Field>
+              {/* Sign In Link */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="text-center"
+              >
+                <p className="text-slate-400 text-sm">
+                  Already have an account?{' '}
+                  <a
+                    href="/login"
+                    className="text-amber-400 hover:text-amber-300 font-semibold transition-colors"
+                  >
+                    Sign in here
+                  </a>
+                </p>
+              </motion.div>
+            </form>
 
-              <FieldDescription className="text-center">
-                Already have an account? <a href="/login">Sign in</a>
-              </FieldDescription>
-            </FieldGroup>
-          </form>
-
-          <div className="relative hidden bg-muted md:block">
-            {/* <img
-              src="/placeholder.svg"
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            /> */}
+            {/* Footer */}
+            <div className="px-8 py-6 border-t border-white/10 bg-white/[0.02]">
+              <p className="text-xs text-slate-400 text-center">
+                By creating an account, you agree to our{' '}
+                <a href="#" className="text-amber-400 hover:text-amber-300 transition-colors">
+                  Terms of Service
+                </a>
+                {' '}and{' '}
+                <a href="#" className="text-amber-400 hover:text-amber-300 transition-colors">
+                  Privacy Policy
+                </a>
+              </p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
 
-      <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our{" "}
-        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </FieldDescription>
+          {/* Image Column - Hidden on mobile, visible on lg screens */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="hidden lg:flex relative bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-l border-white/10 items-center justify-center p-8 overflow-hidden"
+          >
+            {/* Background gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] to-[#050d1a] opacity-60"></div>
+
+            {/* Image Container */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="relative z-10 flex flex-col items-center gap-4"
+            >
+              {/* Image */}
+              <div className="relative w-full h-64">
+                <img
+                  src="https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400&q=80"
+                  alt="Bus Interior"
+                  className="w-full h-full object-cover rounded-2xl shadow-2xl border border-white/20"
+                />
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/40 to-transparent"></div>
+              </div>
+
+              {/* Text Content */}
+              <div className="text-center space-y-2 relative z-10">
+                <h3 className="text-xl font-bold text-white">Join Our Community</h3>
+                <p className="text-slate-300 text-sm">
+                  Start your journey with BusTicketBD today
+                </p>
+                <div className="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-amber-400">⭐⭐⭐⭐⭐</span>
+                  </div>
+                  <span className="text-xs text-slate-400">Trusted by 50K+ users</span>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* Additional Info - Mobile Only */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="mt-6 text-center lg:hidden"
+        >
+          <p className="text-slate-400 text-sm">
+            Join <span className="text-amber-400 font-semibold">50K+ users</span> booking buses daily
+          </p>
+        </motion.div>
+      </motion.div>
+
+      <style>{`
+        @keyframes blob {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+        }
+        
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+      `}</style>
     </div>
   )
 }
