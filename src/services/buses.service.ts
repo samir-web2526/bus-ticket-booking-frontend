@@ -72,21 +72,27 @@ export async function createBus(
   }
 }
 
-export async function getAllBuses(){
-    try{
-        const result = await fetch(`${API}/api/v1/buses`,{
-            method:"GET",
-            headers:{"Content-Type":"application/json"}
-        })
-        const json = await result.json();
-        console.log(json);
-        if(!result.ok) return {error:json.message ?? "Something went wrong"};
-        return {data:json.data};
-    }catch(err:unknown){
-        const message = err instanceof Error ? err.message:"Something went wrong";
-        console.error("[getAllBuses]",message);
-        return {error:message};
-    }
+export async function getAllBuses(params?: { limit?: number; page?: number; type?: string }) {
+  try {
+    const query = new URLSearchParams();
+    if (params?.limit) query.append('limit', params.limit.toString());
+    if (params?.page) query.append('page', params.page.toString());
+    if (params?.type) query.append('type', params.type);
+
+    const url = `${API}/api/v1/buses${query.toString() ? `?${query.toString()}` : ''}`;
+
+    const result = await fetch(url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const json = await result.json();
+    if (!result.ok) return { error: json.message ?? 'Something went wrong' };
+    return { data: json.data };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Something went wrong';
+    console.error('[getAllBuses]', message);
+    return { error: message };
+  }
 }
 
 export async function getBusById(id:string){

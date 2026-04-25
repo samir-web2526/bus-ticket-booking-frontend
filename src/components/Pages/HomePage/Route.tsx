@@ -8,6 +8,7 @@ import { ArrowRight, Clock, TrendingUp, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getAllRoutes } from '@/src/services/routes.service';
+import { useRouter } from 'next/navigation';
 
 
 interface Schedule {
@@ -84,8 +85,8 @@ const getRouteColor = (tag: string): { color: string; border: string } => {
 const tagColors: Record<string, string> = {
   'Short Trip': 'bg-blue-400/10 text-blue-400 border-blue-400/30',
   'Long Distance': 'bg-amber-400/10 text-amber-400 border-amber-400/30',
-  Popular: 'bg-green-400/10 text-green-400 border-green-400/30',
-  Available: 'bg-purple-400/10 text-purple-400 border-purple-400/30',
+  'Popular': 'bg-green-400/10 text-green-400 border-green-400/30',
+  'Available': 'bg-purple-400/10 text-purple-400 border-purple-400/30',
 };
 
 const formatTime = (minutes: number): string => {
@@ -101,7 +102,9 @@ const getAveragePrice = (schedules: Schedule[]): number => {
 };
 
 export default function RoutesSection() {
+  const router = useRouter();
   const [routes, setRoutes] = useState<Route[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const ref = useRef(null);
@@ -112,8 +115,9 @@ export default function RoutesSection() {
       try {
         setLoading(true);
         setError(null);
-        const result = await getAllRoutes({ limit: 8 });
-
+        const result = await getAllRoutes({ limit: 4 });
+       setRoutes(result.data);
+setTotal(result.meta?.total ?? result.data.length);
         if (result.error) {
           setError(result.error);
           console.error('Error fetching routes:', result.error);
@@ -156,13 +160,15 @@ export default function RoutesSection() {
               <span className="text-amber-400">Destinations</span>
             </h2>
           </div>
-          <Button
-            variant="outline"
-            className="border-white/20 text-white hover:bg-white/5 hover:border-amber-400 group shrink-0"
-          >
-            View all routes
-            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-          </Button>
+        
+  <Button
+  onClick={()=> router.push('/routes')}
+  variant="outline"
+  className="border-white/20 text-white hover:text-amber-400 bg-white/5 hover:bg-amber-400/10 hover:border-amber-400 group shrink-0 transition-all duration-300"
+>
+  View all routes
+  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" />
+</Button>
         </motion.div>
 
         {/* Loading State */}
@@ -288,18 +294,20 @@ export default function RoutesSection() {
         )}
 
         {/* Results count */}
-        {!loading && routes.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center mt-12"
-          >
-            <p className="text-slate-400 text-sm">
-              Showing <span className="text-amber-400 font-semibold">{routes.length}</span> routes
-            </p>
-          </motion.div>
-        )}
+       {/* Results count */}
+{!loading && routes.length > 0 && (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={inView ? { opacity: 1 } : {}}
+    transition={{ duration: 0.6, delay: 0.3 }}
+    className="text-center mt-12"
+  >
+    <p className="text-slate-400 text-sm">
+  Showing <span className="text-amber-400 font-semibold">{routes.length}</span> of{' '}
+  <span className="text-amber-400 font-semibold">{total}</span> routes
+</p>
+  </motion.div>
+)}
       </div>
     </section>
   );

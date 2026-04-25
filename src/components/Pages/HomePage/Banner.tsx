@@ -7,6 +7,8 @@ import { Search, MapPin, Calendar, ArrowRight, ChevronLeft, ChevronRight, Loader
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getAllRoutes } from '@/src/services/routes.service';
+import { useRouter } from 'next/navigation';
+import { getAllBuses } from '@/src/services/buses.service';
 
 
 interface Route {
@@ -49,51 +51,18 @@ export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [slides, setSlides] = useState<SlideRoute[]>([]);
   const [loading, setLoading] = useState(true);
-  const [from, setFrom] = useState('');
-  const [to, setTo] = useState('');
-  const [date, setDate] = useState('');
+  const [stats, setStats] = useState({
+  routes: '...',
+  buses: '...',
+});
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchRoutes = async () => {
       try {
         setLoading(true);
         const result = await getAllRoutes({ limit: 10 });
-
-        if (result.error || !result.data || result.data.length === 0) {
-          console.error('Error fetching routes');
-          // Set default slides if error
-          setSlides([
-            {
-              id: '1',
-              sourceCity: 'Dhaka',
-              destinationCity: 'Chittagong',
-              distanceKm: 250,
-              estimatedTimeMinutes: 300,
-              stops: [],
-              createdAt: '',
-              updatedAt: '',
-              schedules: [],
-              image:
-                'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80',
-              tag: 'Most Popular Route',
-            },
-            {
-              id: '2',
-              sourceCity: 'Dhaka',
-              destinationCity: "Cox's Bazar",
-              distanceKm: 400,
-              estimatedTimeMinutes: 600,
-              stops: [],
-              createdAt: '',
-              updatedAt: '',
-              schedules: [],
-              image:
-                'https://images.unsplash.com/photo-1464219789935-c2d9d9aba644?w=1200&q=80',
-              tag: 'Beach Getaway',
-            },
-          ]);
-          return;
-        }
 
         const slidesData: SlideRoute[] = result.data.slice(0, 5).map((route, index) => ({
           ...route,
@@ -104,23 +73,6 @@ export default function HeroSection() {
         setSlides(slidesData);
       } catch (err) {
         console.error('Failed to fetch routes:', err);
-        // Set default slides on error
-        setSlides([
-          {
-            id: '1',
-            sourceCity: 'Dhaka',
-            destinationCity: 'Chittagong',
-            distanceKm: 250,
-            estimatedTimeMinutes: 300,
-            stops: [],
-            createdAt: '',
-            updatedAt: '',
-            schedules: [],
-            image:
-              'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80',
-            tag: 'Most Popular Route',
-          },
-        ]);
       } finally {
         setLoading(false);
       }
@@ -128,6 +80,30 @@ export default function HeroSection() {
 
     fetchRoutes();
   }, []);
+
+  useEffect(() => {
+  const fetchStats = async () => {
+    try {
+      const routesResult = await getAllRoutes({ limit: 1 });
+      setStats((prev) => ({
+        ...prev,
+        routes: routesResult.meta?.total ? `${routesResult.meta.total}+` : '0',
+      }));
+
+      const busesResult = await getAllBuses();
+      console.log(busesResult)
+      setStats((prev) => ({
+        ...prev,
+        buses: busesResult.data?.meta?.total ? `${busesResult.data.meta.total}+` : '0',
+      }));
+    } catch (err) {
+      console.error('Failed to fetch stats:', err);
+    }
+  };
+
+  fetchStats();
+}, []);
+
 
   useEffect(() => {
     if (slides.length === 0) return;
@@ -226,67 +202,38 @@ export default function HeroSection() {
               Book intercity buses instantly. Hundreds of routes, real-time seat selection, and secure payments.
             </p>
           </div>
-
-          {/* Search card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col gap-4"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-400 h-4 w-4" />
-                <Input
-                  placeholder="From city"
-                  value={from}
-                  onChange={(e) => setFrom(e.target.value)}
-                  className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20"
-                />
-              </div>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-400 h-4 w-4" />
-                <Input
-                  placeholder="To city"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20"
-                />
-              </div>
-            </div>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-400 h-4 w-4" />
-              <Input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="pl-9 bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20"
-              />
-            </div>
-            <Button className="w-full bg-amber-400 hover:bg-amber-300 text-black font-bold text-base h-12 rounded-xl transition-all duration-200 group">
-              <Search className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-              Search Buses
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </motion.div>
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.6 }}
+>
+  <Button
+    onClick={()=>router.push('/find-buses')}
+    className="bg-amber-400 hover:bg-amber-300 text-black font-bold text-base h-12 px-8 rounded-xl transition-all duration-200 group"
+  >
+    <Search className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+    Find Buses
+    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+  </Button>
+</motion.div>
 
           {/* Stats */}
           <div className="flex gap-8">
             {[
-              { value: '500+', label: 'Routes' },
-              { value: '50K+', label: 'Happy Riders' },
-              { value: '100+', label: 'Operators' },
-            ].map((stat, i) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + i * 0.1 }}
-              >
-                <p className="text-2xl font-black text-amber-400">{stat.value}</p>
-                <p className="text-sm text-slate-400">{stat.label}</p>
-              </motion.div>
-            ))}
+  { value: stats.routes, label: 'Routes' },
+  { value: '50K+', label: 'Happy Riders' },
+  { value: stats.buses, label: 'Buses' },
+].map((stat, i) => (
+  <motion.div
+    key={stat.label}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.8 + i * 0.1 }}
+  >
+    <p className="text-2xl font-black text-amber-400">{stat.value}</p>
+    <p className="text-sm text-slate-400">{stat.label}</p>
+  </motion.div>
+))}
           </div>
         </motion.div>
 

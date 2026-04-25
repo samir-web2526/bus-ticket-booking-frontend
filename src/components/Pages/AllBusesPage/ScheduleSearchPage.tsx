@@ -20,6 +20,7 @@ import { motion } from 'framer-motion';
 import { searchSchedules } from '@/src/services/schedule.service';
 import ScheduleCard from './ScheduleCard';
 import { getAllRoutes } from '@/src/services/routes.service';
+import { useSearchParams } from 'next/navigation';
 
 interface Schedule {
   id: string;
@@ -167,6 +168,7 @@ const ScheduleSearchPage: React.FC = () => {
       return () => clearTimeout(timer);
     }
   }, [filters.from, filters.to, filters.date, busType, page]);
+
 
   // ================== CLIENT SEARCH (TEXT BASED) ==================
   useEffect(() => {
