@@ -25,30 +25,20 @@ import { createOperator } from "@/src/services/user.service";
 //   address: z.string().min(1, "Address is required"),
 // });
 const operatorSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email(),
-  password: z.string().min(6),
-  phone: z.string().min(10),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password too short"),
+  phone: z.string().min(10, "Invalid phone number"),
 
-  profileImage: z.string().default(""),
+  profileImage: z.string().optional(),
 
-  companyName: z.string().min(1),
-  tradeLicense: z.string().min(1),
-  nid: z.string().min(1),
-  address: z.string().min(1),
+  companyName: z.string().min(1, "Company name is required"),
+  tradeLicense: z.string().min(1, "Trade license is required"),
+  nid: z.string().min(1, "NID is required"),
+  address: z.string().min(1, "Address is required"),
 });
 
-type OperatorFormValues = {
-  name: string;
-  email: string;
-  password: string;
-  phone: string;
-  profileImage: string;
-  companyName: string;
-  tradeLicense: string;
-  nid: string;
-  address: string;
-};
+type OperatorFormValues = z.infer<typeof operatorSchema>;
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -71,20 +61,49 @@ export default function CreateOperator() {
    const { handleSubmit, register, formState, control } = form;
   
   const values = useWatch({
-    control,
-  });
+  control,
+  defaultValue: {
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    profileImage: "",
+    companyName: "",
+    tradeLicense: "",
+    nid: "",
+    address: "",
+  },
+});
+  // const onSubmit = async (data: OperatorFormValues) => {
+  //   console.log("FORM DATA:", data);
+  //   const res = await createOperator(data);
+  //   console.log(res);
+  //   if (res.error) {
+  //     toast.error(res.error);
+  //   } else {
+  //     toast.success("Operator created successfully! 🎉");
+  //     form.reset();
+  //   }
+  // };
+
   const onSubmit = async (data: OperatorFormValues) => {
-    const res = await createOperator(data);
-    if (res.error) {
-      toast.error(res.error);
-    } else {
-      toast.success("Operator created successfully! 🎉");
-      form.reset();
-    }
+  const payload = {
+    ...data,
+    profileImage: data.profileImage || undefined, 
   };
 
+  const res = await createOperator(payload);
+
+  if (res.error) {
+    toast.error(res.error);
+  } else {
+    toast.success("Operator created successfully! 🎉");
+    form.reset();
+  }
+};
+
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden p-6 lg:p-12">
+    <div className="min-h-screen bg-[#050d1a] relative overflow-hidden p-6 lg:p-12">
       {/* Background Grid */}
       <div
         className="absolute inset-0 opacity-3"
@@ -422,3 +441,4 @@ export default function CreateOperator() {
     </div>
   );
 }
+

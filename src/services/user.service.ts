@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { cookies } from "next/headers";
@@ -85,12 +86,23 @@ export async function createOperator(
 
     const json = await result.json();
 
+    // if (!result.ok) {
+    //   return {
+    //     data: null,
+    //     error: json?.message ?? "Failed to create operator",
+    //   };
+    // }
     if (!result.ok) {
-      return {
-        data: null,
-        error: json?.message ?? "Failed to create operator",
-      };
-    }
+  console.log("FULL ERROR:", json); // 👈 debug
+
+  return {
+    data: null,
+    error:
+      json?.errorSources?.map((e: any) => `${e.path}: ${e.message}`).join(", ")
+      || json?.message
+      || "Failed to create operator",
+  };
+}
 
     return { data: json?.data ?? null, error: null };
   } catch (err: unknown) {
