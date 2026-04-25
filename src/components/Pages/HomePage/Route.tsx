@@ -218,7 +218,8 @@ setTotal(result.meta?.total ?? result.data.length);
                   className={`group relative bg-gradient-to-br ${color} border ${border} rounded-2xl p-5 cursor-pointer overflow-hidden`}
                 >
                   {/* Glow effect on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/[0.03] rounded-2xl" />
+                  {/* <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/[0.03] rounded-2xl" /> */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/[0.03] rounded-2xl pointer-events-none" />
 
                   {/* Tag */}
                   <Badge
@@ -282,9 +283,10 @@ setTotal(result.meta?.total ?? result.data.length);
                   <div className="overflow-hidden h-0 group-hover:h-9 transition-all duration-300">
                     <Button
                       size="sm"
+                      onClick={() => router.push(`/routes/${route.id}`)}
                       className="w-full bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs h-9"
                     >
-                      Book Now
+                     View Schedules
                     </Button>
                   </div>
                 </motion.div>

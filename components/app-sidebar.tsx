@@ -128,6 +128,7 @@ const ADMIN_NAV = [
       {title: "Create Route", url: "/admin-dashboard/create-route", icon: React.createElement(Tag)},
       {title: "Create Bus", url: "/admin-dashboard/create-bus", icon: React.createElement(Tag)},
       {title: "Create Schedule", url: "/admin-dashboard/create-schedule", icon: React.createElement(Tag)},
+      {title: "Create Operator", url: "/admin-dashboard/create-operator", icon: React.createElement(Tag)},
       { title: "All Operators", url: "/admin-dashboard/operators", icon: React.createElement(UserCircle) },
       { title: "All Passengers", url: "/admin-dashboard/passengers", icon: React.createElement(UserCircle) },
       { title: "My Profile", url: "/admin-dashboard/me", icon: React.createElement(UserCircle) },

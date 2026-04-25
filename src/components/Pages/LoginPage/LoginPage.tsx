@@ -56,10 +56,10 @@ export function SigninForm({
     
     // ✅ Success toast based on role
     const toastMessage = result.role === "ADMIN" 
-      ? "Welcome Admin! 🎯" 
+      ? "Welcome Admin" 
       : result.role === "OPERATOR" 
-      ? "Welcome Operator! 🚌"
-      : "Welcome Passenger! 🎉"
+      ? "Welcome Operator"
+      : "Welcome Passenger"
     
     const toastDescription = `You logged in successfully as ${result.role.toLowerCase()}`
 

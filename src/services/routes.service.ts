@@ -140,6 +140,7 @@ export async function getRouteById(
     });
 
     const json = await result.json();
+    console.log("API RAW:", json);
 
     if (!result.ok) {
       return { data: null, error: json?.message ?? "Route not found" };
