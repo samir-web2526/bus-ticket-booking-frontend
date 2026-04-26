@@ -13,21 +13,34 @@ const footerLinks = {
 export default async function Footer() {
   let routeLinks: { id: string; sourceCity: string; destinationCity: string }[] = [];
 
+  // Fallback routes - যখন API fail হবে তখন এটি use হবে
+  const fallbackRoutes = [
+    { id: '1', sourceCity: 'Dhaka', destinationCity: 'Chittagong' },
+    { id: '2', sourceCity: 'Dhaka', destinationCity: 'Sylhet' },
+    { id: '3', sourceCity: 'Dhaka', destinationCity: "Cox's Bazar" },
+    { id: '4', sourceCity: 'Dhaka', destinationCity: 'Rajshahi' },
+  ];
+
   try {
     const result = await getAllRoutes({ limit: 4 });
     
-    if (result.data && result.data.length > 0) {
-      routeLinks = result.data;
+    // Properly check if result has data
+    if (result && typeof result === 'object' && 'data' in result) {
+      const data = result.data;
+      if (Array.isArray(data) && data.length > 0) {
+        routeLinks = data;
+      } else {
+        console.warn('No routes found in API response, using fallback');
+        routeLinks = fallbackRoutes;
+      }
+    } else {
+      console.warn('Invalid API response format, using fallback');
+      routeLinks = fallbackRoutes;
     }
   } catch (err) {
     console.error('Failed to fetch routes for footer:', err);
-    // Fallback routes
-    routeLinks = [
-      { id: '1', sourceCity: 'Dhaka', destinationCity: 'Chittagong' },
-      { id: '2', sourceCity: 'Dhaka', destinationCity: 'Sylhet' },
-      { id: '3', sourceCity: 'Dhaka', destinationCity: "Cox's Bazar" },
-      { id: '4', sourceCity: 'Dhaka', destinationCity: 'Rajshahi' },
-    ];
+    // Always use fallback on error
+    routeLinks = fallbackRoutes;
   }
 
   return (
@@ -92,7 +105,7 @@ export default async function Footer() {
             <h4 className="text-white font-bold text-sm mb-5 tracking-wide">{group}</h4>
             <ul className="flex flex-col gap-3">
               {links.map((link) => {
-                // Link এর URL decide করুন
+                // Link এর URL mapping
                 const linkMap: Record<string, string> = {
                   'About': '/about',
                   'Find Buses': '/find-buses',
@@ -124,23 +137,26 @@ export default async function Footer() {
         <div>
           <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Routes</h4>
           <ul className="flex flex-col gap-3">
-            {routeLinks.map((route) => {
-              // Route ID use করে route details page এ যাবেন
-              const routeName = `${route.sourceCity} → ${route.destinationCity}`;
-              const routeHref = `/routes/${route.id}`;
-              
-              return (
-                <li key={route.id}>
-                  <a
-                    href={routeHref}
-                    className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
-                    title={`View ${routeName} details`}
-                  >
-                    {routeName}
-                  </a>
-                </li>
-              );
-            })}
+            {routeLinks && routeLinks.length > 0 ? (
+              routeLinks.map((route) => {
+                const routeName = `${route.sourceCity} → ${route.destinationCity}`;
+                const routeHref = `/routes/${route.id}`;
+                
+                return (
+                  <li key={route.id}>
+                    <a
+                      href={routeHref}
+                      className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
+                      title={`View ${routeName} details`}
+                    >
+                      {routeName}
+                    </a>
+                  </li>
+                );
+              })
+            ) : (
+              <li className="text-slate-500 text-sm italic">No routes available</li>
+            )}
           </ul>
         </div>
       </div>
