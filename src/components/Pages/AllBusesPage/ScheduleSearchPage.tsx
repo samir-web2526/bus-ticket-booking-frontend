@@ -20,15 +20,28 @@ import { motion } from 'framer-motion';
 import { Schedule, searchSchedules } from '@/src/services/schedule.service';
 import ScheduleCard from './ScheduleCard';
 import { getAllRoutes, Route } from '@/src/services/routes.service';
+import { useSearchParams } from 'next/navigation';
 
 
 const ScheduleSearchPage: React.FC = () => {
+  const searchParams = useSearchParams();
+
+const [busType, setBusType] = useState(
+  () => searchParams.get('busType') ?? '' // ✅ initial value এ set করুন
+);
+const [searchInput, setSearchInput] = useState(
+  () => searchParams.get('busName') ?? ''
+);
+const [searchTerm, setSearchTerm] = useState(
+  () => searchParams.get('busName') ?? ''
+);
+
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   // const [filteredSchedules, setFilteredSchedules] = useState<Schedule[]>([]);
   const [routes, setRoutes] = useState<Route[]>([]);
-  const [searchInput, setSearchInput] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [busType, setBusType] = useState('');
+  // const [searchInput, setSearchInput] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
+  // const [busType, setBusType] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -76,67 +89,20 @@ const ScheduleSearchPage: React.FC = () => {
     loadRoutes();
   }, []);
 
+  // ================== URL PARAMS FROM BUS SECTION ==================
+// useEffect(() => {
+//   const busTypeParam = searchParams.get('busType');
+//   const busNameParam = searchParams.get('busName');
+
+//   if (busTypeParam) setBusType(busTypeParam);
+//   if (busNameParam) {
+//     setSearchInput(busNameParam);
+//     setSearchTerm(busNameParam);
+//   }
+// }, []);
+
   // ================== SEARCH API ==================
-  // useEffect(() => {
-  //   const performSearch = async () => {
-  //     try {
-  //       setSearching(true);
-  //       setError(null);
-  //       setHasSearched(true);
 
-  //       console.log('[performSearch] Query:', {
-  //         from: filters.from,
-  //         to: filters.to,
-  //         date: filters.date,
-  //         busType,
-  //       });
-
-  //       const result = await searchSchedules({
-  //         from: filters.from === 'ALL' ? '' : filters.from,
-  //         to: filters.to === 'ALL' ? '' : filters.to,
-  //         date: filters.date,
-  //         busType: busType === 'ALL' ? '' : busType,
-  //         page,
-  //         limit: 12,
-  //       });
-
-  //       console.log('[performSearch] Result:', result);
-
-  //       if (result.error) {
-  //         console.error('[performSearch] API Error:', result.error);
-  //         setError(result.error);
-  //         setSchedules([]);
-  //         setFilteredSchedules([]);
-  //       } else {
-  //         let schedulesData: Schedule[] = [];
-
-  //         if (Array.isArray(result.data)) {
-  //           schedulesData = result.data;
-  //         } else if (result.data && Array.isArray(result.data)) {
-  //           schedulesData = result.data;
-  //         }
-
-  //         console.log('[performSearch] Schedules found:', schedulesData.length);
-
-  //         setSchedules(schedulesData);
-  //         setFilteredSchedules(schedulesData);
-  //       }
-  //     } catch (err) {
-  //       const message = err instanceof Error ? err.message : 'Search failed';
-  //       console.error('[performSearch] Exception:', message);
-  //       setError(message);
-  //       setSchedules([]);
-  //       setFilteredSchedules([]);
-  //     } finally {
-  //       setSearching(false);
-  //     }
-  //   };
-
-  //   if (filters.from || filters.to || filters.date || busType) {
-  //     const timer = setTimeout(performSearch, 500);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [filters.from, filters.to, filters.date, busType, page]);
 
 useEffect(() => {
   const performSearch = async () => {

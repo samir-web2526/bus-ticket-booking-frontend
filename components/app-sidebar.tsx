@@ -144,6 +144,7 @@ const OPERATOR_NAV = [
     isActive: true,
     items: [
       { title: "My Buses", url: "/operator-dashboard/buses", icon: React.createElement(Tag) },
+      { title: "Create Schedule", url: "/operator-dashboard/create-schedule", icon: React.createElement(Tag) },
       { title: "Passengers", url: "/operator-dashboard/passengers", icon: React.createElement(UserCircle) },
       { title: "My Profile", url: "/operator-dashboard/me", icon: React.createElement(UserCircle) },
     ],

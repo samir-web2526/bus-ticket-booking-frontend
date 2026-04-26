@@ -6,6 +6,7 @@ import { Star, ArrowRight, SlidersHorizontal, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getAllBuses } from '@/src/services/buses.service';
+import { useRouter } from 'next/navigation';
 
 interface Bus {
   id: string;
@@ -76,6 +77,7 @@ const filters = [
 ];
 
 export default function BusesSection() {
+  const router = useRouter();
   const [buses, setBuses] = useState<Bus[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [total, setTotal] = useState(0);
@@ -262,6 +264,7 @@ export default function BusesSection() {
                       </div>
                       <Button
                         size="sm"
+                        onClick={() => router.push(`/find-buses?busType=${bus.type}&busName=${bus.name}`)}
                         className="bg-amber-400 hover:bg-amber-300 text-black font-bold group/btn"
                       >
                         Book

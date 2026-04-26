@@ -128,6 +128,40 @@ export const getAllRoutes = async (params?: {
   }
 };
 
+export const getRoutesForDropdown = async (): Promise<RoutesResponse> => {
+  try {
+    const accessToken = await getAccessToken();
+
+    const response = await fetch(`${API}/api/v1/routes/dropdown`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const json = await response.json();
+
+    if (!response.ok) {
+      return {
+        data: [],
+        error: json?.message || "Failed to fetch routes",
+      };
+    }
+
+    const routes: Route[] = json?.data ?? [];
+
+    return {
+      data: routes,
+      error: null,
+    };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Network error";
+    console.error("[getRoutesForDropdown] Error:", message);
+    return { data: [], error: message };
+  }
+};
+
 // GET /api/v1/routes/:id — Public
 export async function getRouteById(
   id: string

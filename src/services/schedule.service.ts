@@ -1,9 +1,14 @@
 // src/services/schedule.service.ts
-
+"use server";
+import { cookies } from 'next/headers';
 import { ServiceResponse } from './booking.service';
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+async function getAccessToken(): Promise<string> {
+  const cookieStore = cookies();
+  return (await cookieStore).get('accessToken')?.value ?? '';
+}
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface SearchQuery {
@@ -188,6 +193,76 @@ export const searchSchedules = async (
 
     return {
       data: [],
+      error: message,
+    };
+  }
+};
+
+export interface CreateSchedulePayload {
+  busId: string;
+  routeId: string;
+  departure: string;
+  arrival: string;
+  status?: 'scheduled' | 'cancelled' | 'completed';
+}
+
+/**
+ * Create a new schedule (Operator only)
+ * POST /api/v1/schedules
+ */
+export const createSchedule = async (
+  payload: CreateSchedulePayload,
+): Promise<ServiceResponse<Schedule>> => {
+  try {
+    const accessToken = await getAccessToken();
+    const url = `${API}/api/v1/schedules`;
+
+    console.log("[createSchedule] URL:", url);
+    console.log("[createSchedule] Payload:", payload);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const json = await response.json();
+
+    console.log("[createSchedule] Raw Response:", {
+      status: response.status,
+      ok: response.ok,
+      data: json,
+    });
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: json?.message || `Failed to create schedule (${response.status})`,
+      };
+    }
+
+    const schedule = json?.data ?? null;
+
+    if (!schedule) {
+      return {
+        data: null,
+        error: "No schedule data returned from server",
+      };
+    }
+
+    return {
+      data: schedule,
+      error: null,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Network error";
+    console.error("[createSchedule] Error:", message);
+
+    return {
+      data: null,
       error: message,
     };
   }
