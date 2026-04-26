@@ -1,47 +1,55 @@
+'use client';
+
 import { Bus, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { getAllRoutes } from '@/src/services/routes.service';
+import { useEffect, useState } from 'react';
 
+interface Route {
+  id: string;
+  sourceCity: string;
+  destinationCity: string;
+}
 
 const footerLinks = {
   Company: ['About', 'Find Buses', 'Routes'],
   Support: ['Help Center', 'Contact Us', 'Refund Policy', 'Terms of Service'],
 };
 
-export default async function Footer() {
-  let routeLinks: { id: string; sourceCity: string; destinationCity: string }[] = [];
+const FALLBACK_ROUTES: Route[] = [
+  { id: '1', sourceCity: 'Dhaka', destinationCity: 'Chittagong' },
+  { id: '2', sourceCity: 'Dhaka', destinationCity: 'Sylhet' },
+  { id: '3', sourceCity: 'Dhaka', destinationCity: "Cox's Bazar" },
+  { id: '4', sourceCity: 'Dhaka', destinationCity: 'Rajshahi' },
+];
 
-  // Fallback routes - যখন API fail হবে তখন এটি use হবে
-  const fallbackRoutes = [
-    { id: '1', sourceCity: 'Dhaka', destinationCity: 'Chittagong' },
-    { id: '2', sourceCity: 'Dhaka', destinationCity: 'Sylhet' },
-    { id: '3', sourceCity: 'Dhaka', destinationCity: "Cox's Bazar" },
-    { id: '4', sourceCity: 'Dhaka', destinationCity: 'Rajshahi' },
-  ];
+export default function Footer() {
+  const [routeLinks, setRouteLinks] = useState<Route[]>(FALLBACK_ROUTES);
+  const [isLoading, setIsLoading] = useState(true);
 
-  try {
-    const result = await getAllRoutes({ limit: 4 });
-    
-    // Properly check if result has data
-    if (result && typeof result === 'object' && 'data' in result) {
-      const data = result.data;
-      if (Array.isArray(data) && data.length > 0) {
-        routeLinks = data;
-      } else {
-        console.warn('No routes found in API response, using fallback');
-        routeLinks = fallbackRoutes;
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      try {
+        setIsLoading(true);
+        const result = await getAllRoutes({ limit: 4 });
+        
+        if (result.data && result.data.length > 0) {
+          setRouteLinks(result.data);
+        } else {
+          setRouteLinks(FALLBACK_ROUTES);
+        }
+      } catch (err) {
+        console.error('Failed to fetch routes for footer:', err);
+        setRouteLinks(FALLBACK_ROUTES);
+      } finally {
+        setIsLoading(false);
       }
-    } else {
-      console.warn('Invalid API response format, using fallback');
-      routeLinks = fallbackRoutes;
-    }
-  } catch (err) {
-    console.error('Failed to fetch routes for footer:', err);
-    // Always use fallback on error
-    routeLinks = fallbackRoutes;
-  }
+    };
+
+    fetchRoutes();
+  }, []);
 
   return (
     <footer className="bg-[#030810] border-t border-white/10">
@@ -137,7 +145,9 @@ export default async function Footer() {
         <div>
           <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Routes</h4>
           <ul className="flex flex-col gap-3">
-            {routeLinks && routeLinks.length > 0 ? (
+            {isLoading ? (
+              <li className="text-slate-500 text-sm italic">Loading routes...</li>
+            ) : routeLinks.length > 0 ? (
               routeLinks.map((route) => {
                 const routeName = `${route.sourceCity} → ${route.destinationCity}`;
                 const routeHref = `/routes/${route.id}`;

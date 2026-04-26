@@ -1,4 +1,5 @@
-// services/route.service.ts
+
+
 "use server";
 
 import { cookies } from "next/headers";
@@ -78,6 +79,7 @@ export async function createRoute(
 }
 
 // GET /api/v1/routes — Public
+
 export const getAllRoutes = async (params?: {
   search?: string;
   page?: number;
@@ -100,6 +102,15 @@ export const getAllRoutes = async (params?: {
 
     const response = await fetch(url);
 
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.error('[getAllRoutes] Invalid content type:', contentType);
+      return {
+        data: [],
+        error: 'Invalid API response format',
+      };
+    }
+
     const json = await response.json();
 
     if (!response.ok) {
@@ -109,13 +120,15 @@ export const getAllRoutes = async (params?: {
       };
     }
 
-    const routes: Route[] = json?.data?.data ?? json?.data ?? [];
+    // ✅ Fix: Double nested data access করুন
+    const routes: Route[] = json?.data?.data ?? [];
+    const meta = json?.data?.meta;
 
     console.log("[getAllRoutes] Extracted:", routes.length, "routes");
 
     return {
       data: routes,
-      meta: json?.data?.meta || json?.meta,
+      meta: meta,
       error: null,
     };
   } catch (err: unknown) {
