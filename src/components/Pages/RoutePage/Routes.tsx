@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { getAllRoutes } from '@/src/services/routes.service';
 import {Route} from '../../../services/routes.service'
 import { Schedule } from '@/src/services/schedule.service';
+import { useRouter } from 'next/navigation';
 
 // interface Schedule {
 //   id: string;
@@ -90,6 +91,7 @@ const getAveragePrice = (schedules: Schedule[]): number => {
 };
 
 export default function AllRoutesPage() {
+  const router = useRouter();
   const [routes, setRoutes] = useState<Route[]>([]);
   // const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
   const [loading, setLoading] = useState(true);
@@ -306,12 +308,14 @@ export default function AllRoutesPage() {
                   const price = getAveragePrice(route.schedules);
 
                     const stops = route.stops ?? [];
+                     console.log('Route ID:', route.id);
 
                   return (
                     <motion.div
                       key={route.id}
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
+                      onClick={() => router.push(`/routes/${route.id}`)} 
                       transition={{ duration: 0.5, delay: i * 0.05 }}
                       whileHover={{ y: -6, transition: { duration: 0.2 } }}
                       className={`group relative bg-gradient-to-br ${color} border ${border} rounded-2xl p-6 cursor-pointer overflow-hidden h-full flex flex-col`}
@@ -389,7 +393,10 @@ export default function AllRoutesPage() {
                       </div>
 
                       {/* Book button */}
-                      <Button className="w-full bg-amber-400 hover:bg-amber-300 text-black font-bold text-sm h-11 rounded-xl transition-all duration-200 group/btn mt-auto">
+                      <Button
+                      // onClick={() => router.push(`/routes/${route.id}`)}
+    
+                       className="w-full bg-amber-400 hover:bg-amber-300 text-black font-bold text-sm h-11 rounded-xl transition-all duration-200 group/btn mt-auto">
                         View Schedule
                         <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>

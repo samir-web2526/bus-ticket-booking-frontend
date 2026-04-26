@@ -12,6 +12,7 @@ export interface SearchQuery {
   date?: string;
   busType?: string;
   page?: number;
+  search?: string;
   limit?: number;
 }
 
@@ -145,6 +146,7 @@ export const searchSchedules = async (
     if (query.to) params.append("destinationCity", query.to);
     if (query.date) params.append("date", query.date);
     if (query.busType) params.append("busType", query.busType);
+    if (query.search) params.append("search", query.search);
     if (query.page) params.append("page", query.page.toString());
     if (query.limit) params.append("limit", query.limit.toString());
 

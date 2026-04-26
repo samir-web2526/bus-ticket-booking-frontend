@@ -112,8 +112,8 @@ export default async function Footer() {
         <div>
           <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Routes</h4>
           <ul className="flex flex-col gap-3">
-            {routeLinks.map((route) => (
-              <li key={route}>
+            {routeLinks.map((route,index) => (
+              <li  key={`${route}-${index}`}>
                 <a
                   href="#"
                   className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
