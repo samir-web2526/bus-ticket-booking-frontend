@@ -187,7 +187,7 @@ const Navbar = ({
                   <a href={auth.login.url}>{auth.login.title}</a>
                 </Button>
               </motion.div>
-              <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
+              {/* <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
                 <motion.button
                   className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
                   onClick={() => window.location.href = auth.register.url}
@@ -202,7 +202,18 @@ const Navbar = ({
                     {auth.register.title}
                   </span>
                 </motion.button>
-              </motion.div>
+              </motion.div> */}
+              <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
+  <Button
+    asChild
+    className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
+  >
+    <a href={auth.register.url} className="flex items-center gap-2">
+      <Zap className="w-4 h-4" />
+      {auth.register.title}
+    </a>
+  </Button>
+</motion.div>
             </motion.div>
           </div>
 

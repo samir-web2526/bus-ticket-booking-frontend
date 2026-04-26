@@ -343,6 +343,7 @@ const filteredSchedules = schedules;
               <Input
                 type="date"
                 value={filters.date}
+                min={new Date().toISOString().split('T')[0]}
                 onChange={(e) => handleFilterChange('date', e.target.value)}
                 className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
               />

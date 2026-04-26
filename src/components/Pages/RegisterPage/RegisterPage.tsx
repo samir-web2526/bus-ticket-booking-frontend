@@ -14,9 +14,11 @@ import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import Link from "next/link"
 import { Home } from "lucide-react"
+import { signUp } from "@/src/services/auth/action"
 
 const signupSchema = z
   .object({
+    name: z.string().min(1, "Name is required"),
     email: z
       .string()
       .min(1, "Email is required")
@@ -50,54 +52,41 @@ export function SignupForm({
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   })
 
-  const onSubmit = async (data: SignupFormValues) => {
-    setServerError(null)
+ const onSubmit = async (data: SignupFormValues) => {
+  setServerError(null)
 
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-        }),
-      })
+  const result = await signUp({
+    name: data.name,
+    email: data.email,
+    password: data.password,
+    role: "PASSENGER",
+  })
 
-      const result = await response.json()
-
-      if (!response.ok) {
-        setServerError(result.message || "Something went wrong. Please try again.")
-        toast.error("Registration Failed", {
-          description: result.message || "Something went wrong",
-          position: "top-right",
-        })
-        return
-      }
-
-      setIsSuccess(true)
-      reset()
-
-      toast.success("Account Created! 🎉", {
-        description: "Please check your email to verify your account",
-        position: "top-right",
-        duration: 5000,
-      })
-
-    } catch {
-      const errorMsg = "Network error. Please check your internet connection."
-      setServerError(errorMsg)
-      toast.error("Network Error", {
-        description: errorMsg,
-        position: "top-right",
-      })
-    }
+  if (result.error) {
+    setServerError(result.error)
+    toast.error("Registration Failed", {
+      description: result.error,
+      position: "top-right",
+    })
+    return
   }
+
+  setIsSuccess(true)
+  reset()
+
+  toast.success("Account Created! 🎉", {
+    description: "Welcome to BusTicketBD!",
+    position: "top-right",
+    duration: 5000,
+  })
+}
 
   return (
     <div className={cn("min-h-screen bg-[#050d1a] flex items-center justify-center p-4", className)} {...props}>
@@ -190,6 +179,30 @@ export function SignupForm({
                   <p className="text-green-300 text-sm flex-1">🎉 Account created! Please check your email to verify.</p>
                 </motion.div>
               )}
+
+              <motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.05 }}
+  className="space-y-2"
+>
+  <label htmlFor="name" className="block text-sm font-semibold text-slate-300">
+    Full Name
+  </label>
+  <Input
+    id="name"
+    type="text"
+    placeholder="John Doe"
+    aria-invalid={!!errors.name}
+    {...register("name")}
+    className="bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
+  />
+  {errors.name ? (
+    <p className="text-xs text-red-400 font-semibold">{errors.name.message}</p>
+  ) : (
+    <p className="text-xs text-slate-400">Enter your full name</p>
+  )}
+</motion.div>
 
               {/* Email Field */}
               <motion.div
