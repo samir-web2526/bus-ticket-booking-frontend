@@ -1,7 +1,6 @@
 
 import ScheduleSearchPage from '@/src/components/Pages/AllBusesPage/ScheduleSearchPage'
 import React, { Suspense } from 'react'
-
 export default function BusesPage() {
   return (
     <Suspense fallback={

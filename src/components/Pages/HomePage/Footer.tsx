@@ -1,4 +1,3 @@
-
 import { Bus, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,29 +6,27 @@ import { getAllRoutes } from '@/src/services/routes.service';
 
 
 const footerLinks = {
-  Company: ['About Us', 'Careers', 'Press', 'Blog'],
+  Company: ['About', 'Find Buses', 'Routes'],
   Support: ['Help Center', 'Contact Us', 'Refund Policy', 'Terms of Service'],
 };
 
 export default async function Footer() {
-  let routeLinks: string[] = [];
+  let routeLinks: { id: string; sourceCity: string; destinationCity: string }[] = [];
 
   try {
     const result = await getAllRoutes({ limit: 4 });
     
     if (result.data && result.data.length > 0) {
-      routeLinks = result.data.map(
-        (route) => `${route.sourceCity} → ${route.destinationCity}`
-      );
+      routeLinks = result.data;
     }
   } catch (err) {
     console.error('Failed to fetch routes for footer:', err);
     // Fallback routes
     routeLinks = [
-      'Dhaka → Chittagong',
-      'Dhaka → Sylhet',
-      "Dhaka → Cox's Bazar",
-      'Dhaka → Rajshahi',
+      { id: '1', sourceCity: 'Dhaka', destinationCity: 'Chittagong' },
+      { id: '2', sourceCity: 'Dhaka', destinationCity: 'Sylhet' },
+      { id: '3', sourceCity: 'Dhaka', destinationCity: "Cox's Bazar" },
+      { id: '4', sourceCity: 'Dhaka', destinationCity: 'Rajshahi' },
     ];
   }
 
@@ -94,16 +91,31 @@ export default async function Footer() {
           <div key={group}>
             <h4 className="text-white font-bold text-sm mb-5 tracking-wide">{group}</h4>
             <ul className="flex flex-col gap-3">
-              {links.map((link) => (
-                <li key={link}>
-                  <a
-                    href="#"
-                    className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
-                  >
-                    {link}
-                  </a>
-                </li>
-              ))}
+              {links.map((link) => {
+                // Link এর URL decide করুন
+                const linkMap: Record<string, string> = {
+                  'About': '/about',
+                  'Find Buses': '/find-buses',
+                  'Routes': '/routes',
+                  'Help Center': '#',
+                  'Contact Us': '#',
+                  'Refund Policy': '#',
+                  'Terms of Service': '#',
+                };
+                
+                const href = linkMap[link] || '#';
+                
+                return (
+                  <li key={link}>
+                    <a
+                      href={href}
+                      className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
@@ -112,16 +124,23 @@ export default async function Footer() {
         <div>
           <h4 className="text-white font-bold text-sm mb-5 tracking-wide">Routes</h4>
           <ul className="flex flex-col gap-3">
-            {routeLinks.map((route,index) => (
-              <li  key={`${route}-${index}`}>
-                <a
-                  href="#"
-                  className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
-                >
-                  {route}
-                </a>
-              </li>
-            ))}
+            {routeLinks.map((route) => {
+              // Route ID use করে route details page এ যাবেন
+              const routeName = `${route.sourceCity} → ${route.destinationCity}`;
+              const routeHref = `/routes/${route.id}`;
+              
+              return (
+                <li key={route.id}>
+                  <a
+                    href={routeHref}
+                    className="text-slate-400 text-sm hover:text-amber-400 transition-colors"
+                    title={`View ${routeName} details`}
+                  >
+                    {routeName}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
