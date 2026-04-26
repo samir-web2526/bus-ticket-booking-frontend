@@ -1,6 +1,6 @@
 import PaymentSuccessPage from "@/src/components/Pages/PaymentSuccessPage";
 import { Suspense } from "react";
-
+export const dynamic = 'force-dynamic';
 
 export default function SuccessPage() {
   return (
