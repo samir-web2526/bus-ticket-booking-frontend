@@ -1,15 +1,15 @@
+import PaymentSuccessPage from "@/src/components/Pages/PaymentSuccessPage";
+import { Suspense } from "react";
 
-import ScheduleSearchPage from '@/src/components/Pages/AllBusesPage/ScheduleSearchPage'
-import React, { Suspense } from 'react'
 
-export default function BusesPage() {
+export default function SuccessPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-[#050d1a] flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
       </div>
     }>
-      <ScheduleSearchPage />
+      <PaymentSuccessPage />
     </Suspense>
   );
 }

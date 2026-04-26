@@ -28,7 +28,7 @@ export async function getMyBookings(){
     try{
         const cookieStore = cookies();
         const accessToken = (await cookieStore).get("accessToken")?.value;
-        const result = await fetch(`${API}/api/v1/bookings`,{
+        const result = await fetch(`${API}/api/v1/bookings/my-bookings`,{
             method:"GET",
             headers:{
                 "Content-Type":"application/json",

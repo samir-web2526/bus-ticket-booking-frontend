@@ -72,11 +72,9 @@ export function SigninForm({
     })
 
     // Redirect after short delay
-    setTimeout(() => {
-      if (role === "ADMIN") router.push("/admin-dashboard")
-      else if (role === "OPERATOR") router.push("/operator-dashboard")
-      else if (role === "PASSENGER") router.push("/passenger-dashboard")
-    }, 500)
+  if (role === "ADMIN") router.replace("/admin-dashboard");
+else if (role === "OPERATOR") router.replace("/operator-dashboard");
+else router.replace("/passenger-dashboard");
   }
 
   return (

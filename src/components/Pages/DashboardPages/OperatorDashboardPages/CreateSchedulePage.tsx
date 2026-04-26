@@ -162,13 +162,13 @@ useEffect(() => {
     return `${hours}h ${minutes}m`;
   };
 
-  const formatDateTime = (val: string) => {
-    if (!val) return null;
-    return new Date(val).toLocaleString("en-BD", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-  };
+ const formatDateTime = (val: string | undefined) => {
+  if (!val) return null;
+  return new Date(val).toLocaleString("en-BD", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
 
   // ─── Submit ─────────────────────────────────────────────────────────────────
 

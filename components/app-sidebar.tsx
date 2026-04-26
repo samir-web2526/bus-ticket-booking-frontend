@@ -7,7 +7,6 @@ import {
   CalendarDays,
   UserCircle,
   Tag,
-  Search,
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -23,98 +22,6 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
-
-// ─── ADMIN NAV ───────────────────────────────────────────
-// const ADMIN_NAV = [
-//   {
-//     title: "Overview",
-//     url: "/dashboard",
-//     icon: React.createElement(LayoutDashboard),
-//     isActive: true,
-//     items: [
-//       {
-//         title: "All Bookings",
-//         url: "/dashboard/bookings",
-//         icon: React.createElement(CalendarDays),
-//       },
-//       {
-//         title: "All Buses",
-//         url: "/dashboard/buses",
-//         icon: React.createElement(Tag),
-//       },
-//       {
-//         title: "All Operators",
-//         url: "/dashboard/operators",
-//         icon: React.createElement(UserCircle),
-//       },
-//       {
-//         title: "All Passangers",
-//         url: "/dashboard/passangers",
-//         icon: React.createElement(UserCircle),
-//       },
-//       {
-//         title: "My Profile",
-//         url: "/dashboard/me",
-//         icon: React.createElement(UserCircle),
-//       },
-//     ],
-//   },
-// ];
-
-// // ─── OPERATOR NAV ───────────────────────────────────────
-// const OPERATOR_NAV = [
-//   {
-//     title: "Overview",
-//     url: "/dashboard",
-//     icon: React.createElement(LayoutDashboard),
-//     isActive: true,
-//     items: [
-//       {
-//         title: "My Buses",
-//         url: "/dashboard/buses",
-//         icon: React.createElement(Tag),
-//       },
-//       {
-//         title: "Passangers",
-//         url: "/dashboard/passangers",
-//         icon: React.createElement(UserCircle),
-//       },
-//       {
-//         title: "My Profile",
-//         url: "/dashboard/me",
-//         icon: React.createElement(UserCircle),
-//       },
-//     ],
-//   },
-// ];
-
-// // ─── PASSANGER NAV ─────────────────────────────────────
-// const PASSANGER_NAV = [
-//   {
-//     title: "Overview",
-//     url: "/dashboard",
-//     icon: React.createElement(LayoutDashboard),
-//     isActive: true,
-//     items: [
-//       {
-//         title: "Find Bus",
-//         url: "/dashboard/find-bus",
-//         icon: React.createElement(Search),
-//       },
-//       {
-//         title: "My Bookings",
-//         url: "/dashboard/bookings",
-//         icon: React.createElement(CalendarDays),
-//       },
-//       {
-//         title: "My Profile",
-//         url: "/dashboard/me",
-//         icon: React.createElement(UserCircle),
-//       },
-//     ],
-//   },
-// ];
-
 const ADMIN_NAV = [
   {
     title: "Overview",
@@ -122,15 +29,12 @@ const ADMIN_NAV = [
     icon: React.createElement(LayoutDashboard),
     isActive: true,
     items: [
-      { title: "All Bookings", url: "/admin-dashboard/bookings", icon: React.createElement(CalendarDays) },
       { title: "All Buses", url: "/admin-dashboard/buses", icon: React.createElement(Tag) },
       { title: "All Routes", url: "/admin-dashboard/routes", icon: React.createElement(Tag) },
       {title: "Create Route", url: "/admin-dashboard/create-route", icon: React.createElement(Tag)},
       {title: "Create Bus", url: "/admin-dashboard/create-bus", icon: React.createElement(Tag)},
-      {title: "Create Schedule", url: "/admin-dashboard/create-schedule", icon: React.createElement(Tag)},
       {title: "Create Operator", url: "/admin-dashboard/create-operator", icon: React.createElement(Tag)},
       { title: "All Operators", url: "/admin-dashboard/operators", icon: React.createElement(UserCircle) },
-      { title: "All Passengers", url: "/admin-dashboard/passengers", icon: React.createElement(UserCircle) },
       { title: "My Profile", url: "/admin-dashboard/me", icon: React.createElement(UserCircle) },
     ],
   },
@@ -145,7 +49,6 @@ const OPERATOR_NAV = [
     items: [
       { title: "My Buses", url: "/operator-dashboard/buses", icon: React.createElement(Tag) },
       { title: "Create Schedule", url: "/operator-dashboard/create-schedule", icon: React.createElement(Tag) },
-      { title: "Passengers", url: "/operator-dashboard/passengers", icon: React.createElement(UserCircle) },
       { title: "My Profile", url: "/operator-dashboard/me", icon: React.createElement(UserCircle) },
     ],
   },
@@ -158,7 +61,6 @@ const PASSENGER_NAV = [
     icon: React.createElement(LayoutDashboard),
     isActive: true,
     items: [
-      { title: "Find Bus", url: "/passenger-dashboard/find-bus", icon: React.createElement(Search) },
       { title: "My Bookings", url: "/passenger-dashboard/bookings", icon: React.createElement(CalendarDays) },
       { title: "My Profile", url: "/passenger-dashboard/me", icon: React.createElement(UserCircle) },
     ],
@@ -187,7 +89,7 @@ export function AppSidebar({
     navItem = PASSENGER_NAV;
   }
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" suppressHydrationWarning {...props}>
       {/* ── Logo ── */}
       <SidebarHeader>
         <SidebarMenu>

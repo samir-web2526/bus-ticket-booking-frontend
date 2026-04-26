@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -27,6 +28,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { logout } from "@/src/services/auth/action";
+
 
 interface MenuItem {
   title: string;
@@ -38,6 +41,10 @@ interface MenuItem {
 
 interface NavbarProps {
   className?: string;
+  user?: {
+    name: string;
+    role: "ADMIN" | "OPERATOR" | "PASSENGER";
+  } | null;
   logo?: {
     url: string;
     src: string;
@@ -59,6 +66,7 @@ interface NavbarProps {
 }
 
 const Navbar = ({
+  user,
   logo = {
     url: "/",
     src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
@@ -83,6 +91,13 @@ const Navbar = ({
   useEffect(() => {
     setIsHydrated(true);
   }, []);
+
+  const dashboardUrl =
+  user?.role === "ADMIN"
+    ? "/admin-dashboard"
+    : user?.role === "OPERATOR"
+    ? "/operator-dashboard"
+    : "/passenger-dashboard";
 
   return (
     <section className={cn("relative", className)}>
@@ -177,43 +192,60 @@ const Navbar = ({
               transition={{ delay: 0.3 }}
               className="flex gap-3 items-center"
             >
-              <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className="border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold text-base"
-                >
-                  <a href={auth.login.url}>{auth.login.title}</a>
-                </Button>
-              </motion.div>
-              {/* <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
-                <motion.button
-                  className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 relative overflow-hidden group shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
-                  onClick={() => window.location.href = auth.register.url}
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20"
-                    animate={{ x: ["-100%", "100%"] }}
-                    transition={{ duration: 0.5, repeat: Infinity }}
-                  />
-                  <span className="relative flex items-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    {auth.register.title}
-                  </span>
-                </motion.button>
-              </motion.div> */}
-              <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
-  <Button
-    asChild
-    className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
-  >
-    <a href={auth.register.url} className="flex items-center gap-2">
-      <Zap className="w-4 h-4" />
-      {auth.register.title}
-    </a>
-  </Button>
-</motion.div>
+              {user ? (
+                <>
+                  {/* Dashboard */}
+                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold text-base"
+                    >
+                      <a href={dashboardUrl}>Dashboard</a>
+                    </Button>
+                  </motion.div>
+
+                  {/* Sign Out */}
+                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
+                    <form action={logout}>
+                      <Button
+                        type="submit"
+                        className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 shadow-lg shadow-amber-500/20"
+                      >
+                        Sign Out
+                      </Button>
+                    </form>
+                  </motion.div>
+                </>
+              ) : (
+                <>
+                  {/* Login */}
+                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold text-base"
+                    >
+                      <a href={auth.login.url}>{auth.login.title}</a>
+                    </Button>
+                  </motion.div>
+
+                  {/* Register */}
+                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
+                    <Button
+                      asChild
+                      className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
+                    >
+                      <a href={auth.register.url} className="flex items-center gap-2">
+                        <Zap className="w-4 h-4" />
+                        {auth.register.title}
+                      </a>
+                    </Button>
+                  </motion.div>
+                </>
+              )}
             </motion.div>
           </div>
 
@@ -274,32 +306,56 @@ const Navbar = ({
                       ))}
                     </Accordion>
 
-                    {/* Auth Buttons */}
+                    {/* Mobile Auth Buttons */}
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
                       className="border-t border-slate-200 pt-4 flex flex-col gap-3"
                     >
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="w-full border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <a href={auth.login.url}>{auth.login.title}</a>
-                      </Button>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="w-full py-2.5 rounded-xl font-bold text-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 shadow-lg shadow-amber-500/20"
-                        onClick={() => {
-                          setIsOpen(false);
-                          window.location.href = auth.register.url;
-                        }}
-                      >
-                        {auth.register.title}
-                      </motion.button>
+                      {user ? (
+                        <>
+                          <Button
+                            asChild
+                            variant="outline"
+                            className="w-full border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <a href={dashboardUrl}>Dashboard</a>
+                          </Button>
+                          <form action={logout}>
+                            <button
+                              type="submit"
+                              onClick={() => setIsOpen(false)}
+                              className="w-full py-2.5 rounded-xl font-bold text-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400"
+                            >
+                              Sign Out
+                            </button>
+                          </form>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            asChild
+                            variant="outline"
+                            className="w-full border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <a href={auth.login.url}>{auth.login.title}</a>
+                          </Button>
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="w-full py-2.5 rounded-xl font-bold text-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 shadow-lg shadow-amber-500/20"
+                            onClick={() => {
+                              setIsOpen(false);
+                              window.location.href = auth.register.url;
+                            }}
+                          >
+                            {auth.register.title}
+                          </motion.button>
+                        </>
+                      )}
                     </motion.div>
                   </motion.div>
                 </SheetContent>
