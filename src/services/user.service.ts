@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use server";
 
 import { cookies } from "next/headers";
+import { PassengerProfile } from "./passengers.sevice";
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -25,6 +26,8 @@ export interface User {
   status: "ACTIVE" | "INACTIVE" | "SUSPENDED";
   createdAt: string;
   updatedAt: string;
+
+   passengerProfile?: PassengerProfile
 }
 
 export interface CreateOperatorPayload {
@@ -48,6 +51,17 @@ export interface CreateOperatorResponse {
 export type ServiceResponse<T> =
   | { data: T; error: null }
   | { data: null; error: string };
+
+  export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+}
+
+  export interface PaginatedResponse<T> {
+  meta: PaginationMeta;
+  data: T[];
+}
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -86,23 +100,22 @@ export async function createOperator(
 
     const json = await result.json();
 
-    // if (!result.ok) {
-    //   return {
-    //     data: null,
-    //     error: json?.message ?? "Failed to create operator",
-    //   };
-    // }
     if (!result.ok) {
-  console.log("FULL ERROR:", json); // 👈 debug
+      return {
+        data: null,
+        error: json?.message ?? "Failed to create operator",
+      };
+    }
+  
 
-  return {
-    data: null,
-    error:
-      json?.errorSources?.map((e: any) => `${e.path}: ${e.message}`).join(", ")
-      || json?.message
-      || "Failed to create operator",
-  };
-}
+//   return {
+//     data: null,
+//     error:
+//       json?.errorSources?.map((e: any) => `${e.path}: ${e.message}`).join(", ")
+//       || json?.message
+//       || "Failed to create operator",
+//   };
+// }
 
     return { data: json?.data ?? null, error: null };
   } catch (err: unknown) {

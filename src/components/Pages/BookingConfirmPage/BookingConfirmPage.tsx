@@ -193,7 +193,7 @@ export default function BookingConfirmPage({ locks, schedule }: Props) {
                         animate={{ opacity: 1 }}
                         className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/10"
                       >
-                        <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center">
                           <Check size={16} className="text-amber-400" />
                           <span className="text-white font-medium">Seat {lock.seat.number}</span>
                         </div>

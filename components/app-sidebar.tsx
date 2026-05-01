@@ -50,6 +50,7 @@ const OPERATOR_NAV = [
       { title: "My Buses", url: "/operator-dashboard/buses", icon: React.createElement(Tag) },
       { title: "Create Schedule", url: "/operator-dashboard/create-schedule", icon: React.createElement(Tag) },
       { title: "My Profile", url: "/operator-dashboard/me", icon: React.createElement(UserCircle) },
+      { title: "My Passengers", url: "/operator-dashboard/my-passengers", icon: React.createElement(UserCircle) },
     ],
   },
 ];

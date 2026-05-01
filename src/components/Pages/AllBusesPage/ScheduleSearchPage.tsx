@@ -26,15 +26,15 @@ import { useSearchParams } from 'next/navigation';
 const ScheduleSearchPage: React.FC = () => {
   const searchParams = useSearchParams();
 
-const [busType, setBusType] = useState(
-  () => searchParams.get('busType') ?? '' // ✅ initial value এ set করুন
-);
-const [searchInput, setSearchInput] = useState(
-  () => searchParams.get('busName') ?? ''
-);
-const [searchTerm, setSearchTerm] = useState(
-  () => searchParams.get('busName') ?? ''
-);
+  const [busType, setBusType] = useState(
+    () => searchParams.get('busType') ?? '' // ✅ initial value এ set করুন
+  );
+  const [searchInput, setSearchInput] = useState(
+    () => searchParams.get('busName') ?? ''
+  );
+  const [searchTerm, setSearchTerm] = useState(
+    () => searchParams.get('busName') ?? ''
+  );
 
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   // const [filteredSchedules, setFilteredSchedules] = useState<Schedule[]>([]);
@@ -90,59 +90,59 @@ const [searchTerm, setSearchTerm] = useState(
   }, []);
 
   // ================== URL PARAMS FROM BUS SECTION ==================
-// useEffect(() => {
-//   const busTypeParam = searchParams.get('busType');
-//   const busNameParam = searchParams.get('busName');
+  // useEffect(() => {
+  //   const busTypeParam = searchParams.get('busType');
+  //   const busNameParam = searchParams.get('busName');
 
-//   if (busTypeParam) setBusType(busTypeParam);
-//   if (busNameParam) {
-//     setSearchInput(busNameParam);
-//     setSearchTerm(busNameParam);
-//   }
-// }, []);
+  //   if (busTypeParam) setBusType(busTypeParam);
+  //   if (busNameParam) {
+  //     setSearchInput(busNameParam);
+  //     setSearchTerm(busNameParam);
+  //   }
+  // }, []);
 
   // ================== SEARCH API ==================
 
 
-useEffect(() => {
-  const performSearch = async () => {
-    try {
-      setSearching(true);
-      setError(null);
-      setHasSearched(true);
+  useEffect(() => {
+    const performSearch = async () => {
+      try {
+        setSearching(true);
+        setError(null);
+        setHasSearched(true);
 
-      const result = await searchSchedules({
-        from: filters.from === 'ALL' ? '' : filters.from,
-        to: filters.to === 'ALL' ? '' : filters.to,
-        date: filters.date,
-        busType: busType === 'ALL' ? '' : busType,
-        search: searchTerm, // ✅ searchTerm যোগ করুন
-        page,
-        limit: 12,
-      });
+        const result = await searchSchedules({
+          from: filters.from === 'ALL' ? '' : filters.from,
+          to: filters.to === 'ALL' ? '' : filters.to,
+          date: filters.date,
+          busType: busType === 'ALL' ? '' : busType,
+          search: searchTerm, // ✅ searchTerm যোগ করুন
+          page,
+          limit: 12,
+        });
 
-      if (result.error) {
-        setError(result.error);
+        if (result.error) {
+          setError(result.error);
+          setSchedules([]);
+        } else {
+          const schedulesData: Schedule[] = result.data || []; // ✅ .data.data না
+          setSchedules(schedulesData);
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Search failed';
+        setError(message);
         setSchedules([]);
-      } else {
-        const schedulesData: Schedule[] = result.data || []; // ✅ .data.data না
-        setSchedules(schedulesData);
+      } finally {
+        setSearching(false);
       }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Search failed';
-      setError(message);
-      setSchedules([]);
-    } finally {
-      setSearching(false);
-    }
-  };
+    };
 
-  // ✅ searchTerm যোগ করুন condition-এ
-  if (filters.from || filters.to || filters.date || busType || searchTerm) {
-    const timer = setTimeout(performSearch, 500);
-    return () => clearTimeout(timer);
-  }
-}, [filters.from, filters.to, filters.date, busType, page, searchTerm]); // ✅ searchTerm dependency-তে যোগ করুন
+    // ✅ searchTerm যোগ করুন condition-এ
+    if (filters.from || filters.to || filters.date || busType || searchTerm) {
+      const timer = setTimeout(performSearch, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [filters.from, filters.to, filters.date, busType, page, searchTerm]); // ✅ searchTerm dependency-তে যোগ করুন
 
 
   // ================== CLIENT SEARCH (TEXT BASED) ==================
@@ -167,7 +167,7 @@ useEffect(() => {
   //   console.log('[Client Search] Filtered count:', filtered.length);
   //   setFilteredSchedules(filtered);
   // }, [searchTerm, schedules]);
-const filteredSchedules = schedules;
+  const filteredSchedules = schedules;
 
   // ================== HELPERS ==================
   const handleFilterChange = (key: string, value: any) => {
@@ -326,22 +326,22 @@ const filteredSchedules = schedules;
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#0a1628] border-white/20">
-  <SelectItem value="ALL" className="text-white hover:bg-white/10">
-    All Types
-  </SelectItem>
-  <SelectItem value="AC" className="text-white hover:bg-white/10">
-    AC
-  </SelectItem>
-  <SelectItem value="NON_AC" className="text-white hover:bg-white/10">
-    Non-AC
-  </SelectItem>
-  <SelectItem value="SLEEPER" className="text-white hover:bg-white/10">
-    Sleeper
-  </SelectItem>
-  <SelectItem value="DOUBLE_DECKER" className="text-white hover:bg-white/10">
-    Double Decker
-  </SelectItem>
-</SelectContent>
+                  <SelectItem value="ALL" className="text-white hover:bg-white/10">
+                    All Types
+                  </SelectItem>
+                  <SelectItem value="AC" className="text-white hover:bg-white/10">
+                    AC
+                  </SelectItem>
+                  <SelectItem value="NON_AC" className="text-white hover:bg-white/10">
+                    Non-AC
+                  </SelectItem>
+                  <SelectItem value="SLEEPER" className="text-white hover:bg-white/10">
+                    Sleeper
+                  </SelectItem>
+                  <SelectItem value="DOUBLE_DECKER" className="text-white hover:bg-white/10">
+                    Double Decker
+                  </SelectItem>
+                </SelectContent>
               </Select>
             </div>
           </div>
@@ -377,34 +377,34 @@ const filteredSchedules = schedules;
             </Button>
           </div> */}
           <div className="flex gap-3 flex-wrap">
-  <div className="flex-1 relative min-w-[200px]">
-    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400" />
-    <Input
-      placeholder="Search bus name or route..."
-      value={searchInput}
-      onChange={(e) => setSearchInput(e.target.value)}
-      onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-      className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
-    />
-  </div>
+            <div className="flex-1 relative min-w-[200px]">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400" />
+              <Input
+                placeholder="Search bus name or route..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="pl-12 bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl h-11"
+              />
+            </div>
 
-  <Button
-    onClick={handleSearch}
-    className="bg-amber-400 hover:bg-amber-300 text-black font-bold rounded-xl h-11 px-6 flex items-center gap-2 transition-all duration-200 group"
-  >
-    <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
-    Search
-    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-  </Button>
+            <Button
+              onClick={handleSearch}
+              className="bg-amber-400 hover:bg-amber-300 text-black font-bold rounded-xl h-11 px-6 flex items-center gap-2 transition-all duration-200 group"
+            >
+              <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              Search
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
 
-  <Button
-    variant="outline"
-    onClick={clearFilters}
-    className="border-white/20 bg-red-600 text-white hover:bg-amber-400 rounded-xl h-11 px-6 transition-all duration-200"
-  >
-    Clear
-  </Button>
-</div>
+            <Button
+              variant="outline"
+              onClick={clearFilters}
+              className="border-white/20 bg-red-600 text-white hover:bg-amber-400 rounded-xl h-11 px-6 transition-all duration-200"
+            >
+              Clear
+            </Button>
+          </div>
         </motion.div>
       </div>
 
