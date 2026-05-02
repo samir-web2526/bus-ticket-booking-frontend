@@ -1,10 +1,11 @@
-
 import { getAllUsers } from '@/src/services/dashboard-services/operators';
-import {  Mail, Phone } from 'lucide-react';
+import { Mail, Phone, Plus, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default async function AllOperators() {
   const res = await getAllUsers('OPERATOR');
-  const operators = (res.data ?? []).filter((u: any) => u.role === 'OPERATOR'); // ✅ frontend filter
+  const operators = (res.data ?? []).filter((u: any) => u.role === 'OPERATOR');
 
   return (
     <div className="min-h-screen bg-[#050d1a] relative overflow-hidden p-6 lg:p-12">
@@ -15,12 +16,20 @@ export default async function AllOperators() {
       <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full blur-3xl -z-10" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="mb-10">
-          <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">— Management</p>
-          <h1 className="text-4xl lg:text-5xl font-black text-white mb-2">
-            All <span className="text-amber-400">Operators</span>
-          </h1>
-          <p className="text-slate-400 text-lg">Total {operators.length} operators</p>
+        {/* Header */}
+        <div className="mb-10 flex items-end justify-between">
+          <div>
+            <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">— Management</p>
+            <h1 className="text-4xl lg:text-5xl font-black text-white mb-2">
+              All <span className="text-amber-400">Operators</span>
+            </h1>
+            <p className="text-slate-400 text-lg">Total {operators.length} operators</p>
+          </div>
+          <Link href="/admin-dashboard/create-operator">
+            <Button className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-amber-400/10">
+              <Plus className="w-4 h-4" /> Create Operator
+            </Button>
+          </Link>
         </div>
 
         {operators.length === 0 ? (
@@ -56,11 +65,18 @@ export default async function AllOperators() {
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex justify-between text-xs text-slate-500">
+                <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-500">
                   <span>Joined {new Date(op.createdAt).toLocaleDateString('en-BD')}</span>
-                  <span className={op.isVerified ? 'text-green-400' : 'text-slate-500'}>
-                    {op.isVerified ? '✓ Verified' : 'Unverified'}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className={op.isVerified ? 'text-green-400' : 'text-slate-500'}>
+                      {op.isVerified ? '✓ Verified' : 'Unverified'}
+                    </span>
+                    <Link href={`/admin-dashboard/operators/${op.id}`}>
+                      <Button size="sm" className="bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs h-7 px-3 rounded-lg">
+                        Details <ArrowRight className="w-3 h-3 ml-1" />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}

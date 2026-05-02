@@ -1,7 +1,8 @@
 import { getAllBuses } from '@/src/services/buses.service';
-import { Bus, Users, Zap, Star, ArrowRight } from 'lucide-react';
+import { Bus,Star, ArrowRight, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface Bus {
   id: string;
@@ -69,12 +70,19 @@ export default async function AllBuses() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="mb-10">
-          <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">— Fleet Management</p>
-          <h1 className="text-4xl lg:text-5xl font-black text-white mb-2">
-            All <span className="text-amber-400">Buses</span>
-          </h1>
-          <p className="text-slate-400 text-lg">Total {buses.length} buses in fleet</p>
+        <div className="mb-10 flex items-end justify-between">
+          <div>
+            <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">— Fleet Management</p>
+            <h1 className="text-4xl lg:text-5xl font-black text-white mb-2">
+              All <span className="text-amber-400">Buses</span>
+            </h1>
+            <p className="text-slate-400 text-lg">Total {buses.length} buses in fleet</p>
+          </div>
+          <Link href="/admin-dashboard/create-bus">
+            <Button className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-amber-400/10">
+              <Plus className="w-4 h-4" /> New Bus
+            </Button>
+          </Link>
         </div>
 
         {/* Grid */}
