@@ -1,10 +1,11 @@
-import Profile from '@/src/components/Pages/DashboardPages/OperatorDashboardPages/Profile'
+import OperatorProfile from '@/src/components/Pages/DashboardPages/OperatorDashboardPages/Profile'
+
 import React from 'react'
 export const dynamic = 'force-dynamic'
-export default function OperatorProfile() {
+export default function Profile() {
   return (
     <div>
-        <Profile></Profile>
+       <OperatorProfile></OperatorProfile>
     </div>
   )
 }
