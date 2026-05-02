@@ -17,6 +17,7 @@ export interface CreateBusPayload {
   pricePerSeat: number;
   isActive?: boolean;
 }
+export type UpdateBusPayload = Partial<CreateBusPayload>;
 
 export type ServiceResponse<T> =
   | { data: T; error: null }
@@ -110,6 +111,99 @@ export async function getBusById(id:string){
         console.error("[getBusById]",message);
         return {error:message};
     }
+}
+
+export async function updateBus(
+  id: string,
+  payload: UpdateBusPayload
+): Promise<ServiceResponse<any>> {
+  try {
+    const accessToken = await getAccessToken();
+ 
+    if (!accessToken) {
+      return {
+        data: null,
+        error: "Authentication required. Please log in.",
+      };
+    }
+ 
+    const result = await fetch(`${API}/api/v1/buses/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(payload),
+    });
+ 
+    const json = await result.json();
+ 
+    if (!result.ok) {
+      return {
+        data: null,
+        error: json?.message ?? "Failed to update bus",
+      };
+    }
+ 
+    return {
+      data: json?.data ?? null,
+      error: null,
+    };
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "Something went wrong";
+    console.error("[updateBus]", message);
+ 
+    return {
+      data: null,
+      error: message,
+    };
+  }
+}
+ 
+// DELETE /api/v1/buses/:id
+export async function deleteBus(id: string): Promise<ServiceResponse<any>> {
+  try {
+    const accessToken = await getAccessToken();
+ 
+    if (!accessToken) {
+      return {
+        data: null,
+        error: "Authentication required. Please log in.",
+      };
+    }
+ 
+    const result = await fetch(`${API}/api/v1/buses/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+ 
+    const json = await result.json();
+ 
+    if (!result.ok) {
+      return {
+        data: null,
+        error: json?.message ?? "Failed to delete bus",
+      };
+    }
+ 
+    return {
+      data: json?.data ?? null,
+      error: null,
+    };
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : "Something went wrong";
+    console.error("[deleteBus]", message);
+ 
+    return {
+      data: null,
+      error: message,
+    };
+  }
 }
 
 export async function getOperatorBuses(){
