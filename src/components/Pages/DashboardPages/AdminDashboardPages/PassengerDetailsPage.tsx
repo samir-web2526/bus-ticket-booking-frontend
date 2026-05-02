@@ -47,22 +47,14 @@ interface EditModalProps {
 }
 
 function EditPassengerModal({ passenger, open, onClose, onUpdated }: EditModalProps) {
-  const [form, setForm] = useState({
-    name: passenger.name || '',
-    email: passenger.email || '',
-    phone: passenger.phone || '',
-  });
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      setForm({
-        name: passenger.name || '',
-        email: passenger.email || '',
-        phone: passenger.phone || '',
-      });
-    }
-  }, [open, passenger]);
+  const [form, setForm] = useState({
+  name: passenger.name || '',
+  email: passenger.email || '',
+  phone: passenger.phone || '',
+});
+
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (field: string, value: string) => {
     const editableFields = ['email', 'phone'];
@@ -88,7 +80,13 @@ function EditPassengerModal({ passenger, open, onClose, onUpdated }: EditModalPr
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    // <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+  open={open}
+  onOpenChange={(isOpen) => {
+    if (!isOpen) onClose();
+  }}
+>
       <DialogContent className="bg-[#050d1a] border border-white/10 text-white max-w-lg rounded-3xl p-0 overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <DialogHeader className="px-8 pt-8 pb-5 border-b border-white/10 relative">
@@ -277,13 +275,13 @@ export default function PassengerDetailPage({ id }: { id: string }) {
               </div>
 
               {/* Edit + Delete buttons */}
-              <div className="self-start sm:self-auto flex items-center gap-3 flex-wrap">
+              <div className="self-start sm:self-auto flex items-center gap-3">
                 <motion.button
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                   onClick={() => setModalOpen(true)}
                   className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-amber-400/10"
                 >
-                  <Pencil className="w-4 h-4" /> Edit Passenger
+                  <Pencil className="w-4 h-4" /> Edit
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
@@ -339,13 +337,13 @@ export default function PassengerDetailPage({ id }: { id: string }) {
         </motion.div>
       </div>
 
-      {/* Edit Modal */}
       <EditPassengerModal
-        passenger={passenger}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onUpdated={setPassenger}
-      />
+  // key={passenger.id + modalOpen}
+  passenger={passenger}
+  open={modalOpen}
+  onClose={() => setModalOpen(false)}
+  onUpdated={(updated) => setPassenger(updated as Passenger)}
+/>
 
       {/* Delete Confirm Dialog */}
       {deleteDialog && (

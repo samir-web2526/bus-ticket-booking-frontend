@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import {
   Shield, CheckCircle, XCircle,
-  Building2, FileText, CreditCard, MapPin,
+  Building2,
   Pencil, Loader2, Zap, Lock, ArrowLeft,
   User, Calendar, RefreshCw, Trash2,
 } from 'lucide-react';
@@ -37,7 +37,7 @@ interface Operator {
   profileImage: string | null;
   createdAt: string;
   updatedAt: string;
-  operatorProfile: OperatorProfile | null;
+  operatorProfile?: OperatorProfile | null |undefined;
 }
 
 // ─── Styles ───────────────────────────────────────────────────────────────
@@ -59,29 +59,15 @@ interface EditModalProps {
 
 function EditOperatorModal({ operator, open, onClose, onUpdated }: EditModalProps) {
   const [form, setForm] = useState({
-    name: operator.name || '',
+  name: operator.name || '',
     email: operator.email || '',
     phone: operator.phone || '',
     companyName: operator.operatorProfile?.companyName || '',
     tradeLicense: operator.operatorProfile?.tradeLicense || '',
     nid: operator.operatorProfile?.nid || '',
     address: operator.operatorProfile?.address || '',
-  });
+});
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setForm({
-        name: operator.name || '',
-        email: operator.email || '',
-        phone: operator.phone || '',
-        companyName: operator.operatorProfile?.companyName || '',
-        tradeLicense: operator.operatorProfile?.tradeLicense || '',
-        nid: operator.operatorProfile?.nid || '',
-        address: operator.operatorProfile?.address || '',
-      });
-    }
-  }, [open, operator]);
 
   const handleChange = (field: string, value: string) => {
     const editableFields = ['email', 'phone', 'companyName', 'address'];
@@ -122,7 +108,13 @@ function EditOperatorModal({ operator, open, onClose, onUpdated }: EditModalProp
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    // <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+  open={open}
+  onOpenChange={(isOpen) => {
+    if (!isOpen) onClose();
+  }}
+>
       <DialogContent className="bg-[#050d1a] border border-white/10 text-white max-w-lg rounded-3xl p-0 overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <DialogHeader className="px-8 pt-8 pb-5 border-b border-white/10 relative">
@@ -275,6 +267,7 @@ export default function OperatorDetailPage({ id }: { id: string }) {
     const load = async () => {
       try {
         const res = await getUserById(id);
+        console.log('getUserById response:', res);
         if (res.error) { setError(res.error); return; }
         setOperator(res.data);
       } catch {
@@ -287,19 +280,26 @@ export default function OperatorDetailPage({ id }: { id: string }) {
   }, [id]);
 
   const handleDelete = async () => {
-    try {
-      setDeleteLoading(true);
-      const res = await deleteUser(operator!.id);
-      if (res.error) { toast.error(res.error); return; }
-      toast.success('Operator deleted successfully!');
-      router.push('/admin-dashboard/operators');
-    } catch {
-      toast.error('Something went wrong');
-    } finally {
+  try {
+    setDeleteLoading(true);
+    const res = await deleteUser(operator!.id);
+
+    if (res.error) {
+      toast.error(res.error);
       setDeleteLoading(false);
-      setDeleteDialog(false);
+      return;
     }
-  };
+
+    toast.success('Operator deleted successfully!');
+    setDeleteDialog(false);
+    router.push('/admin-dashboard/operators');
+    router.refresh();
+  } catch (err) {
+    console.error('[handleDelete]', err);
+    toast.error('Something went wrong');
+    setDeleteLoading(false);
+  }
+};
 
   if (loading) {
     return (
@@ -386,7 +386,7 @@ export default function OperatorDetailPage({ id }: { id: string }) {
                   onClick={() => setModalOpen(true)}
                   className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-amber-400/10"
                 >
-                  <Pencil className="w-4 h-4" /> Edit Operator
+                  <Pencil className="w-4 h-4" /> Edit
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
@@ -446,11 +446,12 @@ export default function OperatorDetailPage({ id }: { id: string }) {
 
       {/* Edit Modal */}
       <EditOperatorModal
-        operator={operator}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onUpdated={setOperator}
-      />
+  // key={operator.id + modalOpen}
+  operator={operator}
+  open={modalOpen}
+  onClose={() => setModalOpen(false)}
+  onUpdated={(updated) => setOperator(updated as Operator)}
+/>
 
       {/* Delete Confirm Dialog */}
       {deleteDialog && (

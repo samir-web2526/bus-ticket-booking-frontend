@@ -9,6 +9,7 @@ const API = process.env.NEXT_PUBLIC_BACKEND_URL;
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface OperatorProfile {
+  id:string;
   userId: string;
   companyName: string;
   tradeLicense: string;
@@ -24,10 +25,12 @@ export interface User {
   profileImage: string | null;
   role: "OPERATOR" | "PASSENGER" | "ADMIN";
   status: "ACTIVE" | "INACTIVE" | "SUSPENDED";
+   isVerified: boolean;
   createdAt: string;
   updatedAt: string;
 
-   passengerProfile?: PassengerProfile
+   passengerProfile?: PassengerProfile | null;
+  operatorProfile?: OperatorProfile | null | undefined;
 }
 
 export interface CreateOperatorPayload {
@@ -240,7 +243,7 @@ export async function updateUser(
     }
 
     const result = await fetch(`${API}/api/v1/users/${userId}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
