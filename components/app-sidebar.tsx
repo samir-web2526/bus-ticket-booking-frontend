@@ -66,6 +66,7 @@ const PASSENGER_NAV = [
     icon: React.createElement(LayoutDashboard),
     isActive: true,
     items: [
+      { title: "Dashboard", url: "/passenger-dashboard", icon: React.createElement(LayoutDashboard) },
       { title: "My Bookings", url: "/passenger-dashboard/bookings", icon: React.createElement(CalendarDays) },
       { title: "My Profile", url: "/passenger-dashboard/me", icon: React.createElement(UserCircle) },
     ],

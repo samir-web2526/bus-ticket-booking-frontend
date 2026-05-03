@@ -1,25 +1,20 @@
+// app/(dashboard)/my-bookings/page.tsx  — পুরো file replace করুন
 import { getMyBookings } from '@/src/services/dashboard-services/bookings';
 import {
-  Ticket,
-  MapPin,
-  Calendar,
-  CreditCard,
-  AlertCircle,
-  CheckCircle2,
-  XCircle,
-  Clock,
-  BusFront,
-  Armchair,
+  Ticket, MapPin, Calendar, CreditCard, AlertCircle,
+  CheckCircle2, XCircle, Clock, BusFront, Armchair, Banknote,
 } from 'lucide-react';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 interface BookingSeat {
   id: string;
-  seat: {
-    number: string;
-    type: string;
-    price: number;
-  };
+  seat: { number: string; type: string; price: number };
+}
+
+interface Payment {
+  status: 'PAID' | 'UNPAID';
+  amount: number;
+  paidAt: string | null;
 }
 
 interface Booking {
@@ -28,14 +23,11 @@ interface Booking {
   totalFare: number;
   createdAt: string;
   bookingSeats: BookingSeat[];
+  payment: Payment | null;
   schedule: {
     departure: string;
     arrival: string;
-    bus: {
-      name: string;
-      number: string;
-      type: string;
-    };
+    bus: { name: string; number: string; type: string };
     route: {
       sourceCity: string;
       destinationCity: string;
@@ -46,10 +38,7 @@ interface Booking {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-const statusConfig: Record<
-  string,
-  { label: string; cls: string; icon: React.ElementType }
-> = {
+const bookingStatusConfig: Record<string, { label: string; cls: string; icon: React.ElementType }> = {
   CONFIRMED: { label: 'Confirmed', cls: 'bg-green-400/10 text-green-400 border-green-400/20', icon: CheckCircle2 },
   PENDING:   { label: 'Pending',   cls: 'bg-amber-400/10 text-amber-400 border-amber-400/20', icon: Clock        },
   CANCELLED: { label: 'Cancelled', cls: 'bg-red-400/10   text-red-400   border-red-400/20',   icon: XCircle      },
@@ -88,9 +77,28 @@ function StatCard({
   );
 }
 
+// ─── Payment Badge ────────────────────────────────────────────────────────────
+function PaymentBadge({ payment }: { payment: Payment | null }) {
+  if (!payment) return null;
+
+  const isPaid = payment.status === 'PAID';
+  return (
+    <span
+      className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+        isPaid
+          ? 'bg-green-400/10 text-green-400 border-green-400/20'
+          : 'bg-red-400/10 text-red-400 border-red-400/20'
+      }`}
+    >
+      <Banknote className="w-3 h-3" />
+      {isPaid ? 'Paid' : 'Unpaid'}
+    </span>
+  );
+}
+
 // ─── Booking Card ─────────────────────────────────────────────────────────────
 function BookingCard({ booking }: { booking: Booking }) {
-  const cfg = statusConfig[booking.status] ?? statusConfig.PENDING;
+  const cfg = bookingStatusConfig[booking.status] ?? bookingStatusConfig.PENDING;
   const StatusIcon = cfg.icon;
   const seatNumbers = booking.bookingSeats.map((bs) => bs.seat.number).join(', ');
   const seatType = booking.bookingSeats[0]?.seat.type ?? '';
@@ -99,7 +107,7 @@ function BookingCard({ booking }: { booking: Booking }) {
     <div className="bg-white/[0.03] border border-white/10 hover:border-amber-400/20 rounded-2xl p-5 transition-colors duration-200">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
 
-        {/* Left */}
+        {/* ── Left ── */}
         <div className="flex-1 min-w-0">
           {/* Route */}
           <div className="flex items-center gap-2 mb-1">
@@ -119,7 +127,7 @@ function BookingCard({ booking }: { booking: Booking }) {
             &nbsp;·&nbsp;{busTypeLabel[booking.schedule.bus.type] ?? booking.schedule.bus.type}
           </div>
 
-          {/* Meta */}
+          {/* Meta row */}
           <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-400">
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-amber-400" />
@@ -141,14 +149,20 @@ function BookingCard({ booking }: { booking: Booking }) {
           </div>
         </div>
 
-        {/* Right */}
+        {/* ── Right ── */}
         <div className="flex flex-col items-start sm:items-end gap-2 shrink-0">
+          {/* Booking status */}
           <span className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full border ${cfg.cls}`}>
             <StatusIcon className="w-3 h-3" />
             {cfg.label}
           </span>
+
+          {/* Payment status — আলাদা badge */}
+          <PaymentBadge payment={booking.payment} />
+
           <p className="text-slate-600 text-xs">{fmt(booking.createdAt)}</p>
         </div>
+
       </div>
     </div>
   );
@@ -157,14 +171,14 @@ function BookingCard({ booking }: { booking: Booking }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default async function AllMyBookings() {
   const res = await getMyBookings();
+    const bookings: Booking[] = Array.isArray(res?.data) ? res.data : [];
+  // const bookings: Booking[] = Array.isArray(res?.data?.data)
+  //   ? res.data.data
+  //   : Array.isArray(res?.data)
+  //   ? res.data
+  //   : [];
 
-  const bookings: Booking[] = Array.isArray(res?.data?.data)
-    ? res.data.data
-    : Array.isArray(res?.data)
-    ? res.data
-    : [];
-
-  const hasError = !!res && 'error' in res;
+  const hasError = !!res?.error;
 
   const confirmed = bookings.filter((b) => b.status === 'CONFIRMED').length;
   const pending   = bookings.filter((b) => b.status === 'PENDING').length;
@@ -172,7 +186,7 @@ export default async function AllMyBookings() {
 
   return (
     <div className="min-h-screen bg-[#050d1a] relative overflow-hidden p-6 lg:p-12">
-      {/* Background */}
+      {/* Background grid */}
       <div
         className="absolute inset-0 opacity-5 pointer-events-none"
         style={{
@@ -187,13 +201,8 @@ export default async function AllMyBookings() {
 
         {/* Header */}
         <div className="mb-10">
-          <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">
-            — Passenger
-          </p>
-          <h1
-            className="text-4xl lg:text-5xl font-black text-white"
-            style={{ fontFamily: "'Sora', sans-serif" }}
-          >
+          <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">— Passenger</p>
+          <h1 className="text-4xl lg:text-5xl font-black text-white" style={{ fontFamily: "'Sora', sans-serif" }}>
             My <span className="text-amber-400">Bookings</span>
           </h1>
         </div>
