@@ -50,6 +50,14 @@ export interface CreateOperatorResponse {
   operatorProfile: OperatorProfile;
 }
 
+export interface UpdateOperatorPayload {
+  email?: string;
+  phone?: string;
+ status?: "ACTIVE" | "BLOCKED" | "DELETED";
+  companyName?: string;  // flat — nested operatorProfile না
+  address?: string;      // flat — nested operatorProfile না
+}
+
 // Consistent response wrapper — used for ALL service functions
 export type ServiceResponse<T> =
   | { data: T; error: null }
@@ -230,7 +238,7 @@ export async function getUserById(
  */
 export async function updateUser(
   userId: string,
-  payload: Partial<CreateOperatorPayload>
+   payload: UpdateOperatorPayload
 ): Promise<ServiceResponse<User>> {
   try {
     const accessToken = await getAccessToken();

@@ -29,6 +29,7 @@ const ADMIN_NAV = [
     icon: React.createElement(LayoutDashboard),
     isActive: true,
     items: [
+      { title: "Dashboard", url: "/admin-dashboard", icon: React.createElement(LayoutDashboard) },
       { title: "All Buses", url: "/admin-dashboard/buses", icon: React.createElement(Tag) },
       { title: "All Routes", url: "/admin-dashboard/routes", icon: React.createElement(Tag) },
       {title: "Create Route", url: "/admin-dashboard/create-route", icon: React.createElement(Tag)},
@@ -48,6 +49,7 @@ const OPERATOR_NAV = [
     icon: React.createElement(LayoutDashboard),
     isActive: true,
     items: [
+      { title: "Dashboard", url: "/operator-dashboard", icon: React.createElement(LayoutDashboard) },
       { title: "My Buses", url: "/operator-dashboard/buses", icon: React.createElement(Tag) },
       { title: "Create Schedule", url: "/operator-dashboard/create-schedule", icon: React.createElement(Tag) },
       { title: "My Profile", url: "/operator-dashboard/me", icon: React.createElement(UserCircle) },

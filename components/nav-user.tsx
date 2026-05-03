@@ -1,3 +1,4 @@
+
 "use client"
 
 import {
@@ -8,7 +9,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -20,7 +20,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { RiArrowUpDownLine, RiSparklingLine, RiCheckboxCircleLine, RiBankCardLine, RiNotificationLine, RiLogoutBoxLine } from "@remixicon/react"
+import { logout } from "@/src/services/auth/action"
+import { RiArrowUpDownLine, RiLogoutBoxLine, RiHomeLine } from "@remixicon/react"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -32,6 +34,15 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await logout()
+  }
+
+  const handleHome = () => {
+    router.push("/")
+  }
 
   return (
     <SidebarMenu>
@@ -72,35 +83,13 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <RiSparklingLine
-                />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            <DropdownMenuItem onClick={handleHome}>
+              <RiHomeLine className="mr-2 size-4" />
+              Home
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <RiCheckboxCircleLine
-                />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <RiBankCardLine
-                />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <RiNotificationLine
-                />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <RiLogoutBoxLine
-              />
+            <DropdownMenuItem onClick={handleLogout}>
+              <RiLogoutBoxLine className="mr-2 size-4" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

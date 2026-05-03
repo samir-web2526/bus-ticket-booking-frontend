@@ -3,16 +3,15 @@
 import { useState, useEffect } from 'react';
 import {
   Shield, CheckCircle, XCircle,
-  Pencil, Loader2, Zap, Lock, ArrowLeft,
+  Pencil, Loader2, ArrowLeft,
   User, Calendar, RefreshCw, Trash2,
 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getUserById, updateUser, deleteUser } from '@/src/services/user.service';
+import { getUserById, deleteUser } from '@/src/services/user.service';
+import EditPassengerModal from './EditPassengerModal'; // 👈 আলাদা ফাইল থেকে import
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -27,110 +26,6 @@ interface Passenger {
   profileImage: string | null;
   createdAt: string;
   updatedAt: string;
-}
-
-// ─── Styles ───────────────────────────────────────────────────────────────
-
-const inputCls =
-  'w-full bg-white/5 border border-white/20 text-white rounded-xl h-11 px-3 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400/20 transition-colors placeholder:text-slate-600';
-
-const disabledInputCls =
-  'w-full bg-white/5 border border-white/20 text-slate-400 rounded-xl h-11 px-3 cursor-not-allowed opacity-60';
-
-// ─── Edit Modal ───────────────────────────────────────────────────────────
-
-interface EditModalProps {
-  passenger: Passenger;
-  open: boolean;
-  onClose: () => void;
-  onUpdated: (p: Passenger) => void;
-}
-
-function EditPassengerModal({ passenger, open, onClose, onUpdated }: EditModalProps) {
-
-  const [form, setForm] = useState({
-  name: passenger.name || '',
-  email: passenger.email || '',
-  phone: passenger.phone || '',
-});
-
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (field: string, value: string) => {
-    const editableFields = ['email', 'phone'];
-    if (editableFields.includes(field)) {
-      setForm(prev => ({ ...prev, [field]: value }));
-    }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      const payload = { email: form.email, phone: form.phone };
-      const res = await updateUser(passenger.id, payload);
-      if (res.error) { toast.error(res.error); return; }
-      toast.success('Passenger updated successfully!');
-      onUpdated({ ...passenger, email: form.email, phone: form.phone });
-      onClose();
-    } catch {
-      toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    // <Dialog open={open} onOpenChange={onClose}>
-    <Dialog
-  open={open}
-  onOpenChange={(isOpen) => {
-    if (!isOpen) onClose();
-  }}
->
-      <DialogContent className="bg-[#050d1a] border border-white/10 text-white max-w-lg rounded-3xl p-0 overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <DialogHeader className="px-8 pt-8 pb-5 border-b border-white/10 relative">
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-amber-400 text-xs font-semibold tracking-widest uppercase mb-1">— Edit Passenger</p>
-            <DialogTitle className="text-white font-black text-2xl">
-              Update <span className="text-amber-400">Passenger</span>
-            </DialogTitle>
-            <p className="text-slate-500 text-sm mt-2">Edit passenger information below</p>
-          </motion.div>
-        </DialogHeader>
-        <div className="px-8 py-6 space-y-4 relative">
-          <div>
-            <label className="text-sm font-bold text-slate-400 uppercase tracking-widest block mb-2 flex items-center gap-2">
-              <Lock className="w-3 h-3" /> Full Name
-            </label>
-            <input type="text" value={form.name} disabled className={disabledInputCls} />
-            <p className="text-slate-500 text-xs mt-1">Contact support to change this field</p>
-          </div>
-          <div>
-            <label className="text-sm font-bold text-amber-400 uppercase tracking-widest block mb-2">Email Address</label>
-            <input type="email" value={form.email} onChange={e => handleChange('email', e.target.value)} placeholder="email@example.com" className={inputCls} />
-          </div>
-          <div>
-            <label className="text-sm font-bold text-amber-400 uppercase tracking-widest block mb-2">Phone Number</label>
-            <input type="tel" value={form.phone} onChange={e => handleChange('phone', e.target.value)} placeholder="01XXXXXXXXX" className={inputCls} />
-          </div>
-        </div>
-        <DialogFooter className="px-8 py-5 border-t border-white/10 gap-3">
-          <Button variant="outline" onClick={onClose} disabled={loading}
-            className="flex-1 border-white/10 bg-white/5 text-slate-300 hover:border-white/20 hover:text-white rounded-xl h-11">
-            Cancel
-          </Button>
-          <motion.button
-            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-            onClick={handleSubmit} disabled={loading}
-            className="flex-1 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 disabled:opacity-50 text-black font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm"
-          >
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</> : <><Zap className="w-4 h-4" /> Save Changes</>}
-          </motion.button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
 }
 
 // ─── Stat Card ────────────────────────────────────────────────────────────
@@ -337,13 +232,13 @@ export default function PassengerDetailPage({ id }: { id: string }) {
         </motion.div>
       </div>
 
+      {/* Edit Modal — আলাদা component থেকে আসছে */}
       <EditPassengerModal
-  // key={passenger.id + modalOpen}
-  passenger={passenger}
-  open={modalOpen}
-  onClose={() => setModalOpen(false)}
-  onUpdated={(updated) => setPassenger(updated as Passenger)}
-/>
+        passenger={passenger}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onUpdated={(updated) => setPassenger(updated as Passenger)}
+      />
 
       {/* Delete Confirm Dialog */}
       {deleteDialog && (
