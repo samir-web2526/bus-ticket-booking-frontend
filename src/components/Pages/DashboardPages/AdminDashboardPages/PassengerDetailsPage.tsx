@@ -10,23 +10,10 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getUserById, deleteUser } from '@/src/services/user.service';
+import { getUserById, deleteUser,type User as UserType} from '@/src/services/user.service';
 import EditPassengerModal from './EditPassengerModal'; // 👈 আলাদা ফাইল থেকে import
 
 // ─── Types ────────────────────────────────────────────────────────────────
-
-interface Passenger {
-  id: string;
-  name: string;
-  email: string;
-  phone: string | null;
-  role: string;
-  status: string;
-  isVerified: boolean;
-  profileImage: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
 
 // ─── Stat Card ────────────────────────────────────────────────────────────
 
@@ -61,7 +48,7 @@ function FieldRow({ label, value }: { label: string; value: string | null }) {
 
 export default function PassengerDetailPage({ id }: { id: string }) {
   const router = useRouter();
-  const [passenger, setPassenger] = useState<Passenger | null>(null);
+  const [passenger, setPassenger] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -237,7 +224,8 @@ export default function PassengerDetailPage({ id }: { id: string }) {
         passenger={passenger}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onUpdated={(updated) => setPassenger(updated as Passenger)}
+        // onUpdated={(updated) => setPassenger(updated as Passenger)}
+        onUpdated={(updated) => setPassenger(updated)}
       />
 
       {/* Delete Confirm Dialog */}

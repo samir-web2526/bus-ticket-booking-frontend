@@ -29,5 +29,5 @@ export default async function BusDetailsPage({ params }: { params: Promise<{ id:
     );
   }
 
-  return <BusDetailsClient bus={result.data} />;
+  return <BusDetailsClient id={id} />;
 }

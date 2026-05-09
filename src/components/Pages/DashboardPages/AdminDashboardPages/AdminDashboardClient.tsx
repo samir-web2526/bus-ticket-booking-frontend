@@ -7,7 +7,7 @@ const TYPE_LABELS: Record<string, string> = { AC: 'AC', NON_AC: 'Non-AC', AC_SLE
 const TYPE_COLORS = ['#3b82f6', '#22c55e', '#a78bfa', '#f97316'];
 
 interface Props {
-  stats: { totalBuses: number; activeBuses: number; inactiveBuses: number; totalOperators: number; activeOperators: number; totalPassengers: number; verifiedPassengers: number; totalRoutes: number; routesWithSchedules: number; avgPricePerSeat: number };
+  stats: { totalBuses: number; activeBuses: number; inactiveBuses: number; totalOperators: number; activeOperators: number;deletedBuses: number; totalPassengers: number; verifiedPassengers: number; totalRoutes: number; routesWithSchedules: number; avgPricePerSeat: number };
   busTypeCount: Record<string, number>;
   topOperators: { name: string; count: number }[];
   routesBySchedules: { label: string; schedules: number; distance: number }[];

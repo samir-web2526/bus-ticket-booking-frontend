@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { motion } from "framer-motion";
 import { Loader2, Zap, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { updateUser } from "@/src/services/user.service";
+import { updateUser, User } from "@/src/services/user.service";
 
 // ─── Styles ───────────────────────────────────────────────────────────────
 
@@ -22,26 +22,12 @@ const inputCls =
 const disabledInputCls =
   "w-full bg-white/5 border border-white/10 text-slate-400 rounded-xl h-11 px-3 cursor-not-allowed opacity-60";
 
-// ─── Types ────────────────────────────────────────────────────────────────
-
-interface Passenger {
-  id: string;
-  name: string;
-  email: string;
-  phone: string | null;
-  role: string;
-  status: string;
-  isVerified: boolean;
-  profileImage: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface EditPassengerModalProps {
-  passenger: Passenger;
+  passenger: User;        // ✅ User
   open: boolean;
   onClose: () => void;
-  onUpdated: (p: Passenger) => void;
+  onUpdated: (p: User) => void;  // ✅ User
 }
 
 // ─── Component ────────────────────────────────────────────────────────────
@@ -62,59 +48,98 @@ export default function EditPassengerModal({
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      setForm({
-        name: passenger.name || "",
-        email: passenger.email || "",
-        phone: passenger.phone || "",
-        status: passenger.status || "ACTIVE",
-        isVerified: passenger.isVerified ?? false,
-      });
-    }
-  }, [open, passenger]);
+  // useEffect(() => {
+  //   if (open) {
+  //     setForm({
+  //       name: passenger.name || "",
+  //       email: passenger.email || "",
+  //       phone: passenger.phone || "",
+  //       status: passenger.status || "ACTIVE",
+  //       isVerified: passenger.isVerified ?? false,
+  //     });
+  //   }
+  // }, [open, passenger]);
 
   // ✅ FIXED: strict typing (string | boolean)
   const handleChange = (field: keyof typeof form, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async () => {
-    try {
-      setLoading(true);
+//   const handleSubmit = async () => {
+//     try {
+//       setLoading(true);
 
-      const payload = {
-        email: form.email,
-        phone: form.phone,
-        status: form.status,
-        isVerified: form.isVerified,
-      };
+//       // const payload = {
+//       //   email: form.email,
+//       //   phone: form.phone,
+//       //   status: form.status,
+//       //   isVerified: form.isVerified,
+//       // };
 
-      const res = await updateUser(passenger.id, payload);
+//       const payload: {
+//   email: string;
+//   phone: string;
+//   status: 'ACTIVE' | 'BLOCKED' | 'DELETED';
+//   isVerified: boolean;
+// } = {
+//   email: form.email,
+//   phone: form.phone,
+//   status: form.status as 'ACTIVE' | 'BLOCKED' | 'DELETED',
+//   isVerified: form.isVerified,
+// };
 
-      if (res.error) {
-        toast.error(res.error);
-        return;
-      }
+//       const res = await updateUser(passenger.id, payload);
 
-      toast.success("Passenger updated successfully!");
+//       if (res.error) {
+//         toast.error(res.error);
+//         return;
+//       }
 
-      onUpdated({
-        ...passenger,
-        email: form.email,
-        phone: form.phone,
-        status: form.status,
-        isVerified: form.isVerified,
-      });
+//       toast.success("Passenger updated successfully!");
 
-      onClose();
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
-      setLoading(false);
+//      const updatedPassenger: User = {
+//   ...passenger,
+//   email: form.email,
+//   phone: form.phone || null,
+//   status: form.status as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
+//   isVerified: form.isVerified,
+// };
+
+
+//       onUpdated(updatedPassenger);
+
+//       onClose();
+//     } catch {
+//       toast.error("Something went wrong");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+const handleSubmit = async () => {
+  try {
+    setLoading(true);
+
+    const res = await updateUser(passenger.id, {
+      email: form.email,
+      phone: form.phone,
+      status: form.status as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
+      isVerified: form.isVerified,
+    });
+
+    if (res.error || !res.data) {
+      toast.error(res.error ?? 'Failed to update');
+      return;
     }
-  };
 
+    toast.success('Passenger updated successfully!');
+    onUpdated(res.data); // ✅ User type সরাসরি আসছে
+    onClose();
+  } catch {
+    toast.error('Something went wrong');
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="bg-[#050d1a] border border-white/10 text-white max-w-lg rounded-3xl p-0 overflow-hidden shadow-2xl">

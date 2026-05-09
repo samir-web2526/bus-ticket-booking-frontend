@@ -3,7 +3,7 @@ import AdminDashboardClient from '@/src/components/Pages/DashboardPages/AdminDas
 import { getAllBuses } from '@/src/services/buses.service';
 import { getAllUsers } from '@/src/services/dashboard-services/operators';
 import { getAllRoutes } from '@/src/services/routes.service';
-
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
   const [busesRes, operatorsRes, passengersRes, routesRes] = await Promise.all([

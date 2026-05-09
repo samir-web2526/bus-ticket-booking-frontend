@@ -1,6 +1,5 @@
 import RouteDetailsClient from "@/src/components/Pages/AllRoutesPage/RoutesDetailsClient";
 
-
 interface Props {
   params: Promise<{ id: string }>;
 }

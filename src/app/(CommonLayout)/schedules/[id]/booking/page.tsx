@@ -17,8 +17,6 @@ export default async function BookingPage({ params }: Props) {
     getScheduleById(id),
     getActiveLocks(id),
   ]);
-
-  // ✅ lock না থাকলে seat select page-এ
   if (!locksRes.data || locksRes.data.length === 0) {
     redirect(`/schedules/${id}`);
   }
@@ -29,7 +27,6 @@ export default async function BookingPage({ params }: Props) {
 
   const locks = locksRes.data;
   const schedule = scheduleRes.data;
-//   const totalPrice = locks.reduce((sum, l) => sum + l.seat.price, 0);
 
   return (
     <BookingConfirmPage

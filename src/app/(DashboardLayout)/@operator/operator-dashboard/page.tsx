@@ -2,7 +2,7 @@
 import OperatorDashboardClient from '@/src/components/Pages/DashboardPages/OperatorDashboardPages/OperatorDashboardClient';
 import { getOperatorBuses } from '@/src/services/buses.service';
 import { getOperatorPassengers } from '@/src/services/passengers.sevice';
-
+export const dynamic = "force-dynamic";
 
 export default async function OperatorDashboardPage() {
   const [busesRes, passengersRes] = await Promise.all([

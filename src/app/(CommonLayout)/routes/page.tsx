@@ -1,4 +1,4 @@
-
+export const dynamic = "force-dynamic";
 import AllRoutesPage from '@/src/components/Pages/RoutePage/Routes'
 import React from 'react'
 

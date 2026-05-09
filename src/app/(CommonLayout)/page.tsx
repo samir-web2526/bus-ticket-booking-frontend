@@ -5,7 +5,7 @@ import Footer from '@/src/components/Pages/HomePage/Footer'
 import RoutesSection from '@/src/components/Pages/HomePage/Route'
 import TestimonialsSection from '@/src/components/Pages/HomePage/Testimonial'
 import React from 'react'
-
+export const dynamic = "force-dynamic";
 export default function HomePage() {
   return (
     <div>

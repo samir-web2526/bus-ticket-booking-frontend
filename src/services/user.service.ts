@@ -53,9 +53,10 @@ export interface CreateOperatorResponse {
 export interface UpdateOperatorPayload {
   email?: string;
   phone?: string;
- status?: "ACTIVE" | "BLOCKED" | "DELETED";
-  companyName?: string;  // flat — nested operatorProfile না
-  address?: string;      // flat — nested operatorProfile না
+  status?: 'ACTIVE' | 'BLOCKED' | 'DELETED' | 'INACTIVE' | 'SUSPENDED'; // ✅ সব values
+  companyName?: string;
+  address?: string;
+  isVerified?: boolean; // ✅ যোগ করুন
 }
 
 // Consistent response wrapper — used for ALL service functions

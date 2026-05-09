@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -30,7 +29,6 @@ import {
 import { cn } from "@/lib/utils";
 import { logout } from "@/src/services/auth/action";
 
-
 interface MenuItem {
   title: string;
   url: string;
@@ -54,14 +52,8 @@ interface NavbarProps {
   };
   menu?: MenuItem[];
   auth?: {
-    login: {
-      title: string;
-      url: string;
-    };
-    register: {
-      title: string;
-      url: string;
-    };
+    login: { title: string; url: string };
+    register: { title: string; url: string };
   };
 }
 
@@ -93,48 +85,19 @@ const Navbar = ({
   }, []);
 
   const dashboardUrl =
-  user?.role === "ADMIN"
-    ? "/admin-dashboard"
-    : user?.role === "OPERATOR"
-    ? "/operator-dashboard"
-    : "/passenger-dashboard";
+    user?.role === "ADMIN"
+      ? "/admin-dashboard"
+      : user?.role === "OPERATOR"
+      ? "/operator-dashboard"
+      : "/passenger-dashboard";
 
   return (
     <section className={cn("relative", className)}>
-      {/* Animated Background Gradients */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          animate={{ y: [0, -20, 0] }}
-          transition={{ duration: 4, repeat: Infinity }}
-          className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-amber-500/25 to-transparent rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ y: [0, 20, 0] }}
-          transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-          className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-500/10 to-transparent rounded-full blur-3xl"
-        />
-      </div>
-
-      {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-slate-50 to-slate-100 border-b border-slate-200" />
-
-      {/* Grid background */}
-      <div
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,180,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.1) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
-        }}
-      />
-
       <nav className="relative z-10 py-4 md:py-6">
         <div className="container">
           {/* Desktop Menu */}
           <div className="hidden items-center justify-between lg:flex">
-            {/* Left: Logo + Menu */}
             <div className="flex items-center gap-12">
-              {/* Logo */}
               <motion.a
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.95 }}
@@ -153,11 +116,7 @@ const Navbar = ({
                     transition={{ duration: 3, repeat: Infinity }}
                     className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-400 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"
                   />
-                  <img
-                    src={logo.src}
-                    className="max-h-10 relative"
-                    alt={logo.alt}
-                  />
+                  <img src={logo.src} className="max-h-10 relative" alt={logo.alt} />
                 </div>
                 <motion.span
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%"] }}
@@ -168,7 +127,6 @@ const Navbar = ({
                 </motion.span>
               </motion.a>
 
-              {/* Navigation Menu */}
               <NavigationMenu>
                 <NavigationMenuList>
                   {menu.map((item, idx) => (
@@ -185,7 +143,6 @@ const Navbar = ({
               </NavigationMenu>
             </div>
 
-            {/* Right: Auth Buttons */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -194,24 +151,21 @@ const Navbar = ({
             >
               {user ? (
                 <>
-                  {/* Dashboard */}
                   <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
                     <Button
                       asChild
                       variant="outline"
                       size="sm"
-                      className="border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold text-base"
+                      className="border-amber-400/60 text-amber-600 hover:border-amber-500 hover:bg-amber-50 rounded-xl font-bold text-base"
                     >
                       <a href={dashboardUrl}>Dashboard</a>
                     </Button>
                   </motion.div>
-
-                  {/* Sign Out */}
                   <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
                     <form action={logout}>
                       <Button
                         type="submit"
-                        className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 shadow-lg shadow-amber-500/20"
+                        className="px-6 py-2.5 rounded-xl font-bold text-white text-base bg-amber-500 hover:bg-amber-400 transition-all duration-300 shadow-md shadow-amber-200"
                       >
                         Sign Out
                       </Button>
@@ -220,23 +174,20 @@ const Navbar = ({
                 </>
               ) : (
                 <>
-                  {/* Login */}
                   <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
                     <Button
                       asChild
                       variant="outline"
                       size="sm"
-                      className="border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold text-base"
+                      className="border-amber-400/60 text-amber-600 hover:border-amber-500 hover:bg-amber-50 rounded-xl font-bold text-base"
                     >
                       <a href={auth.login.url}>{auth.login.title}</a>
                     </Button>
                   </motion.div>
-
-                  {/* Register */}
                   <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
                     <Button
                       asChild
-                      className="px-6 py-2.5 rounded-xl font-bold text-black text-base bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 transition-all duration-300 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40"
+                      className="px-6 py-2.5 rounded-xl font-bold text-white text-base bg-amber-500 hover:bg-amber-400 transition-all duration-300 shadow-md shadow-amber-200"
                     >
                       <a href={auth.register.url} className="flex items-center gap-2">
                         <Zap className="w-4 h-4" />
@@ -251,36 +202,30 @@ const Navbar = ({
 
           {/* Mobile Menu */}
           <div className="flex items-center justify-between lg:hidden">
-            {/* Logo */}
             <motion.a
               whileHover={{ scale: 1.08 }}
               href={logo.url}
               className="flex items-center gap-2"
             >
               <img src={logo.src} className="max-h-9" alt={logo.alt} />
-              <span className="font-black text-white text-xl">{logo.title}</span>
+              <span className="font-black text-gray-900 text-xl">{logo.title}</span>
             </motion.a>
 
-            {/* Menu Toggle */}
             {isHydrated && (
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild suppressHydrationWarning>
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 90 }}
                     whileTap={{ scale: 0.9 }}
-                    className="p-2 rounded-xl border border-amber-400/50 text-amber-400 hover:bg-amber-400/10 transition-colors"
+                    className="p-2 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
                   >
-                    {isOpen ? (
-                      <X className="size-6" />
-                    ) : (
-                      <Menu className="size-6" />
-                    )}
+                    {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
                   </motion.button>
                 </SheetTrigger>
 
-                <SheetContent className="bg-white border-l border-slate-200 overflow-y-auto">
+                <SheetContent className="bg-white border-l border-gray-200 overflow-y-auto">
                   <SheetHeader>
-                    <SheetTitle className="text-slate-900 text-xl">
+                    <SheetTitle className="text-gray-900 text-xl">
                       <motion.span className="text-amber-600 font-black">
                         {logo.title}
                       </motion.span>
@@ -292,7 +237,6 @@ const Navbar = ({
                     animate={{ opacity: 1 }}
                     className="flex flex-col gap-6 p-4 mt-8"
                   >
-                    {/* Mobile Menu Items */}
                     <Accordion type="single" collapsible className="flex w-full flex-col gap-1">
                       {menu.map((item, idx) => (
                         <motion.div
@@ -306,19 +250,18 @@ const Navbar = ({
                       ))}
                     </Accordion>
 
-                    {/* Mobile Auth Buttons */}
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
-                      className="border-t border-slate-200 pt-4 flex flex-col gap-3"
+                      className="border-t border-gray-200 pt-4 flex flex-col gap-3"
                     >
                       {user ? (
                         <>
                           <Button
                             asChild
                             variant="outline"
-                            className="w-full border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold"
+                            className="w-full border-amber-400/60 text-amber-600 hover:border-amber-500 hover:bg-amber-50 rounded-xl font-bold"
                             onClick={() => setIsOpen(false)}
                           >
                             <a href={dashboardUrl}>Dashboard</a>
@@ -327,7 +270,7 @@ const Navbar = ({
                             <button
                               type="submit"
                               onClick={() => setIsOpen(false)}
-                              className="w-full py-2.5 rounded-xl font-bold text-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400"
+                              className="w-full py-2.5 rounded-xl font-bold text-white bg-amber-500 hover:bg-amber-400"
                             >
                               Sign Out
                             </button>
@@ -338,7 +281,7 @@ const Navbar = ({
                           <Button
                             asChild
                             variant="outline"
-                            className="w-full border-amber-400/50 text-amber-400 hover:border-amber-400 hover:bg-amber-400/10 rounded-xl font-bold"
+                            className="w-full border-amber-400/60 text-amber-600 hover:border-amber-500 hover:bg-amber-50 rounded-xl font-bold"
                             onClick={() => setIsOpen(false)}
                           >
                             <a href={auth.login.url}>{auth.login.title}</a>
@@ -346,7 +289,7 @@ const Navbar = ({
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="w-full py-2.5 rounded-xl font-bold text-black bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 shadow-lg shadow-amber-500/20"
+                            className="w-full py-2.5 rounded-xl font-bold text-white bg-amber-500 hover:bg-amber-400 shadow-md shadow-amber-200"
                             onClick={() => {
                               setIsOpen(false);
                               window.location.href = auth.register.url;
@@ -378,10 +321,10 @@ const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger className="text-slate-700 hover:text-amber-600 data-[state=open]:text-amber-600 data-[state=open]:bg-amber-100 hover:bg-amber-50 rounded-lg transition-all duration-200 font-semibold">
+        <NavigationMenuTrigger className="text-gray-700 hover:text-amber-600 data-[state=open]:text-amber-600 data-[state=open]:bg-amber-50 hover:bg-amber-50 rounded-lg transition-all duration-200 font-semibold bg-transparent">
           {item.title}
         </NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-white/95 backdrop-blur-xl border border-amber-400/30 rounded-2xl shadow-2xl">
+        <NavigationMenuContent className="bg-white border border-gray-200 rounded-2xl shadow-xl">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -410,12 +353,9 @@ const renderMenuItem = (item: MenuItem) => {
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
         href={item.url}
-        className="group inline-flex h-11 w-max items-center justify-center rounded-lg bg-transparent px-5 py-2 text-sm font-bold text-slate-700 transition-all duration-200 hover:text-amber-600 hover:bg-amber-100 relative"
+        className="group inline-flex h-11 w-max items-center justify-center rounded-lg bg-transparent px-5 py-2 text-sm font-bold text-gray-700 transition-all duration-200 hover:text-amber-600 hover:bg-amber-50 relative"
       >
         <span className="relative z-10">{item.title}</span>
-        <motion.div
-          className="absolute inset-0 rounded-lg bg-gradient-to-r from-amber-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
-        />
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
@@ -424,17 +364,13 @@ const renderMenuItem = (item: MenuItem) => {
 const renderMobileMenuItem = (item: MenuItem, onClose: () => void) => {
   if (item.items) {
     return (
-      <AccordionItem key={item.title} value={item.title} className="border-slate-200">
-        <AccordionTrigger className="text-lg font-bold text-slate-900 hover:text-amber-600 hover:no-underline py-3 px-2 rounded-lg hover:bg-amber-50 transition-colors">
+      <AccordionItem key={item.title} value={item.title} className="border-gray-200">
+        <AccordionTrigger className="text-lg font-bold text-gray-900 hover:text-amber-600 hover:no-underline py-3 px-2 rounded-lg hover:bg-amber-50 transition-colors">
           {item.title}
         </AccordionTrigger>
         <AccordionContent className="mt-2 space-y-2 pl-2">
           {item.items.map((subItem) => (
-            <SubMenuLink
-              key={subItem.title}
-              item={subItem}
-              onClose={onClose}
-            />
+            <SubMenuLink key={subItem.title} item={subItem} onClose={onClose} />
           ))}
         </AccordionContent>
       </AccordionItem>
@@ -446,7 +382,7 @@ const renderMobileMenuItem = (item: MenuItem, onClose: () => void) => {
       key={item.title}
       href={item.url}
       onClick={onClose}
-      className="block text-lg font-bold text-slate-900 hover:text-amber-600 transition-colors px-3 py-3 rounded-lg hover:bg-amber-50"
+      className="block text-lg font-bold text-gray-900 hover:text-amber-600 transition-colors px-3 py-3 rounded-lg hover:bg-amber-50"
       whileHover={{ x: 8 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -455,16 +391,10 @@ const renderMobileMenuItem = (item: MenuItem, onClose: () => void) => {
   );
 };
 
-const SubMenuLink = ({
-  item,
-  onClose,
-}: {
-  item: MenuItem;
-  onClose?: () => void;
-}) => {
+const SubMenuLink = ({ item, onClose }: { item: MenuItem; onClose?: () => void }) => {
   return (
     <motion.a
-      className="flex flex-row gap-3 rounded-xl p-4 leading-none no-underline transition-all outline-none select-none hover:bg-amber-100 text-slate-700 hover:text-slate-900 group"
+      className="flex flex-row gap-3 rounded-xl p-4 leading-none no-underline transition-all outline-none select-none hover:bg-amber-50 text-gray-700 hover:text-gray-900 group"
       href={item.url}
       onClick={onClose}
       whileHover={{ x: 8 }}
@@ -478,11 +408,11 @@ const SubMenuLink = ({
         {item.icon}
       </motion.div>
       <div>
-        <div className="text-base font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
+        <div className="text-base font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
           {item.title}
         </div>
         {item.description && (
-          <p className="text-sm leading-snug text-slate-600 group-hover:text-slate-700 transition-colors">
+          <p className="text-sm leading-snug text-gray-500 group-hover:text-gray-600 transition-colors">
             {item.description}
           </p>
         )}

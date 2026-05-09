@@ -50,12 +50,12 @@ const getBusTag = (type: string): string => {
 };
 
 const tagColors: Record<string, string> = {
-  'Top Rated': 'bg-amber-400/10 text-amber-400 border-amber-400/30',
-  Popular: 'bg-blue-400/10 text-blue-400 border-blue-400/30',
-  Budget: 'bg-green-400/10 text-green-400 border-green-400/30',
-  Luxury: 'bg-purple-400/10 text-purple-400 border-purple-400/30',
-  Premium: 'bg-rose-400/10 text-rose-400 border-rose-400/30',
-  Special: 'bg-cyan-400/10 text-cyan-400 border-cyan-400/30',
+  'Top Rated': 'bg-amber-100 text-amber-700 border-amber-300',
+  Popular: 'bg-blue-100 text-blue-700 border-blue-300',
+  Budget: 'bg-green-100 text-green-700 border-green-300',
+  Luxury: 'bg-purple-100 text-purple-700 border-purple-300',
+  Premium: 'bg-rose-100 text-rose-700 border-rose-300',
+  Special: 'bg-cyan-100 text-cyan-700 border-cyan-300',
 };
 
 const getBusLabel = (type: string): string => {
@@ -93,12 +93,10 @@ export default function BusesSection() {
         setLoading(true);
         setError(null);
         const result = await getAllBuses({ limit: 100 });
-
         if (result.error) {
           setError(result.error);
           return;
         }
-
         setBuses(result.data?.data || []);
         setTotal(result.data?.meta?.total || 0);
       } catch (err) {
@@ -108,21 +106,15 @@ export default function BusesSection() {
         setLoading(false);
       }
     };
-
     fetchBuses();
   }, []);
 
-  const filtered = busType === ''
-    ? buses
-    : buses.filter((b) => b.type === busType);
-
-  // ✅ displayed — showAll না হলে শুধু ৩টা
+  const filtered = busType === '' ? buses : buses.filter((b) => b.type === busType);
   const displayed = showAll ? filtered : filtered.slice(0, 3);
 
   return (
-    <section ref={ref} className="bg-[#07111f] py-24 px-6 lg:px-12">
+    <section ref={ref} className="bg-white py-24 px-6 lg:px-12">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -130,31 +122,30 @@ export default function BusesSection() {
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12"
         >
           <div>
-            <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">
+            <p className="text-amber-500 text-sm font-semibold tracking-widest uppercase mb-3">
               — Our Fleet
             </p>
             <h2
-              className="text-4xl lg:text-5xl font-black text-white"
+              className="text-4xl lg:text-5xl font-black text-gray-900"
               style={{ fontFamily: "'Sora', sans-serif" }}
             >
-              All <span className="text-amber-400">Buses</span>
+              All <span className="text-amber-500">Buses</span>
             </h2>
           </div>
 
-          {/* Filter pills */}
           <div className="flex items-center gap-2 flex-wrap">
-            <SlidersHorizontal className="h-4 w-4 text-slate-400" />
+            <SlidersHorizontal className="h-4 w-4 text-gray-400" />
             {filters.map((filter) => (
               <button
                 key={filter.value}
                 onClick={() => {
                   setBusType(filter.value);
-                  setShowAll(false); // ✅ filter change হলে reset
+                  setShowAll(false);
                 }}
                 className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
                   busType === filter.value
-                    ? 'bg-amber-400 text-black border-amber-400'
-                    : 'text-white border-white/20 hover:border-amber-400/50'
+                    ? 'bg-amber-500 text-white border-amber-500'
+                    : 'text-gray-600 border-gray-200 hover:border-amber-400 hover:text-amber-600'
                 }`}
               >
                 {filter.label}
@@ -163,42 +154,34 @@ export default function BusesSection() {
           </div>
         </motion.div>
 
-        {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
-              <Loader2 className="h-12 w-12 text-amber-400 animate-spin mx-auto mb-4" />
-              <p className="text-slate-400">Loading buses...</p>
+              <Loader2 className="h-12 w-12 text-amber-500 animate-spin mx-auto mb-4" />
+              <p className="text-gray-400">Loading buses...</p>
             </div>
           </div>
         )}
 
-        {/* Error State */}
         {error && !loading && (
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
-              <p className="text-red-400 text-lg mb-2">Failed to load buses</p>
-              <p className="text-slate-400 text-sm">{error}</p>
+              <p className="text-red-500 text-lg mb-2">Failed to load buses</p>
+              <p className="text-gray-400 text-sm">{error}</p>
             </div>
           </div>
         )}
 
-        {/* Empty State */}
         {!loading && !error && filtered.length === 0 && (
           <div className="flex items-center justify-center h-96">
-            <div className="text-center">
-              <p className="text-slate-400 text-lg">No buses found for this category</p>
-            </div>
+            <p className="text-gray-400 text-lg">No buses found for this category</p>
           </div>
         )}
 
-        {/* Grid */}
         {!loading && displayed.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* ✅ displayed ব্যবহার */}
             {displayed.map((bus, i) => {
               const tag = getBusTag(bus.type);
-
               return (
                 <motion.div
                   key={bus.id}
@@ -207,65 +190,55 @@ export default function BusesSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="group bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-amber-400/30 transition-colors duration-300"
+                  className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-gray-200 hover:shadow-lg transition-all duration-300"
                 >
-                  {/* Image */}
                   <div className="relative h-44 overflow-hidden">
                     <img
                       src={getBusImage(bus.type)}
                       alt={bus.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#07111f] via-transparent to-transparent" />
-                    <Badge
-                      className={`absolute top-3 left-3 border text-xs font-semibold ${tagColors[tag] ?? ''}`}
-                    >
+                    <div className="absolute inset-0 bg-gradient-to-t from-white/50 via-transparent to-transparent" />
+                    <Badge className={`absolute top-3 left-3 border text-xs font-semibold ${tagColors[tag] ?? ''}`}>
                       {tag}
                     </Badge>
-                    <div className="absolute top-3 right-3 bg-black/50 backdrop-blur text-white px-3 py-1 rounded-lg text-xs font-medium">
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur text-gray-700 px-3 py-1 rounded-lg text-xs font-medium shadow-sm">
                       {bus.totalSeats} seats
                     </div>
                   </div>
 
-                  {/* Body */}
                   <div className="p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="text-white font-bold text-lg leading-tight">
-                          {bus.name}
-                        </h3>
-                        <p className="text-slate-400 text-sm mt-0.5">{getBusLabel(bus.type)}</p>
+                        <h3 className="text-gray-900 font-bold text-lg leading-tight">{bus.name}</h3>
+                        <p className="text-gray-400 text-sm mt-0.5">{getBusLabel(bus.type)}</p>
                       </div>
-                      <div className="flex items-center gap-1 bg-amber-400/10 border border-amber-400/20 rounded-lg px-2.5 py-1">
-                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                        <span className="text-amber-400 text-sm font-bold">4.5</span>
+                      <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1">
+                        <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+                        <span className="text-gray-700 text-sm font-bold">4.5</span>
                       </div>
                     </div>
 
-                    {/* Operator Info */}
-                    <div className="mb-4 p-3 bg-white/5 border border-white/10 rounded-lg">
-                      <p className="text-slate-400 text-xs mb-1">Operator</p>
-                      <p className="text-white font-semibold text-sm">{bus.operator.name}</p>
-                      <p className="text-slate-500 text-xs mt-1 flex items-center gap-1">
+                    <div className="mb-4 p-3 bg-gray-50 border border-gray-100 rounded-lg">
+                      <p className="text-gray-400 text-xs mb-1">Operator</p>
+                      <p className="text-gray-800 font-semibold text-sm">{bus.operator.name}</p>
+                      <p className="text-gray-400 text-xs mt-1 flex items-center gap-1">
                         <span>📱</span> {bus.operator.phone}
                       </p>
                     </div>
 
-                    {/* Footer */}
-                    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <div>
-                        <p className="text-slate-400 text-xs">Bus No. {bus.number}</p>
+                        <p className="text-gray-400 text-xs">Bus No. {bus.number}</p>
                         <div className="flex items-baseline gap-1 mt-0.5">
-                          <span className="text-amber-400 font-black text-xl">
-                            ৳{bus.pricePerSeat}
-                          </span>
-                          <span className="text-slate-500 text-xs">/ seat</span>
+                          <span className="text-amber-500 font-black text-xl">৳{bus.pricePerSeat}</span>
+                          <span className="text-gray-400 text-xs">/ seat</span>
                         </div>
                       </div>
                       <Button
                         size="sm"
                         onClick={() => router.push(`/find-buses?busType=${bus.type}&busName=${bus.name}`)}
-                        className="bg-amber-400 hover:bg-amber-300 text-black font-bold group/btn"
+                        className="bg-amber-500 hover:bg-amber-400 text-white font-bold shadow-sm group/btn"
                       >
                         Book
                         <ArrowRight className="ml-1 h-3.5 w-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
@@ -278,7 +251,6 @@ export default function BusesSection() {
           </div>
         )}
 
-        {/* Results count + View All button */}
         {!loading && buses.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -286,17 +258,15 @@ export default function BusesSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-center mt-12 flex flex-col items-center gap-4"
           >
-            <p className="text-slate-400 text-sm">
-              Showing <span className="text-amber-400 font-semibold">{displayed.length}</span> of{' '}
-              <span className="text-amber-400 font-semibold">{total}</span> buses
+            <p className="text-gray-400 text-sm">
+              Showing <span className="text-amber-500 font-semibold">{displayed.length}</span> of{' '}
+              <span className="text-amber-500 font-semibold">{total}</span> buses
             </p>
-
-            {/* ✅ View All button */}
             {filtered.length > 3 && (
               <Button
                 onClick={() => setShowAll(!showAll)}
                 variant="outline"
-                className="border-white/20 text-white hover:text-amber-400 bg-white/5 hover:bg-amber-400/10 hover:border-amber-400 group transition-all duration-300"
+                className="border-gray-200 text-gray-600 hover:text-amber-600 bg-white hover:bg-gray-50 hover:border-amber-400 group transition-all duration-300"
               >
                 {showAll ? 'Show Less' : `View All ${total} Buses`}
                 <ArrowRight
