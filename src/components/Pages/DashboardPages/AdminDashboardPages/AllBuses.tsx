@@ -48,14 +48,14 @@ const getBusImage = (type: string): string => {
 
 const getBusTag = (type: string) => {
   const tags: Record<string, { label: string; cls: string }> = {
-    AC: { label: 'Premium', cls: 'bg-rose-400/10 text-rose-400 border-rose-400/30' },
-    NON_AC: { label: 'Budget', cls: 'bg-green-400/10 text-green-400 border-green-400/30' },
-    SLEEPER: { label: 'Luxury', cls: 'bg-purple-400/10 text-purple-400 border-purple-400/30' },
-    DOUBLE_DECKER: { label: 'Special', cls: 'bg-cyan-400/10 text-cyan-400 border-cyan-400/30' },
-    AC_SLEEPER: { label: 'Luxury', cls: 'bg-purple-400/10 text-purple-400 border-purple-400/30' },
-    AC_CHAIR: { label: 'Premium', cls: 'bg-rose-400/10 text-rose-400 border-rose-400/30' },
+    AC: { label: 'Premium', cls: 'bg-rose-100 text-rose-700 border-rose-200' },
+    NON_AC: { label: 'Budget', cls: 'bg-green-100 text-green-700 border-green-200' },
+    SLEEPER: { label: 'Luxury', cls: 'bg-purple-100 text-purple-700 border-purple-200' },
+    DOUBLE_DECKER: { label: 'Special', cls: 'bg-cyan-100 text-cyan-700 border-cyan-200' },
+    AC_SLEEPER: { label: 'Luxury', cls: 'bg-purple-100 text-purple-700 border-purple-200' },
+    AC_CHAIR: { label: 'Premium', cls: 'bg-rose-100 text-rose-700 border-rose-200' },
   };
-  return tags[type] ?? { label: 'Standard', cls: 'bg-amber-400/10 text-amber-400 border-amber-400/30' };
+  return tags[type] ?? { label: 'Standard', cls: 'bg-amber-100 text-amber-700 border-amber-200' };
 };
 
 export default async function AllBuses() {
@@ -63,44 +63,28 @@ export default async function AllBuses() {
   const buses: Bus[] = res.data?.data ?? [];
 
   return (
-    <div className="min-h-screen bg-[#050d1a] relative overflow-hidden p-6 lg:p-12">
-      <div
-        className="absolute inset-0 opacity-5"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,180,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.1) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
-        }}
-      />
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full blur-3xl -z-10" />
+    <div className="min-h-screen bg-gray-50 relative overflow-hidden p-6 lg:p-12">
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gray-100 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
         <div className="mb-10 flex items-end justify-between">
           <div>
-            <p className="text-amber-400 text-sm font-semibold tracking-widest uppercase mb-3">
-              — Fleet Management
-            </p>
-            <h1 className="text-4xl lg:text-5xl font-black text-white mb-2">
-              All <span className="text-amber-400">Buses</span>
-            </h1>
-            <p className="text-slate-400 text-lg">
-              Total <span className="text-amber-400 font-semibold">{buses.length}</span> buses in fleet
-            </p>
+            <p className="text-gray-400 text-sm font-semibold tracking-widest uppercase mb-3">— Fleet Management</p>
+            <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-2">All <span className="text-gray-500">Buses</span></h1>
+            <p className="text-gray-400 text-lg">Total <span className="text-gray-700 font-semibold">{buses.length}</span> buses in fleet</p>
           </div>
           <Link href="/admin-dashboard/create-bus">
-            <Button className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-amber-400/10">
+            <Button className="flex items-center gap-2 bg-gray-900 hover:bg-gray-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-sm">
               <Plus className="w-4 h-4" /> New Bus
             </Button>
           </Link>
         </div>
 
-        {/* Grid */}
         {buses.length === 0 ? (
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
-              <Bus className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <p className="text-slate-500 text-lg">No buses found</p>
+              <Bus className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-400 text-lg">No buses found</p>
             </div>
           </div>
         ) : (
@@ -110,88 +94,58 @@ export default async function AllBuses() {
               const displayType = typeMapping[bus.type] ?? bus.type;
 
               return (
-                <div
-                  key={bus.id}
-                  className="group bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden hover:border-amber-400/30 transition-colors duration-300"
-                >
-                  {/* Image */}
+                <div key={bus.id} className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition-colors duration-300 shadow-sm">
                   <div className="relative h-44 overflow-hidden">
-                    <img
-                      src={getBusImage(bus.type)}
-                      alt={bus.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#050d1a] via-transparent to-transparent" />
+                    <img src={getBusImage(bus.type)} alt={bus.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
 
-                    {/* Type Badge */}
-                    <Badge className={`absolute top-3 left-3 border text-xs font-semibold ${tag.cls}`}>
-                      {tag.label}
-                    </Badge>
+                    <Badge className={`absolute top-3 left-3 border text-xs font-semibold ${tag.cls}`}>{tag.label}</Badge>
 
-                    {/* Seat Count */}
-                    <div className="absolute top-3 right-3 bg-black/50 backdrop-blur text-white px-3 py-1 rounded-lg text-xs font-medium flex items-center gap-1">
-                      <span>👥</span>
-                      {bus.totalSeats} seats
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur text-gray-700 px-3 py-1 rounded-lg text-xs font-medium flex items-center gap-1">
+                      <span>👥</span>{bus.totalSeats} seats
                     </div>
 
-                    {/* Status */}
-                    <div
-                      className={`absolute bottom-3 right-3 px-2.5 py-1.5 rounded-full text-xs font-bold ${
-                        bus.isActive
-                          ? 'bg-green-400/20 text-green-400 border border-green-400/30'
-                          : 'bg-red-400/20 text-red-400 border border-red-400/30'
-                      }`}
-                    >
+                    <div className={`absolute bottom-3 right-3 px-2.5 py-1.5 rounded-full text-xs font-bold ${bus.isActive ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'}`}>
                       {bus.isActive ? '🟢 Active' : '🔴 Inactive'}
                     </div>
                   </div>
 
-                  {/* Body */}
                   <div className="p-5">
-                    {/* Title + Rating */}
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="text-white font-bold text-lg leading-tight">
-                          {bus.name}
-                        </h3>
-                        <p className="text-slate-400 text-sm mt-0.5">{displayType}</p>
+                        <h3 className="text-gray-900 font-bold text-lg leading-tight">{bus.name}</h3>
+                        <p className="text-gray-400 text-sm mt-0.5">{displayType}</p>
                       </div>
-                      <div className="flex items-center gap-1 bg-amber-400/10 border border-amber-400/20 rounded-lg px-2.5 py-1 whitespace-nowrap">
-                        <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                        <span className="text-amber-400 text-sm font-bold">4.5</span>
+                      <div className="flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1 whitespace-nowrap">
+                        <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+                        <span className="text-amber-600 text-sm font-bold">4.5</span>
                       </div>
                     </div>
 
-                    {/* Operator Info */}
-                    <div className="mb-4 p-3 bg-white/5 border border-white/10 rounded-lg">
-                      <p className="text-slate-400 text-xs uppercase tracking-widest font-semibold mb-1">
-                        Operator
-                      </p>
-                      <p className="text-white font-semibold text-sm">{bus.operator.name}</p>
-                      <p className="text-slate-500 text-xs mt-1">📱 {bus.operator.phone}</p>
+                    <div className="mb-4 p-3 bg-gray-50 border border-gray-100 rounded-lg">
+                      <p className="text-gray-400 text-xs uppercase tracking-widest font-semibold mb-1">Operator</p>
+                      <p className="text-gray-800 font-semibold text-sm">{bus.operator.name}</p>
+                      <p className="text-gray-400 text-xs mt-1">📱 {bus.operator.phone}</p>
                     </div>
 
-                    {/* Price + Bus Number + View Button */}
-                    <div className="pt-4 border-t border-white/10 space-y-3">
+                    <div className="pt-4 border-t border-gray-100 space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-slate-400 text-xs uppercase tracking-widest">Bus #</p>
-                          <p className="text-white font-semibold text-sm">{bus.number}</p>
+                          <p className="text-gray-400 text-xs uppercase tracking-widest">Bus #</p>
+                          <p className="text-gray-800 font-semibold text-sm">{bus.number}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-slate-400 text-xs uppercase tracking-widest">Price</p>
+                          <p className="text-gray-400 text-xs uppercase tracking-widest">Price</p>
                           <div className="flex items-baseline gap-1 mt-0.5">
-                            <span className="text-amber-400 font-black text-xl">৳{bus.pricePerSeat}</span>
-                            <span className="text-slate-500 text-xs">/ seat</span>
+                            <span className="text-gray-900 font-black text-xl">৳{bus.pricePerSeat}</span>
+                            <span className="text-gray-400 text-xs">/ seat</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* View Button */}
                       <Link href={`/admin-dashboard/buses/${bus.id}`} className="block">
-                        <Button className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold h-10 rounded-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2">
-                          View Details
-                          <ArrowRight className="w-3.5 h-3.5" />
+                        <Button className="w-full bg-gray-900 hover:bg-gray-700 text-white font-bold h-10 rounded-lg uppercase tracking-wider text-xs flex items-center justify-center gap-2">
+                          View Details <ArrowRight className="w-3.5 h-3.5" />
                         </Button>
                       </Link>
                     </div>
@@ -202,12 +156,9 @@ export default async function AllBuses() {
           </div>
         )}
 
-        {/* Footer count */}
         {buses.length > 0 && (
           <div className="text-center mt-12">
-            <p className="text-slate-400 text-sm">
-              Showing <span className="text-amber-400 font-semibold">{buses.length}</span> buses in total
-            </p>
+            <p className="text-gray-400 text-sm">Showing <span className="text-gray-700 font-semibold">{buses.length}</span> buses in total</p>
           </div>
         )}
       </div>

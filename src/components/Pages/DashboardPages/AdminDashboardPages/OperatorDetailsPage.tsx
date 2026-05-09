@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import {
   Shield, CheckCircle, XCircle,
   Building2,
-  Pencil, Loader2, Lock, ArrowLeft,
+  Pencil, Loader2, ArrowLeft,
   User, Calendar, RefreshCw, Trash2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -12,9 +12,7 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getUserById, deleteUser } from '@/src/services/user.service';
-import EditOperatorModal from './EditOperatorModal'; // 👈 আলাদা ফাইল থেকে import
-
-// ─── Types ────────────────────────────────────────────────────────────────
+import EditOperatorModal from './EditOperatorModal';
 
 interface OperatorProfile {
   id: string;
@@ -39,8 +37,6 @@ interface Operator {
   operatorProfile?: OperatorProfile | null | undefined;
 }
 
-// ─── Stat Card ────────────────────────────────────────────────────────────
-
 function StatCard({ icon, label, value, accent = false }: {
   icon: React.ReactNode;
   label: string;
@@ -59,8 +55,6 @@ function StatCard({ icon, label, value, accent = false }: {
     </div>
   );
 }
-
-// ─── Info Card ────────────────────────────────────────────────────────────
 
 function InfoCard({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
@@ -81,8 +75,6 @@ function InfoCard({ title, icon, children }: { title: string; icon: React.ReactN
   );
 }
 
-// ─── Field Row ────────────────────────────────────────────────────────────
-
 function FieldRow({ label, value }: { label: string; value: string | null }) {
   return (
     <div className="flex items-start justify-between gap-4 py-3 border-b border-white/5 last:border-0">
@@ -91,8 +83,6 @@ function FieldRow({ label, value }: { label: string; value: string | null }) {
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────
 
 export default function OperatorDetailPage({ id }: { id: string }) {
   const router = useRouter();
@@ -158,7 +148,6 @@ export default function OperatorDetailPage({ id }: { id: string }) {
 
   return (
     <div className="min-h-screen bg-[#050d1a] relative overflow-hidden p-6 lg:p-12">
-      {/* Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
         backgroundImage: 'linear-gradient(rgba(255,180,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.1) 1px, transparent 1px)',
         backgroundSize: '60px 60px',
@@ -168,7 +157,6 @@ export default function OperatorDetailPage({ id }: { id: string }) {
 
       <div className="max-w-5xl mx-auto relative z-10">
 
-        {/* Back */}
         <Link href="/admin-dashboard/operators"
           className="inline-flex items-center gap-2 text-slate-400 hover:text-amber-400 text-sm mb-8 transition-colors group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Operators
@@ -187,7 +175,6 @@ export default function OperatorDetailPage({ id }: { id: string }) {
 
           <div className="px-8 pb-8">
             <div className="-mt-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              {/* Avatar + Name */}
               <div className="flex items-end gap-5">
                 {operator.profileImage ? (
                   <img src={operator.profileImage} alt={operator.name}
@@ -216,7 +203,6 @@ export default function OperatorDetailPage({ id }: { id: string }) {
                 </div>
               </div>
 
-              {/* Edit + Delete buttons */}
               <div className="self-start sm:self-auto flex items-center gap-3 flex-wrap">
                 <motion.button
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
@@ -237,7 +223,6 @@ export default function OperatorDetailPage({ id }: { id: string }) {
           </div>
         </motion.div>
 
-        {/* Stat Pills */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -262,7 +247,6 @@ export default function OperatorDetailPage({ id }: { id: string }) {
           />
         </motion.div>
 
-        {/* Info Cards Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <InfoCard title="Contact Info" icon={<User className="w-4 h-4" />}>
             <FieldRow label="Full Name" value={operator.name} />
@@ -280,16 +264,12 @@ export default function OperatorDetailPage({ id }: { id: string }) {
           )}
         </div>
       </div>
-
-      {/* Edit Modal — আলাদা component থেকে আসছে */}
       <EditOperatorModal
         operator={operator}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onUpdated={(updated) => setOperator(updated as Operator)}
       />
-
-      {/* Delete Confirm Dialog */}
       {deleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !deleteLoading && setDeleteDialog(false)} />

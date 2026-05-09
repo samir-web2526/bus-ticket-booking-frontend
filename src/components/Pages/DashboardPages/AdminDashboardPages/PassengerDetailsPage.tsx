@@ -11,11 +11,7 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { getUserById, deleteUser,type User as UserType} from '@/src/services/user.service';
-import EditPassengerModal from './EditPassengerModal'; // 👈 আলাদা ফাইল থেকে import
-
-// ─── Types ────────────────────────────────────────────────────────────────
-
-// ─── Stat Card ────────────────────────────────────────────────────────────
+import EditPassengerModal from './EditPassengerModal'; 
 
 function StatCard({ icon, label, value, accent = false }: {
   icon: React.ReactNode; label: string; value: string; accent?: boolean;
@@ -33,8 +29,6 @@ function StatCard({ icon, label, value, accent = false }: {
   );
 }
 
-// ─── Field Row ────────────────────────────────────────────────────────────
-
 function FieldRow({ label, value }: { label: string; value: string | null }) {
   return (
     <div className="flex items-start justify-between gap-4 py-3 border-b border-white/5 last:border-0">
@@ -43,8 +37,6 @@ function FieldRow({ label, value }: { label: string; value: string | null }) {
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────
 
 export default function PassengerDetailPage({ id }: { id: string }) {
   const router = useRouter();
@@ -103,7 +95,6 @@ export default function PassengerDetailPage({ id }: { id: string }) {
 
   return (
     <div className="min-h-screen bg-[#050d1a] relative overflow-hidden p-6 lg:p-12">
-      {/* Background */}
       <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
         backgroundImage: 'linear-gradient(rgba(255,180,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.1) 1px, transparent 1px)',
         backgroundSize: '60px 60px',
@@ -113,13 +104,11 @@ export default function PassengerDetailPage({ id }: { id: string }) {
 
       <div className="max-w-3xl mx-auto relative z-10">
 
-        {/* Back */}
         <Link href="/admin-dashboard/passengers"
           className="inline-flex items-center gap-2 text-slate-400 hover:text-amber-400 text-sm mb-8 transition-colors group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Passengers
         </Link>
 
-        {/* Hero Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           className="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden mb-6"
@@ -130,7 +119,7 @@ export default function PassengerDetailPage({ id }: { id: string }) {
 
           <div className="px-8 pb-8">
             <div className="-mt-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-              {/* Avatar + Name */}
+
               <div className="flex items-end gap-5">
                 {passenger.profileImage ? (
                   <img src={passenger.profileImage} alt={passenger.name}
@@ -156,7 +145,6 @@ export default function PassengerDetailPage({ id }: { id: string }) {
                 </div>
               </div>
 
-              {/* Edit + Delete buttons */}
               <div className="self-start sm:self-auto flex items-center gap-3">
                 <motion.button
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
@@ -177,7 +165,6 @@ export default function PassengerDetailPage({ id }: { id: string }) {
           </div>
         </motion.div>
 
-        {/* Stat Pills */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
@@ -200,7 +187,6 @@ export default function PassengerDetailPage({ id }: { id: string }) {
           />
         </motion.div>
 
-        {/* Contact Info Card */}
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}
           className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden"
@@ -219,16 +205,12 @@ export default function PassengerDetailPage({ id }: { id: string }) {
         </motion.div>
       </div>
 
-      {/* Edit Modal — আলাদা component থেকে আসছে */}
       <EditPassengerModal
         passenger={passenger}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        // onUpdated={(updated) => setPassenger(updated as Passenger)}
         onUpdated={(updated) => setPassenger(updated)}
       />
-
-      {/* Delete Confirm Dialog */}
       {deleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !deleteLoading && setDeleteDialog(false)} />

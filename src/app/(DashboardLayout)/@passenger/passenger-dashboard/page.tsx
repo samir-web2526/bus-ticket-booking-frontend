@@ -1,4 +1,4 @@
-// passenger-dashboard/page.tsx — Server Component (data fetch করে Client এ pass করে)
+
 import PassengerDashboardClient from '@/src/components/Pages/DashboardPages/PassengerDashboardPages/PassengerDashboardClient';
 import { getMyBookings } from '@/src/services/dashboard-services/bookings';
 export const dynamic = "force-dynamic";

@@ -1,43 +1,24 @@
 "use client";
 
-import { useState} from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, Zap, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { updateUser, User } from "@/src/services/user.service";
 
-// ─── Styles ───────────────────────────────────────────────────────────────
-
-const inputCls =
-  "w-full bg-white/5 border border-white/20 text-white rounded-xl h-11 px-3 focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-400/20 transition-colors placeholder:text-slate-600";
-
-const disabledInputCls =
-  "w-full bg-white/5 border border-white/10 text-slate-400 rounded-xl h-11 px-3 cursor-not-allowed opacity-60";
-
+const inputCls = "w-full bg-white border border-gray-200 text-gray-900 rounded-xl h-11 px-3 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-200 transition-colors placeholder:text-gray-300";
+const disabledInputCls = "w-full bg-gray-50 border border-gray-100 text-gray-400 rounded-xl h-11 px-3 cursor-not-allowed opacity-60";
 
 interface EditPassengerModalProps {
-  passenger: User;        // ✅ User
+  passenger: User;
   open: boolean;
   onClose: () => void;
-  onUpdated: (p: User) => void;  // ✅ User
+  onUpdated: (p: User) => void;
 }
 
-// ─── Component ────────────────────────────────────────────────────────────
-
-export default function EditPassengerModal({
-  passenger,
-  open,
-  onClose,
-  onUpdated,
-}: EditPassengerModalProps) {
+export default function EditPassengerModal({ passenger, open, onClose, onUpdated }: EditPassengerModalProps) {
   const [form, setForm] = useState({
     name: passenger.name || "",
     email: passenger.email || "",
@@ -48,191 +29,69 @@ export default function EditPassengerModal({
 
   const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (open) {
-  //     setForm({
-  //       name: passenger.name || "",
-  //       email: passenger.email || "",
-  //       phone: passenger.phone || "",
-  //       status: passenger.status || "ACTIVE",
-  //       isVerified: passenger.isVerified ?? false,
-  //     });
-  //   }
-  // }, [open, passenger]);
+  const handleChange = (field: keyof typeof form, value: string | boolean) => setForm((prev) => ({ ...prev, [field]: value }));
 
-  // ✅ FIXED: strict typing (string | boolean)
-  const handleChange = (field: keyof typeof form, value: string | boolean) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const res = await updateUser(passenger.id, {
+        email: form.email,
+        phone: form.phone,
+        status: form.status as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
+        isVerified: form.isVerified,
+      });
+
+      if (res.error || !res.data) { toast.error(res.error ?? 'Failed to update'); return; }
+      toast.success('Passenger updated successfully!');
+      onUpdated(res.data);
+      onClose();
+    } catch { toast.error('Something went wrong'); }
+    finally { setLoading(false); }
   };
 
-//   const handleSubmit = async () => {
-//     try {
-//       setLoading(true);
-
-//       // const payload = {
-//       //   email: form.email,
-//       //   phone: form.phone,
-//       //   status: form.status,
-//       //   isVerified: form.isVerified,
-//       // };
-
-//       const payload: {
-//   email: string;
-//   phone: string;
-//   status: 'ACTIVE' | 'BLOCKED' | 'DELETED';
-//   isVerified: boolean;
-// } = {
-//   email: form.email,
-//   phone: form.phone,
-//   status: form.status as 'ACTIVE' | 'BLOCKED' | 'DELETED',
-//   isVerified: form.isVerified,
-// };
-
-//       const res = await updateUser(passenger.id, payload);
-
-//       if (res.error) {
-//         toast.error(res.error);
-//         return;
-//       }
-
-//       toast.success("Passenger updated successfully!");
-
-//      const updatedPassenger: User = {
-//   ...passenger,
-//   email: form.email,
-//   phone: form.phone || null,
-//   status: form.status as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
-//   isVerified: form.isVerified,
-// };
-
-
-//       onUpdated(updatedPassenger);
-
-//       onClose();
-//     } catch {
-//       toast.error("Something went wrong");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-const handleSubmit = async () => {
-  try {
-    setLoading(true);
-
-    const res = await updateUser(passenger.id, {
-      email: form.email,
-      phone: form.phone,
-      status: form.status as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
-      isVerified: form.isVerified,
-    });
-
-    if (res.error || !res.data) {
-      toast.error(res.error ?? 'Failed to update');
-      return;
-    }
-
-    toast.success('Passenger updated successfully!');
-    onUpdated(res.data); // ✅ User type সরাসরি আসছে
-    onClose();
-  } catch {
-    toast.error('Something went wrong');
-  } finally {
-    setLoading(false);
-  }
-};
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-[#050d1a] border border-white/10 text-white max-w-lg rounded-3xl p-0 overflow-hidden shadow-2xl">
-
-        <DialogHeader className="px-8 pt-8 pb-5 border-b border-white/10">
+      <DialogContent className="bg-white border border-gray-200 text-gray-900 max-w-lg rounded-3xl p-0 overflow-hidden shadow-xl">
+        <DialogHeader className="px-8 pt-8 pb-5 border-b border-gray-100">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-amber-400 text-xs font-semibold uppercase mb-1">
-              — Edit Passenger
-            </p>
-            <DialogTitle className="text-white font-black text-2xl">
-              Update <span className="text-amber-400">Passenger</span>
-            </DialogTitle>
+            <p className="text-gray-400 text-xs font-semibold uppercase mb-1">— Edit Passenger</p>
+            <DialogTitle className="text-gray-900 font-black text-2xl">Update <span className="text-gray-500">Passenger</span></DialogTitle>
           </motion.div>
         </DialogHeader>
 
         <div className="px-8 py-6 space-y-4">
-
-          {/* Name */}
           <div>
-            <label className="text-slate-400 text-sm flex items-center gap-2">
-              <Lock className="w-3 h-3" /> Full Name
-            </label>
+            <label className="text-gray-400 text-sm flex items-center gap-2"><Lock className="w-3 h-3" /> Full Name</label>
             <input disabled value={form.name} className={disabledInputCls} />
           </div>
-
-          {/* Email */}
           <div>
-            <label className="text-amber-400 text-sm">Email</label>
-            <input
-              value={form.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              className={inputCls}
-            />
+            <label className="text-gray-600 text-sm font-semibold block mb-1">Email</label>
+            <input value={form.email} onChange={(e) => handleChange("email", e.target.value)} className={inputCls} />
           </div>
-
-          {/* Phone */}
           <div>
-            <label className="text-amber-400 text-sm">Phone</label>
-            <input
-              value={form.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              className={inputCls}
-            />
+            <label className="text-gray-600 text-sm font-semibold block mb-1">Phone</label>
+            <input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} />
           </div>
-
-          {/* Status */}
           <div>
-            <label className="text-amber-400 text-sm">Status</label>
-            <select
-              value={form.status}
-              onChange={(e) => handleChange("status", e.target.value)}
-              className={inputCls}
-            >
+            <label className="text-gray-600 text-sm font-semibold block mb-1">Status</label>
+            <select value={form.status} onChange={(e) => handleChange("status", e.target.value)} className={inputCls}>
               <option value="ACTIVE">Active</option>
               <option value="BLOCKED">Blocked</option>
               <option value="DELETED">Deleted</option>
             </select>
           </div>
-
-          {/* Verified */}
           <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={form.isVerified}
-              onChange={(e) => handleChange("isVerified", e.target.checked)}
-              className="w-4 h-4 accent-amber-400"
-            />
-            <span className="text-sm text-slate-300">
-              {form.isVerified ? "Verified" : "Not Verified"}
-            </span>
+            <input type="checkbox" checked={form.isVerified} onChange={(e) => handleChange("isVerified", e.target.checked)} className="w-4 h-4 accent-gray-900" />
+            <span className="text-sm text-gray-600">{form.isVerified ? "Verified" : "Not Verified"}</span>
           </div>
-
         </div>
 
-        <DialogFooter className="px-8 py-5 border-t border-white/10 gap-3">
-          <Button onClick={onClose} disabled={loading} className="flex-1">
+        <DialogFooter className="px-8 py-5 border-t border-gray-100 gap-3">
+          <Button onClick={onClose} disabled={loading} variant="outline" className="flex-1 border-gray-200 text-gray-600 rounded-xl h-11">
             Cancel
           </Button>
-
-          <motion.button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="flex-1 bg-amber-400 text-black rounded-xl py-2 flex items-center justify-center gap-2"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Saving...
-              </>
-            ) : (
-              <>
-                <Zap className="w-4 h-4" /> Save Changes
-              </>
-            )}
+          <motion.button onClick={handleSubmit} disabled={loading} className="flex-1 bg-gray-900 hover:bg-gray-700 text-white rounded-xl py-2 flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-sm">
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : <><Zap className="w-4 h-4" /> Save Changes</>}
           </motion.button>
         </DialogFooter>
       </DialogContent>
