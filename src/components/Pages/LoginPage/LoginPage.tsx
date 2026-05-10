@@ -22,9 +22,9 @@ const signinSchema = z.object({
 type SigninFormValues = z.infer<typeof signinSchema>
 
 const DUMMY_CREDENTIALS = {
-  ADMIN:     { email: "admin@busticketbd.com",     password: "admin123" },
-  OPERATOR:  { email: "operator@busticketbd.com",  password: "operator123" },
-  PASSENGER: { email: "passenger@busticketbd.com", password: "passenger123" },
+  ADMIN:     { email: "admin@gmail.com",     password: "admin123" },
+  OPERATOR:  { email: "operator1@gmail.com",  password: "123456" },
+  PASSENGER: { email: "pas1@gmail.com", password: "Passenger1!" },
 } as const
 
 type DummyRole = keyof typeof DUMMY_CREDENTIALS

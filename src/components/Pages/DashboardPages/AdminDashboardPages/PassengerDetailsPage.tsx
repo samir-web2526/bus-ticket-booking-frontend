@@ -10,20 +10,20 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { getUserById, deleteUser,type User as UserType} from '@/src/services/user.service';
-import EditPassengerModal from './EditPassengerModal'; 
+import { getUserById, deleteUser, type User as UserType } from '@/src/services/user.service';
+import EditPassengerModal from './EditPassengerModal';
 
 function StatCard({ icon, label, value, accent = false }: {
   icon: React.ReactNode; label: string; value: string; accent?: boolean;
 }) {
   return (
-    <div className={`p-5 rounded-2xl border flex flex-col gap-3 ${accent ? 'bg-amber-400/5 border-amber-400/20' : 'bg-white/[0.03] border-white/10'}`}>
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${accent ? 'bg-amber-400/15 text-amber-400' : 'bg-white/5 text-slate-400'}`}>
+    <div className={`p-5 rounded-2xl border flex flex-col gap-3 ${accent ? 'bg-amber-50 border-amber-200' : 'bg-gray-50 border-gray-200'}`}>
+      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${accent ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-500'}`}>
         {icon}
       </div>
       <div>
-        <p className="text-slate-500 text-xs mb-0.5">{label}</p>
-        <p className={`font-bold text-sm leading-snug ${accent ? 'text-amber-400' : 'text-white'}`}>{value}</p>
+        <p className="text-gray-400 text-xs mb-0.5">{label}</p>
+        <p className={`font-bold text-sm leading-snug ${accent ? 'text-amber-600' : 'text-gray-800'}`}>{value}</p>
       </div>
     </div>
   );
@@ -31,9 +31,9 @@ function StatCard({ icon, label, value, accent = false }: {
 
 function FieldRow({ label, value }: { label: string; value: string | null }) {
   return (
-    <div className="flex items-start justify-between gap-4 py-3 border-b border-white/5 last:border-0">
-      <p className="text-slate-500 text-xs uppercase tracking-wider shrink-0 pt-0.5">{label}</p>
-      <p className="text-white text-sm font-semibold text-right">{value ?? 'Not provided'}</p>
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-gray-100 last:border-0">
+      <p className="text-gray-400 text-xs uppercase tracking-wider shrink-0 pt-0.5">{label}</p>
+      <p className="text-gray-800 text-sm font-semibold text-right">{value ?? 'Not provided'}</p>
     </div>
   );
 }
@@ -79,7 +79,7 @@ export default function PassengerDetailPage({ id }: { id: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050d1a] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -87,34 +87,30 @@ export default function PassengerDetailPage({ id }: { id: string }) {
 
   if (error || !passenger) {
     return (
-      <div className="min-h-screen bg-[#050d1a] flex items-center justify-center">
-        <p className="text-red-400">{error || 'Passenger not found'}</p>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <p className="text-red-500">{error || 'Passenger not found'}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#050d1a] relative overflow-hidden p-6 lg:p-12">
-      <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
-        backgroundImage: 'linear-gradient(rgba(255,180,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.1) 1px, transparent 1px)',
-        backgroundSize: '60px 60px',
-      }} />
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-amber-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-white relative overflow-hidden p-6 lg:p-12">
+      {/* Subtle background blob */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gray-100 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-3xl mx-auto relative z-10">
 
         <Link href="/admin-dashboard/passengers"
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-amber-400 text-sm mb-8 transition-colors group">
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-gray-700 text-sm mb-8 transition-colors group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Passengers
         </Link>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="bg-white/[0.03] border border-white/10 rounded-3xl overflow-hidden mb-6"
+          className="bg-white border border-gray-200 rounded-3xl overflow-hidden mb-6 shadow-sm"
         >
-          <div className="h-32 bg-gradient-to-r from-blue-500/20 via-blue-400/10 to-transparent relative">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(96,165,250,0.15),transparent_60%)]" />
+          <div className="h-32 bg-gradient-to-r from-blue-50 via-blue-100/60 to-transparent relative">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(96,165,250,0.12),transparent_60%)]" />
           </div>
 
           <div className="px-8 pb-8">
@@ -123,25 +119,25 @@ export default function PassengerDetailPage({ id }: { id: string }) {
               <div className="flex items-end gap-5">
                 {passenger.profileImage ? (
                   <img src={passenger.profileImage} alt={passenger.name}
-                    className="w-24 h-24 rounded-2xl object-cover border-4 border-[#050d1a] shadow-xl" />
+                    className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-xl" />
                 ) : (
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-400/20 to-blue-600/10 border-4 border-[#050d1a] flex items-center justify-center text-blue-400 font-black text-4xl shadow-xl">
+                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 border-4 border-white flex items-center justify-center text-blue-500 font-black text-4xl shadow-xl">
                     {passenger.name?.charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div className="pb-1">
                   <div className="flex items-center gap-3 mb-1 flex-wrap">
-                    <h1 className="text-white font-black text-2xl lg:text-3xl">{passenger.name}</h1>
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${passenger.status === 'ACTIVE' ? 'bg-green-400/10 text-green-400 border-green-400/20' : 'bg-red-400/10 text-red-400 border-red-400/20'}`}>
+                    <h1 className="text-gray-900 font-black text-2xl lg:text-3xl">{passenger.name}</h1>
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${passenger.status === 'ACTIVE' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-red-50 text-red-500 border-red-200'}`}>
                       {passenger.status}
                     </span>
                     {passenger.isVerified && (
-                      <span className="flex items-center gap-1 text-xs font-bold text-blue-400 bg-blue-400/10 border border-blue-400/20 px-2.5 py-1 rounded-full">
+                      <span className="flex items-center gap-1 text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full">
                         <CheckCircle className="w-3 h-3" /> Verified
                       </span>
                     )}
                   </div>
-                  <p className="text-slate-400 text-sm">{passenger.email}</p>
+                  <p className="text-gray-400 text-sm">{passenger.email}</p>
                 </div>
               </div>
 
@@ -149,14 +145,14 @@ export default function PassengerDetailPage({ id }: { id: string }) {
                 <motion.button
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                   onClick={() => setModalOpen(true)}
-                  className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-lg shadow-amber-400/10"
+                  className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-sm transition-all"
                 >
                   <Pencil className="w-4 h-4" /> Edit
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
                   onClick={() => setDeleteDialog(true)}
-                  className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 text-red-400 font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider transition-all"
+                  className="flex items-center gap-2 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 text-red-500 font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider transition-all"
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </motion.button>
@@ -189,13 +185,13 @@ export default function PassengerDetailPage({ id }: { id: string }) {
 
         <motion.div
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-white/[0.03] border border-white/10 rounded-2xl overflow-hidden"
+          className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm"
         >
-          <div className="px-6 py-4 border-b border-white/10 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center text-amber-400">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
               <User className="w-4 h-4" />
             </div>
-            <p className="text-white font-bold text-sm uppercase tracking-wider">Contact Info</p>
+            <p className="text-gray-800 font-bold text-sm uppercase tracking-wider">Contact Info</p>
           </div>
           <div className="p-6">
             <FieldRow label="Full Name" value={passenger.name} />
@@ -211,30 +207,30 @@ export default function PassengerDetailPage({ id }: { id: string }) {
         onClose={() => setModalOpen(false)}
         onUpdated={(updated) => setPassenger(updated)}
       />
+
       {deleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !deleteLoading && setDeleteDialog(false)} />
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => !deleteLoading && setDeleteDialog(false)} />
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="relative bg-[#050d1a] border border-red-500/20 rounded-3xl p-8 max-w-md w-full shadow-2xl"
+            className="relative bg-white border border-red-100 rounded-3xl p-8 max-w-md w-full shadow-2xl"
           >
-            <div className="absolute top-0 right-0 w-48 h-48 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 mb-5">
+            <div className="w-14 h-14 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-red-500 mb-5">
               <Trash2 className="w-6 h-6" />
             </div>
             <p className="text-red-400 text-xs font-semibold tracking-widest uppercase mb-2">— Danger Zone</p>
-            <h2 className="text-white font-black text-2xl mb-2">Delete Passenger?</h2>
-            <p className="text-slate-400 text-sm mb-8">
+            <h2 className="text-gray-900 font-black text-2xl mb-2">Delete Passenger?</h2>
+            <p className="text-gray-400 text-sm mb-8">
               Are you sure you want to delete{' '}
-              <span className="text-white font-semibold">{passenger.name}</span>?{' '}
+              <span className="text-gray-900 font-semibold">{passenger.name}</span>?{' '}
               This action cannot be undone.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteDialog(false)}
                 disabled={deleteLoading}
-                className="flex-1 border border-white/10 bg-white/5 text-slate-300 hover:border-white/20 hover:text-white rounded-xl h-11 font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-50"
+                className="flex-1 border border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300 hover:text-gray-800 rounded-xl h-11 font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-50"
               >
                 Cancel
               </button>
