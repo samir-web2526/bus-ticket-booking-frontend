@@ -86,14 +86,14 @@ export default function TestimonialsSection() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="text-center mb-24"
         >
-          <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-8">
+          <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-6">
             Testimonials
           </p>
-          <h2 className="text-4xl lg:text-7xl font-black text-foreground font-heading tracking-tighter">
+          <h2 className="text-4xl lg:text-6xl font-bold text-foreground tracking-tight">
             Loved by <br />
-            <span className="text-amber-500 italic">50,000+ Verified Riders</span>
+            <span className="text-amber-600">50,000+ Happy Travelers</span>
           </h2>
-          <p className="text-muted-foreground mt-8 max-w-2xl mx-auto font-medium text-xl leading-relaxed italic">See why our community ranks us as Bangladesh&apos;s most trusted booking platform.</p>
+          <p className="text-muted-foreground mt-6 max-w-2xl mx-auto font-normal text-lg leading-relaxed">See why our community ranks us as Bangladesh&apos;s most trusted booking platform.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -115,19 +115,19 @@ export default function TestimonialsSection() {
                 ))}
               </div>
 
-              <p className="text-foreground text-lg italic leading-relaxed mb-10 font-medium relative z-10">
+              <p className="text-foreground text-lg leading-relaxed mb-10 font-normal relative z-10">
                 &ldquo;{t.text}&rdquo;
               </p>
 
               <div className="flex items-center gap-5 pt-10 border-t border-border/50 relative z-10">
-                <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white font-black text-xs flex-shrink-0 shadow-lg shadow-slate-900/10">
+                <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-lg shadow-slate-900/10">
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="text-foreground font-black text-lg font-heading tracking-tight leading-none mb-2">{t.name}</p>
+                  <p className="text-foreground font-semibold text-lg leading-tight mb-1">{t.name}</p>
                   <div className="flex items-center gap-2">
                      <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                     <p className="text-muted-foreground text-[9px] font-black uppercase tracking-[0.2em]">{t.route}</p>
+                     <p className="text-muted-foreground text-sm font-medium">{t.route}</p>
                   </div>
                 </div>
               </div>

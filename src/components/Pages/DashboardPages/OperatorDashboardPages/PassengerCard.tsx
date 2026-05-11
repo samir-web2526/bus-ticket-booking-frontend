@@ -23,7 +23,7 @@ function StatusBadge({ status }: { status?: string }) {
   const cfg = map[s] ?? map.ACTIVE
   return (
     <span
-      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black italic tracking-widest border ${cfg.cls}`}
+      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium border ${cfg.cls}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${cfg.dot}`} />
       {s}
@@ -54,7 +54,7 @@ function DeleteConfirmModal({
       onDeleted(passenger.id)
       onClose()
     } catch {
-      setError('CRITICAL: TERMINATION SEQUENCE FAILED')
+      setError('Failed to delete user. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -71,12 +71,12 @@ function DeleteConfirmModal({
               <AlertTriangle className="w-10 h-10 text-destructive animate-pulse" />
             </div>
             <div>
-              <p className="text-destructive text-[10px] font-black tracking-[0.4em] uppercase mb-4 italic">— TERMINATION PROTOCOL</p>
-              <DialogTitle className="text-foreground font-black text-3xl font-heading uppercase italic tracking-tighter leading-none mb-4">
-                SCRUB <span className="text-destructive">PERSONNEL</span> NODE?
+              <p className="text-destructive text-sm font-medium mb-3">Delete User</p>
+              <DialogTitle className="text-foreground font-bold text-2xl tracking-tight leading-none mb-4">
+                Delete <span className="text-destructive">{passenger.name}</span>?
               </DialogTitle>
-              <p className="text-muted-foreground text-[11px] font-black uppercase tracking-[0.1em] italic leading-relaxed">
-                Confirming permanent deletion of <span className="text-foreground">{passenger.name}</span>. This operational node will be removed from the registry.
+              <p className="text-muted-foreground text-base font-normal leading-relaxed">
+                This action cannot be undone. The user will be permanently removed from the system.
               </p>
             </div>
           </div>
@@ -84,7 +84,7 @@ function DeleteConfirmModal({
 
         <div className="px-12 pb-12 pt-6 space-y-4 relative z-10">
           {error && (
-            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl flex items-center gap-3 text-destructive text-[10px] font-black uppercase tracking-widest italic mb-4">
+            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl flex items-center gap-3 text-destructive text-sm font-medium mb-4">
               <Activity className="w-4 h-4" />
               {error}
             </div>
@@ -95,24 +95,24 @@ function DeleteConfirmModal({
               variant="outline"
               onClick={onClose}
               disabled={loading}
-              className="h-16 border-border bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest italic transition-all duration-500"
+              className="h-14 border-border bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground rounded-2xl text-base font-medium transition-all duration-500"
             >
-              ABORT
+              Cancel
             </Button>
             <Button
               onClick={handleDelete}
               disabled={loading}
-              className="h-16 bg-destructive hover:bg-destructive/90 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest italic shadow-2xl shadow-destructive/20 transition-all duration-500 group"
+              className="h-14 bg-destructive hover:bg-destructive/90 text-white font-semibold rounded-2xl text-base shadow-xl shadow-destructive/20 transition-all duration-500 group"
             >
               {loading
                 ? <Loader2 className="w-4 h-4 animate-spin" />
-                : 'TERMINATE NODE'}
+                : 'Delete User'}
             </Button>
           </div>
           
           <div className="flex items-center justify-center gap-3 opacity-20 select-none pt-4">
              <div className="h-[1px] w-8 bg-border" />
-             <p className="text-[8px] font-black uppercase tracking-[0.5em]">SECURE LINK: {passenger.id.slice(0, 8)}</p>
+             <p className="text-xs font-medium text-muted-foreground">ID: {passenger.id.slice(0, 8)}</p>
              <div className="h-[1px] w-8 bg-border" />
           </div>
         </div>
@@ -135,14 +135,14 @@ export function PassengerCard({
       <TableRow className="border-border/40 hover:bg-muted/30 transition-all duration-500 group/row relative overflow-hidden">
         <TableCell className="py-8 pl-10 relative z-10">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shrink-0 shadow-lg group-hover/row:scale-110 transition-transform italic font-heading">
+            <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shrink-0 shadow-lg group-hover/row:scale-110 transition-transform font-bold text-xl">
               {passenger.name?.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="text-foreground font-black text-sm uppercase tracking-tight italic leading-none mb-1.5 group-hover/row:text-amber-500 transition-colors">{passenger.name}</p>
+              <p className="text-foreground font-semibold text-base leading-none mb-1.5 group-hover/row:text-amber-500 transition-colors">{passenger.name}</p>
               <div className="flex items-center gap-2">
                  <Mail className="w-3 h-3 text-muted-foreground opacity-40" />
-                 <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest italic opacity-40">{passenger.email}</p>
+                 <p className="text-muted-foreground text-sm font-medium opacity-60">{passenger.email}</p>
               </div>
             </div>
           </div>
@@ -153,8 +153,8 @@ export function PassengerCard({
               <div className="p-2 bg-muted rounded-xl">
                  <Phone className="w-3 h-3 text-amber-500 opacity-60" />
               </div>
-              <p className="text-foreground text-[10px] font-black uppercase tracking-widest italic">
-                {passenger.phone ?? <span className="opacity-20">NOT DETECTED</span>}
+              <p className="text-foreground text-sm font-medium">
+                {passenger.phone ?? <span className="opacity-40">No phone</span>}
               </p>
            </div>
         </TableCell>
@@ -164,8 +164,8 @@ export function PassengerCard({
               <div className="p-2 bg-muted rounded-xl">
                  <User className="w-3 h-3 text-blue-500 opacity-60" />
               </div>
-              <p className="text-foreground text-[10px] font-black uppercase tracking-widest italic">
-                {passenger.passengerProfile?.gender ?? <span className="opacity-20">UNDETERMINED</span>}
+              <p className="text-foreground text-sm font-medium">
+                {passenger.passengerProfile?.gender ?? <span className="opacity-40">Not set</span>}
               </p>
            </div>
         </TableCell>
@@ -175,8 +175,8 @@ export function PassengerCard({
               <div className="p-2 bg-muted rounded-xl">
                  <Calendar className="w-3 h-3 text-emerald-500 opacity-60" />
               </div>
-              <p className="text-foreground text-[10px] font-black uppercase tracking-widest italic">
-                {passenger.passengerProfile?.dateOfBirth ?? <span className="opacity-20">TBD</span>}
+              <p className="text-foreground text-sm font-medium">
+                {passenger.passengerProfile?.dateOfBirth ?? <span className="opacity-40">Not set</span>}
               </p>
            </div>
         </TableCell>
@@ -186,7 +186,7 @@ export function PassengerCard({
               <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-lg">
                  <ShieldCheck className="w-4 h-4" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 italic">
+              <span className="text-sm font-semibold text-amber-600">
                 {passenger.role}
               </span>
            </div>

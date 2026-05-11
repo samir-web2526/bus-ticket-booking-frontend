@@ -46,9 +46,9 @@ export default function EditPassengerModal({ passenger, open, onClose, onUpdated
     finally { setLoading(false); }
   };
 
-  const inputCls = "w-full bg-muted/50 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-muted-foreground/30 text-sm font-black uppercase tracking-tight";
-  const disabledInputCls = "w-full bg-muted/20 border border-border/30 text-muted-foreground rounded-2xl h-14 px-4 cursor-not-allowed opacity-60 text-sm font-black uppercase tracking-tight";
-  const labelCls = "text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] block mb-3 ml-1";
+  const inputCls = "w-full bg-muted/50 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-muted-foreground/50 text-base font-normal";
+  const disabledInputCls = "w-full bg-muted/20 border border-border/30 text-muted-foreground rounded-2xl h-14 px-4 cursor-not-allowed opacity-60 text-base font-normal";
+  const labelCls = "text-sm font-semibold text-amber-600 block mb-3 ml-1";
   const sectionCls = "p-8 bg-muted/20 border border-border/50 rounded-[32px] space-y-6";
 
   return (
@@ -59,9 +59,9 @@ export default function EditPassengerModal({ passenger, open, onClose, onUpdated
         <DialogHeader className="px-10 pt-10 pb-8 border-b border-border/50 relative shrink-0">
           <div className="flex items-center justify-between">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-              <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-3 italic">— Guest Calibration</p>
-              <DialogTitle className="text-foreground font-black text-4xl font-heading uppercase italic tracking-tighter leading-none">
-                Adjust <span className="text-amber-500">Passenger</span>
+              <p className="text-amber-600 text-sm font-medium tracking-wide mb-2">Edit Passenger</p>
+              <DialogTitle className="text-foreground font-bold text-3xl tracking-tight leading-none">
+                Edit <span className="text-amber-600">Passenger</span>
               </DialogTitle>
             </motion.div>
             <Button variant="ghost" size="icon" onClick={onClose} className="rounded-2xl hover:bg-muted text-muted-foreground transition-all duration-500">
@@ -74,10 +74,10 @@ export default function EditPassengerModal({ passenger, open, onClose, onUpdated
           <section className={sectionCls}>
              <div className="flex items-center gap-3 mb-2">
                <UserCheck className="w-4 h-4 text-amber-500" />
-               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Identity Node</p>
+               <p className="text-xs font-medium text-muted-foreground opacity-50">Identity</p>
             </div>
             <div>
-              <label className={labelCls}>Authorized Name</label>
+              <label className={labelCls}>Name</label>
               <div className="relative">
                 <input disabled value={form.name} className={disabledInputCls} />
                 <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30" />
@@ -103,9 +103,9 @@ export default function EditPassengerModal({ passenger, open, onClose, onUpdated
 
           <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className={sectionCls}>
-               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40 mb-2">Registry Status</p>
+               <p className="text-xs font-medium text-muted-foreground opacity-50 mb-2">Account Status</p>
                <div>
-                  <label className={labelCls}>Access Level</label>
+                  <label className={labelCls}>Status</label>
                   <select value={form.status} onChange={(e) => handleChange("status", e.target.value)} className={inputCls}>
                     <option value="ACTIVE">ACTIVE CLEARANCE</option>
                     <option value="BLOCKED">REVOKED / BLOCKED</option>
@@ -115,13 +115,13 @@ export default function EditPassengerModal({ passenger, open, onClose, onUpdated
             </div>
 
             <div className={`${sectionCls} flex flex-col justify-center`}>
-               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40 mb-4">Identity Verification</p>
+               <p className="text-xs font-medium text-muted-foreground opacity-50 mb-4">Verification</p>
                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-500 shadow-xl ${form.isVerified ? 'bg-slate-900 text-emerald-500 shadow-emerald-500/10' : 'bg-muted text-muted-foreground'}`}>
                         <ShieldCheck className="w-5 h-5" />
                      </div>
-                     <p className="text-xs font-black text-foreground font-heading tracking-tight italic uppercase">{form.isVerified ? "VERIFIED" : "UNVERIFIED"}</p>
+                     <p className="text-sm font-semibold text-foreground tracking-tight">{form.isVerified ? "Verified" : "Unverified"}</p>
                   </div>
                   <button onClick={() => handleChange("isVerified", !form.isVerified)} className={`w-14 h-8 rounded-full transition-all duration-500 relative ${form.isVerified ? 'bg-emerald-500' : 'bg-muted-foreground/20'}`}>
                     <motion.div animate={{ x: form.isVerified ? 28 : 4 }} className="absolute top-1 w-6 h-6 rounded-full bg-white shadow-xl" />
@@ -132,12 +132,12 @@ export default function EditPassengerModal({ passenger, open, onClose, onUpdated
         </div>
 
         <div className="px-10 py-8 border-t border-border/50 flex gap-6 shrink-0 bg-card">
-          <Button variant="outline" onClick={onClose} disabled={loading} className="flex-1 border-border text-muted-foreground hover:bg-muted hover:text-foreground h-16 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all">
-            Cancel Tuning
+          <Button variant="outline" onClick={onClose} disabled={loading} className="flex-1 border-border text-muted-foreground hover:bg-muted hover:text-foreground h-14 rounded-2xl font-semibold text-base transition-all">
+            Cancel
           </Button>
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={loading} className="flex-[1.5] bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black h-16 rounded-2xl transition-all duration-500 flex items-center justify-center gap-4 uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20">
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={loading} className="flex-[1.5] bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-semibold h-14 rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 text-base shadow-xl shadow-slate-900/20">
             {loading ? <Loader2 className="w-5 h-5 animate-spin text-amber-500" /> : <Zap className="w-5 h-5 text-amber-500 fill-amber-500" />}
-            {loading ? "Synchronizing..." : "Commit Guest Adjustments"}
+            {loading ? "Saving..." : "Save Changes"}
           </motion.button>
         </div>
       </DialogContent>

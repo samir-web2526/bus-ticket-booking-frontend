@@ -26,7 +26,7 @@ const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-BD', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
 const seatCls = (seat: Seat, selected: boolean) => {
-  if (selected) return 'bg-amber-500 border-amber-600 text-white scale-105 shadow-xl shadow-amber-500/20 font-black';
+  if (selected) return 'bg-amber-500 border-amber-600 text-white scale-105 shadow-xl shadow-amber-500/20 font-bold';
   if (!seat.isAvailable) return 'bg-muted/50 border-border text-muted-foreground/30 cursor-not-allowed';
   if (seat.type === 'VIP') return 'bg-amber-500/5 border-amber-500/20 text-amber-600 hover:bg-amber-500/10 hover:scale-110 transition-all';
   if (seat.type === 'DELUXE') return 'bg-purple-500/5 border-purple-500/20 text-purple-600 hover:bg-purple-500/10 hover:scale-110 transition-all';
@@ -46,8 +46,8 @@ const SeatMap: React.FC<{
     <div className="space-y-4">
       {/* Driver */}
       <div className="flex justify-end mb-8">
-        <div className="flex items-center gap-3 bg-muted border border-border rounded-2xl px-5 py-2.5 text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">
-          <Bus className="w-4 h-4" /> DRIVER
+        <div className="flex items-center gap-3 bg-muted border border-border rounded-2xl px-5 py-2.5 text-xs text-muted-foreground font-medium">
+          <Bus className="w-4 h-4" /> Driver
         </div>
       </div>
 
@@ -72,7 +72,7 @@ const SeatMap: React.FC<{
                   whileTap={{ scale: 0.85 }}
                   disabled={!seat.isAvailable}
                   onClick={() => onToggle(seat)}
-                  className={`w-12 h-12 rounded-xl border-2 text-[10px] font-black transition-all duration-200 ${seatCls(seat, selected.includes(seat.id))}`}
+                  className={`w-12 h-12 rounded-xl border-2 text-xs font-bold transition-all duration-200 ${seatCls(seat, selected.includes(seat.id))}`}
                 >
                   {seat.number}
                 </motion.button>
@@ -86,7 +86,7 @@ const SeatMap: React.FC<{
                   whileTap={{ scale: 0.85 }}
                   disabled={!seat.isAvailable}
                   onClick={() => onToggle(seat)}
-                  className={`w-12 h-12 rounded-xl border-2 text-[10px] font-black transition-all duration-200 ${seatCls(seat, selected.includes(seat.id))}`}
+                  className={`w-12 h-12 rounded-xl border-2 text-xs font-bold transition-all duration-200 ${seatCls(seat, selected.includes(seat.id))}`}
                 >
                   {seat.number}
                 </motion.button>
@@ -107,7 +107,7 @@ const SeatMap: React.FC<{
         ].map(({ label, cls }) => (
           <div key={label} className="flex items-center gap-2.5">
             <div className={`w-5 h-5 rounded-lg border-2 ${cls}`} />
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">{label}</span>
+            <span className="text-xs font-medium text-muted-foreground">{label}</span>
           </div>
         ))}
       </div>
@@ -142,7 +142,7 @@ const CountdownTimer: React.FC<{ expiresAt: string; onExpire: () => void }> = ({
     <motion.div
       animate={{ scale: urgent ? [1, 1.05, 1] : 1 }}
       transition={{ duration: 1, repeat: urgent ? Infinity : 0 }}
-      className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest ${
+      className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full text-sm font-medium ${
         urgent
           ? 'bg-destructive/10 text-destructive border border-destructive/20 shadow-lg shadow-destructive/10'
           : 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
@@ -266,19 +266,19 @@ export default function ScheduleDetailClient({
               >
                 <button
                   onClick={() => router.back()}
-                  className="flex items-center gap-2 text-amber-600 hover:text-amber-500 mb-8 text-[10px] font-black uppercase tracking-[0.3em] transition-all group"
+                  className="flex items-center gap-2 text-amber-600 hover:text-amber-500 mb-8 text-xs font-medium transition-all group"
                 >
                   <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Fleet
                 </button>
-                <h1 className="text-5xl lg:text-7xl font-black text-foreground mb-4 tracking-tighter font-heading leading-tight">
+                <h1 className="text-5xl lg:text-6xl font-bold text-foreground mb-4 tracking-tight leading-tight">
                   {schedule.bus?.name}
                 </h1>
                 <div className="flex items-center gap-4">
-                  <Badge className="bg-amber-500 text-white border-none px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em]">
+                  <Badge className="bg-amber-500 text-white border-none px-4 py-1.5 rounded-xl text-xs font-bold">
                     {schedule.bus?.type}
                   </Badge>
-                  <span className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em]">
-                    Unit: {schedule.bus?.number}
+                  <span className="text-muted-foreground text-xs font-medium">
+                    Bus: {schedule.bus?.number}
                   </span>
                 </div>
               </motion.div>
@@ -290,9 +290,9 @@ export default function ScheduleDetailClient({
                 className="bg-card border border-border p-8 rounded-[40px] shadow-2xl flex items-center gap-8"
               >
                 <div className="text-center px-6 border-r border-border last:border-none">
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-2">Availability</p>
-                  <p className="text-4xl font-black text-foreground font-heading tracking-tighter">{availableCount}</p>
-                  <p className="text-[9px] font-black text-amber-600 uppercase tracking-widest mt-1">Seats Left</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Available Seats</p>
+                  <p className="text-4xl font-bold text-foreground">{availableCount}</p>
+                  <p className="text-xs font-medium text-amber-600 mt-1">remaining</p>
                 </div>
                 <div className="text-center px-6">
                    <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-600 mx-auto">
@@ -316,10 +316,10 @@ export default function ScheduleDetailClient({
           
           <div className="grid md:grid-cols-3 gap-16 items-center">
             <div className="text-center">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4">Origin</p>
-              <h3 className="text-4xl lg:text-6xl font-black text-foreground font-heading tracking-tighter mb-4">{schedule.route?.sourceCity}</h3>
-              <p className="text-2xl text-amber-600 font-black tracking-tight">{fmt(schedule.departure)}</p>
-              <p className="text-[11px] font-black text-muted-foreground/60 uppercase tracking-widest mt-2">{fmtDate(schedule.departure)}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-4">From</p>
+              <h3 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">{schedule.route?.sourceCity}</h3>
+              <p className="text-2xl text-amber-600 font-semibold">{fmt(schedule.departure)}</p>
+              <p className="text-xs font-medium text-muted-foreground/60 mt-2">{fmtDate(schedule.departure)}</p>
             </div>
 
             <div className="flex flex-col items-center gap-6">
@@ -330,18 +330,18 @@ export default function ScheduleDetailClient({
                  </div>
               </div>
               <div className="text-center">
-                <Badge className="bg-muted text-foreground border-border px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest mb-2 shadow-sm">
+                <Badge className="bg-muted text-foreground border-border px-5 py-2 rounded-full text-xs font-bold mb-2 shadow-sm">
                   {Math.floor((schedule.route?.estimatedTimeMinutes ?? 0) / 60)}H {(schedule.route?.estimatedTimeMinutes ?? 0) % 60}M
                 </Badge>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">{schedule.route?.distanceKm} KM DISTANCE</p>
+                <p className="text-xs font-medium text-muted-foreground">{schedule.route?.distanceKm} km distance</p>
               </div>
             </div>
 
             <div className="text-center">
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-4">Destination</p>
-              <h3 className="text-4xl lg:text-6xl font-black text-foreground font-heading tracking-tighter mb-4">{schedule.route?.destinationCity}</h3>
-              <p className="text-2xl text-amber-600 font-black tracking-tight">{fmt(schedule.arrival)}</p>
-              <p className="text-[11px] font-black text-muted-foreground/60 uppercase tracking-widest mt-2">{fmtDate(schedule.arrival)}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-4">To</p>
+              <h3 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">{schedule.route?.destinationCity}</h3>
+              <p className="text-2xl text-amber-600 font-semibold">{fmt(schedule.arrival)}</p>
+              <p className="text-xs font-medium text-muted-foreground/60 mt-2">{fmtDate(schedule.arrival)}</p>
             </div>
           </div>
         </motion.div>
@@ -356,7 +356,7 @@ export default function ScheduleDetailClient({
               className="bg-destructive/5 border border-destructive/20 rounded-3xl p-6 flex items-start gap-4 shadow-xl"
             >
               <AlertCircle className="w-6 h-6 text-destructive shrink-0" />
-              <p className="text-destructive font-black text-sm flex-1 uppercase tracking-widest">{error}</p>
+              <p className="text-destructive font-medium text-sm flex-1">{error}</p>
               <button onClick={() => setError(null)} className="hover:scale-110 transition-transform">
                 <X className="w-5 h-5 text-destructive/40" />
               </button>
@@ -377,7 +377,7 @@ export default function ScheduleDetailClient({
                  <div className="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center text-white">
                     <Users className="w-5 h-5" />
                  </div>
-                 <h2 className="text-3xl font-black text-foreground font-heading tracking-tight">Select Seats</h2>
+                 <h2 className="text-3xl font-bold text-foreground">Select Seats</h2>
               </div>
               {step === 'locked' && lockExpiry && (
                 <CountdownTimer expiresAt={lockExpiry} onExpire={handleRelease} />
@@ -393,11 +393,11 @@ export default function ScheduleDetailClient({
                 <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-emerald-500/20 shadow-xl shadow-emerald-500/5">
                   <CheckCircle2 className="w-12 h-12 text-emerald-600" />
                 </div>
-                <h3 className="text-4xl font-black text-foreground font-heading tracking-tighter mb-4">Reservation Successful</h3>
-                <p className="text-muted-foreground font-medium text-lg italic mb-10 max-w-sm mx-auto">Your seats are secured for the next 10 minutes. Please finalize your details.</p>
+                <h3 className="text-4xl font-bold text-foreground mb-4">Reservation Successful</h3>
+                <p className="text-muted-foreground font-medium text-lg mb-10 max-w-sm mx-auto">Your seats are secured for the next 10 minutes. Please finalize your details.</p>
                 <div className="flex flex-wrap gap-4 justify-center">
                   {selectedSeats.map((s) => (
-                    <Badge key={s.id} className="bg-amber-500/10 text-amber-600 border border-amber-500/20 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm">
+                    <Badge key={s.id} className="bg-amber-500/10 text-amber-600 border border-amber-500/20 px-5 py-2.5 rounded-2xl text-xs font-medium shadow-sm">
                       {s.number} • {s.type} • ৳{s.price}
                     </Badge>
                   ))}
@@ -411,14 +411,14 @@ export default function ScheduleDetailClient({
           {/* SUMMARY & ACTION */}
           <div className="lg:col-span-4 flex flex-col gap-8">
             <div className="bg-card border border-border rounded-[48px] p-10 shadow-2xl sticky top-32">
-              <h3 className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-10 text-center">Travel Summary</h3>
+              <h3 className="text-sm font-medium text-muted-foreground mb-10 text-center">Travel Summary</h3>
               
               {selectedSeats.length === 0 ? (
                 <div className="text-center py-16 opacity-30">
                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
                       <Bus className="w-8 h-8" />
                    </div>
-                   <p className="text-[10px] font-black uppercase tracking-widest">No Selection</p>
+                   <p className="text-xs font-medium">No seats selected</p>
                 </div>
               ) : (
                 <div className="space-y-6">
@@ -426,20 +426,20 @@ export default function ScheduleDetailClient({
                     {selectedSeats.map((s) => (
                       <div key={s.id} className="flex justify-between items-center bg-muted/30 p-4 rounded-2xl border border-border/50">
                         <div>
-                          <p className="text-foreground font-black text-sm">SEAT {s.number}</p>
-                          <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{s.type} CLASS</p>
+                          <p className="text-foreground font-semibold text-sm">Seat {s.number}</p>
+                          <p className="text-xs font-medium text-muted-foreground">{s.type} Class</p>
                         </div>
-                        <p className="text-amber-600 font-black text-lg font-heading tracking-tight">৳{s.price}</p>
+                        <p className="text-amber-600 font-semibold text-lg">৳{s.price}</p>
                       </div>
                     ))}
                   </div>
                   
                   <div className="pt-8 border-t border-border flex flex-col gap-2">
                     <div className="flex justify-between items-center px-2">
-                       <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total Investment</span>
-                       <span className="text-4xl font-black text-foreground font-heading tracking-tighter">৳{totalPrice}</span>
+                       <span className="text-xs font-medium text-muted-foreground">Total Amount</span>
+                       <span className="text-4xl font-bold text-foreground">৳{totalPrice}</span>
                     </div>
-                    <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest px-2 opacity-50">Incl. all convenience fees</p>
+                    <p className="text-xs font-medium text-muted-foreground px-2 opacity-50">Including all convenience fees</p>
                   </div>
 
                   <div className="pt-8 space-y-4">
@@ -447,7 +447,7 @@ export default function ScheduleDetailClient({
                       <Button
                         onClick={handleLock}
                         disabled={selectedIds.length === 0 || locking}
-                        className="w-full h-16 rounded-3xl bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20 active:scale-95 transition-all border-none"
+                        className="w-full h-16 rounded-3xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-base shadow-2xl shadow-slate-900/20 active:scale-95 transition-all border-none"
                       >
                         {locking ? (
                           <><Loader2 className="w-5 h-5 mr-3 animate-spin" /> Processing...</>
@@ -459,14 +459,14 @@ export default function ScheduleDetailClient({
                       <>
                         <Button
                           onClick={() => router.push(`/schedules/${scheduleId}/booking`)}
-                          className="w-full h-16 rounded-3xl bg-amber-500 hover:bg-amber-400 text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-amber-500/20 active:scale-95 transition-all border-none flex items-center justify-center gap-3"
+                          className="w-full h-16 rounded-3xl bg-amber-500 hover:bg-amber-400 text-white font-semibold text-base shadow-2xl shadow-amber-500/20 active:scale-95 transition-all border-none flex items-center justify-center gap-3"
                         >
                           Checkout Securely <ArrowRight className="w-5 h-5" />
                         </Button>
                         <Button
                           variant="ghost"
                           onClick={handleRelease}
-                          className="w-full h-12 rounded-2xl text-destructive hover:bg-destructive/10 font-black uppercase tracking-widest text-[10px] transition-all"
+                          className="w-full h-12 rounded-2xl text-destructive hover:bg-destructive/10 font-medium text-base transition-all"
                         >
                           Cancel Reservation
                         </Button>

@@ -86,11 +86,11 @@ export default function RoutesSection() {
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16"
         >
           <div>
-            <p className="text-amber-600 text-xs font-black tracking-[0.2em] uppercase mb-4">
+            <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-3">
               Explore Routes
             </p>
-            <h2 className="text-4xl lg:text-5xl font-black text-foreground leading-tight font-heading">
-              Popular <span className="text-amber-500">Destinations</span>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+              Popular <span className="text-amber-600">Destinations</span>
             </h2>
           </div>
           <Button
@@ -146,22 +146,22 @@ export default function RoutesSection() {
                 >
                   <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${color} opacity-20 blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:opacity-40 transition-opacity`} />
 
-                  <Badge className={`mb-4 border text-[10px] font-black uppercase tracking-wider ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
+                  <Badge className={`mb-4 border text-xs font-medium ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
                     <TrendingUp className="mr-1 h-3 w-3" />
                     {tag}
                   </Badge>
 
                   <div className="flex items-center gap-3 mb-6">
                     <div className="flex-1">
-                      <p className="text-foreground font-black text-xl leading-tight">{route.sourceCity}</p>
-                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mt-1">Origin</p>
+                      <p className="text-foreground font-semibold text-xl leading-tight">{route.sourceCity}</p>
+                      <p className="text-muted-foreground text-xs font-medium mt-1">From</p>
                     </div>
                     <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center shrink-0">
                       <ArrowRight className="text-amber-500 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </div>
                     <div className="flex-1 text-right">
-                      <p className="text-foreground font-black text-xl leading-tight">{route.destinationCity}</p>
-                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mt-1">Destination</p>
+                      <p className="text-foreground font-semibold text-xl leading-tight">{route.destinationCity}</p>
+                      <p className="text-muted-foreground text-xs font-medium mt-1">To</p>
                     </div>
                   </div>
 
@@ -171,7 +171,7 @@ export default function RoutesSection() {
                       {formatTime(route.estimatedTimeMinutes)}
                     </div>
                     <div className="text-right">
-                      <p className="text-amber-600 font-black text-xl leading-none">৳{price || '---'}</p>
+                      <p className="text-amber-600 font-semibold text-xl leading-none">৳{price || '---'}</p>
                     </div>
                   </div>
 

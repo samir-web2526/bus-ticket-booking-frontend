@@ -33,10 +33,10 @@ export default function StatsSection() {
                   {stat.icon}
                 </div>
               </div>
-              <h3 className="text-4xl lg:text-6xl font-black font-heading mb-4 text-foreground tracking-tighter italic">
+              <h3 className="text-4xl lg:text-5xl font-bold mb-3 text-foreground tracking-tight">
                 {stat.value}
               </h3>
-              <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.4em]">
+              <p className="text-muted-foreground text-sm font-medium">
                 {stat.label}
               </p>
             </motion.div>

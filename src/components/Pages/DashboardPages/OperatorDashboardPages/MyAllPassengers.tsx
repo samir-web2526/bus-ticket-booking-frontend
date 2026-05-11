@@ -47,7 +47,7 @@ export default function MyAllPassengers() {
         const res = await getOperatorPassengers({ page, limit: 10, search, status })
 
         if (res.error || !res.data) {
-          setError(res.error ?? 'FAILED TO INITIALIZE PASSENGER SYNC')
+          setError(res.error ?? 'Failed to load passengers')
           return
         }
 
@@ -55,7 +55,7 @@ export default function MyAllPassengers() {
         setMeta(res.data.meta)
         setError('')
       } catch {
-        setError('CRITICAL: DATABASE UPLINK FAILURE')
+        setError('Failed to connect to database. Please try again.')
       } finally {
         setLoading(false)
       }
@@ -71,13 +71,13 @@ export default function MyAllPassengers() {
       <section className="bg-background min-h-screen py-24 px-6 lg:px-12 relative overflow-hidden flex items-center justify-center">
         <div className="bg-card border border-border rounded-[48px] p-16 text-center max-w-md shadow-2xl relative z-10">
           <Activity className="w-16 h-16 text-destructive mx-auto mb-8 animate-pulse" />
-          <h3 className="text-2xl font-black text-foreground font-heading uppercase tracking-tighter italic mb-4">SYSTEM ERROR</h3>
-          <p className="text-muted-foreground text-sm italic font-medium mb-10">{error}</p>
+          <h3 className="text-2xl font-bold text-foreground tracking-tight mb-4">Error</h3>
+          <p className="text-muted-foreground text-base font-normal mb-10">{error}</p>
           <Button
             onClick={() => window.location.reload()}
-            className="w-full h-16 bg-slate-900 hover:bg-slate-800 text-white font-black rounded-2xl uppercase tracking-widest text-[10px] italic shadow-2xl transition-all"
+            className="w-full h-14 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-2xl text-base shadow-xl transition-all"
           >
-            RE-INITIALIZE UPLINK
+            Retry
           </Button>
         </div>
       </section>
@@ -98,16 +98,16 @@ export default function MyAllPassengers() {
           className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10"
         >
           <div>
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— LOGISTICS CONTROL</p>
-            <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-              PASSENGER <span className="text-amber-500">DATABASE</span>
+            <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">Passenger Management</p>
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              My <span className="text-amber-600">Passengers</span>
             </h1>
             <div className="flex items-center gap-4 mt-6">
                <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-xl">
                   <Database className="w-5 h-5" />
                </div>
-               <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.4em] italic opacity-40">
-                  ACTIVE NODES: <span className="text-foreground opacity-100">{meta?.total ?? 0} REGISTERED PERSONNEL</span>
+               <p className="text-muted-foreground text-sm font-medium opacity-60">
+                  Total passengers: <span className="text-foreground font-semibold">{meta?.total ?? 0}</span>
                </p>
             </div>
           </div>
@@ -117,8 +117,8 @@ export default function MyAllPassengers() {
                 <Users className="w-6 h-6 text-amber-500" />
              </div>
              <div>
-                <span className="text-foreground text-[16px] font-black uppercase tracking-widest italic block leading-none mb-1">{meta?.total ?? 0} UNITS</span>
-                <span className="text-muted-foreground text-[8px] font-black uppercase tracking-[0.3em] opacity-40 italic">REGISTRY SYNC ACTIVE</span>
+                <span className="text-foreground text-lg font-semibold block leading-none mb-1">{meta?.total ?? 0} Passengers</span>
+                <span className="text-muted-foreground text-sm font-medium opacity-50">Active registry</span>
              </div>
           </div>
         </motion.div>
@@ -133,10 +133,10 @@ export default function MyAllPassengers() {
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500 group-focus-within:rotate-12 transition-transform" />
             <input
               type="text"
-              placeholder="SEARCH MANIFEST BY PASSENGER IDENTITY…"
+              placeholder="Search by passenger name or email..."
               value={search}
               onChange={(e) => { setPage(1); setSearch(e.target.value) }}
-              className="w-full bg-card border border-border text-foreground rounded-[24px] h-16 pl-14 pr-8 text-[10px] font-black uppercase tracking-widest focus:border-amber-500 focus:outline-none transition-all shadow-2xl shadow-slate-900/[0.03] placeholder:text-muted-foreground/30 italic"
+              className="w-full bg-card border border-border text-foreground rounded-2xl h-14 pl-14 pr-8 text-base font-normal focus:border-amber-500 focus:outline-none transition-all shadow-lg placeholder:text-muted-foreground/50"
             />
           </div>
 
@@ -151,14 +151,14 @@ export default function MyAllPassengers() {
                   setStatus(val === 'ALL' ? '' : val)
                 }}
               >
-                <SelectTrigger className="w-full bg-card border border-border text-foreground rounded-[24px] h-16 pl-14 pr-8 text-[10px] font-black uppercase tracking-widest focus:ring-0 focus:ring-offset-0 focus:border-amber-500 transition-all shadow-2xl shadow-slate-900/[0.03] italic">
+                <SelectTrigger className="w-full bg-card border border-border text-foreground rounded-2xl h-14 pl-14 pr-8 text-base font-normal focus:ring-0 focus:ring-offset-0 focus:border-amber-500 transition-all shadow-lg">
                   <SelectValue placeholder="ALL STATUS" />
                 </SelectTrigger>
                 <SelectContent className="bg-card border border-border text-foreground rounded-[24px] overflow-hidden p-2 shadow-2xl">
-                  <SelectItem value="ALL" className="rounded-xl focus:bg-muted focus:text-amber-500 text-[9px] font-black uppercase tracking-widest italic p-4">GLOBAL STATUS</SelectItem>
-                  <SelectItem value="ACTIVE" className="rounded-xl focus:bg-muted focus:text-emerald-500 text-[9px] font-black uppercase tracking-widest italic p-4">ACTIVE NODES</SelectItem>
-                  <SelectItem value="INACTIVE" className="rounded-xl focus:bg-muted focus:text-slate-500 text-[9px] font-black uppercase tracking-widest italic p-4">OFFLINE NODES</SelectItem>
-                  <SelectItem value="SUSPENDED" className="rounded-xl focus:bg-muted focus:text-destructive text-[9px] font-black uppercase tracking-widest italic p-4">SUSPENDED NODES</SelectItem>
+                  <SelectItem value="ALL" className="rounded-xl focus:bg-muted focus:text-amber-500 text-base font-medium p-4">All Status</SelectItem>
+                  <SelectItem value="ACTIVE" className="rounded-xl focus:bg-muted focus:text-emerald-500 text-base font-medium p-4">Active</SelectItem>
+                  <SelectItem value="INACTIVE" className="rounded-xl focus:bg-muted focus:text-slate-500 text-base font-medium p-4">Inactive</SelectItem>
+                  <SelectItem value="SUSPENDED" className="rounded-xl focus:bg-muted focus:text-destructive text-base font-medium p-4">Suspended</SelectItem>
                 </SelectContent>
               </Select>
           </div>
@@ -173,13 +173,13 @@ export default function MyAllPassengers() {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent bg-muted/10">
-                <TableHead className="text-muted-foreground font-black text-[9px] uppercase tracking-[0.3em] py-8 pl-10 italic opacity-40">Personnel</TableHead>
-                <TableHead className="text-muted-foreground font-black text-[9px] uppercase tracking-[0.3em] py-8 italic opacity-40">Uplink Frequency</TableHead>
-                <TableHead className="text-muted-foreground font-black text-[9px] uppercase tracking-[0.3em] py-8 italic opacity-40">Structural Data</TableHead>
-                <TableHead className="text-muted-foreground font-black text-[9px] uppercase tracking-[0.3em] py-8 italic opacity-40">Temporal Entry</TableHead>
-                <TableHead className="text-muted-foreground font-black text-[9px] uppercase tracking-[0.3em] py-8 italic opacity-40">Auth Level</TableHead>
-                <TableHead className="text-muted-foreground font-black text-[9px] uppercase tracking-[0.3em] py-8 italic opacity-40">Integrity</TableHead>
-                <TableHead className="text-muted-foreground font-black text-[9px] uppercase tracking-[0.3em] py-8 pr-10 text-right italic opacity-40">Diagnostics</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-sm py-6 pl-8 opacity-60">Passenger</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-sm py-6 opacity-60">Contact</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-sm py-6 opacity-60">Profile</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-sm py-6 opacity-60">Joined</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-sm py-6 opacity-60">Role</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-sm py-6 opacity-60">Status</TableHead>
+                <TableHead className="text-muted-foreground font-medium text-sm py-6 pr-8 text-right opacity-60">Actions</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -199,8 +199,8 @@ export default function MyAllPassengers() {
                   <TableRow className="border-transparent hover:bg-transparent">
                     <TableCell colSpan={7} className="text-center py-40 grayscale opacity-40">
                       <Activity className="w-16 h-16 text-muted-foreground mx-auto mb-8 animate-pulse" />
-                      <p className="text-foreground font-black text-2xl font-heading uppercase italic tracking-tighter">NO NODES DETECTED</p>
-                      <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mt-2 italic">AWAITING SYSTEM SYNCHRONIZATION</p>
+                      <p className="text-foreground font-bold text-xl tracking-tight">No passengers found</p>
+                      <p className="text-muted-foreground text-base font-normal mt-2">Try adjusting your search</p>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -229,9 +229,9 @@ export default function MyAllPassengers() {
                   <ShieldCheck className="w-6 h-6" />
                </div>
                <div>
-                  <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.4em] italic opacity-40 mb-1">Navigation Manifest</p>
-                  <p className="text-foreground font-black font-heading text-lg tracking-tighter italic uppercase">
-                    {(page - 1) * meta.limit + 1} <span className="text-xs text-muted-foreground mx-1">—</span> {Math.min(page * meta.limit, meta.total)} <span className="text-xs text-muted-foreground ml-4">OF</span> <span className="text-amber-500 ml-2">{meta.total} ENTRIES</span>
+                  <p className="text-muted-foreground text-sm font-medium opacity-60 mb-1">Showing results</p>
+                  <p className="text-foreground font-semibold text-lg tracking-tight">
+                    {(page - 1) * meta.limit + 1} – {Math.min(page * meta.limit, meta.total)} of {meta.total} passengers
                   </p>
                </div>
             </div>
@@ -259,18 +259,18 @@ export default function MyAllPassengers() {
                   }, [])
                   .map((p, idx) =>
                     p === '...' ? (
-                      <span key={`ellipsis-${idx}`} className="text-muted-foreground/40 font-black px-2 tracking-widest">...</span>
+                      <span key={`ellipsis-${idx}`} className="text-muted-foreground/40 font-medium px-2">...</span>
                     ) : (
                       <button
                         key={p}
                         onClick={() => setPage(p as number)}
-                        className={`w-12 h-12 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 italic shadow-xl ${
+                        className={`w-12 h-12 rounded-2xl text-sm font-medium transition-all duration-500 shadow-lg ${
                           page === p
                             ? 'bg-slate-900 text-amber-500 shadow-amber-500/10'
                             : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground'
                         }`}
                       >
-                        {p < 10 ? `0${p}` : p}
+                        {p}
                       </button>
                     )
                   )}
@@ -291,7 +291,5 @@ export default function MyAllPassengers() {
 
       </div>
     </section>
-  )
-}
   )
 }

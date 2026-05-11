@@ -86,8 +86,8 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
     finally { setLoading(false); }
   };
 
-  const inputCls = "w-full bg-muted/50 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-muted-foreground/30 text-sm font-black uppercase tracking-tight";
-  const labelCls = "text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] block mb-3 ml-1";
+  const inputCls = "w-full bg-muted/50 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-muted-foreground/50 text-base font-normal";
+  const labelCls = "text-sm font-semibold text-amber-600 block mb-3 ml-1";
   const sectionCls = "p-8 bg-muted/20 border border-border/50 rounded-[32px] space-y-6";
 
   return (
@@ -98,9 +98,9 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
         <DialogHeader className="px-10 pt-10 pb-8 border-b border-border/50 relative shrink-0">
           <div className="flex items-center justify-between">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-              <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-3 italic">— Operational Tuning</p>
-              <DialogTitle className="text-foreground font-black text-4xl font-heading uppercase italic tracking-tighter leading-none">
-                Adjust <span className="text-amber-500">Asset</span>
+              <p className="text-amber-600 text-sm font-medium tracking-wide mb-2">Edit Bus</p>
+              <DialogTitle className="text-foreground font-bold text-3xl tracking-tight leading-none">
+                Edit <span className="text-amber-600">Bus</span>
               </DialogTitle>
             </motion.div>
             <Button variant="ghost" size="icon" onClick={onClose} className="rounded-2xl hover:bg-muted text-muted-foreground transition-all duration-500">
@@ -113,20 +113,20 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
           <section className={sectionCls}>
             <div className="flex items-center gap-3 mb-2">
                <Bus className="w-4 h-4 text-amber-500" />
-               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Identity Matrix</p>
+               <p className="text-xs font-medium text-muted-foreground opacity-50">Bus Details</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className={labelCls}>Registry Name</label>
+                <label className={labelCls}>Bus Name</label>
                 <input type="text" value={form.name} onChange={(e) => handleChange("name", e.target.value)} placeholder="HANIF EXPRESS" className={inputCls} />
               </div>
               <div>
-                <label className={labelCls}>Hull Number</label>
+                <label className={labelCls}>Bus Number</label>
                 <input type="text" value={form.number} onChange={(e) => handleChange("number", e.target.value)} placeholder="H-1007" className={inputCls} />
               </div>
             </div>
             <div>
-              <label className={labelCls}>Transit Classification</label>
+              <label className={labelCls}>Bus Type</label>
               <select value={form.type} onChange={(e) => handleChange("type", e.target.value)} className={inputCls}>
                 <option value="AC">AC PREMIUM</option>
                 <option value="NON_AC">NON-AC STANDARD</option>
@@ -139,15 +139,15 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
           <section className={sectionCls}>
             <div className="flex items-center gap-3 mb-2">
                <LayoutGrid className="w-4 h-4 text-emerald-500" />
-               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Spatial Configuration</p>
+               <p className="text-xs font-medium text-muted-foreground opacity-50">Seating</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className={labelCls}>Total Capacity</label>
+                <label className={labelCls}>Total Seats</label>
                 <input type="number" value={form.totalSeats} onChange={(e) => handleChange("totalSeats", parseInt(e.target.value))} min="1" className={inputCls} />
               </div>
               <div>
-                <label className={labelCls}>Standard Vector (৳)</label>
+                <label className={labelCls}>Price (৳)</label>
                 <input type="number" value={form.pricePerSeat} onChange={(e) => handleChange("pricePerSeat", parseInt(e.target.value))} min="1" className={inputCls} />
               </div>
             </div>
@@ -156,19 +156,19 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
           <section className={sectionCls}>
              <div className="flex items-center gap-3 mb-2">
                <Zap className="w-4 h-4 text-amber-500" />
-               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Tier Overrides</p>
+               <p className="text-xs font-medium text-muted-foreground opacity-50">Pricing & Type</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <p className="text-[8px] font-black text-amber-600 uppercase tracking-widest pb-2 border-b border-border/50">VIP Core</p>
+                <p className="text-xs font-semibold text-amber-600 pb-2 border-b border-border/50">VIP Seats</p>
                 <div>
-                  <label className={labelCls}>VIP Node Count</label>
+                  <label className={labelCls}>Price Per Seat</label>
                   <input type="number" value={form.vipSeats || ""} onChange={(e) => handleChange("vipSeats", parseInt(e.target.value) || 0)} min="0" placeholder="0" className={inputCls} />
                 </div>
                 <AnimatePresence>
                   {form.vipSeats > 0 && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-                      <label className={labelCls}>VIP Premium (৳)</label>
+                      <label className={labelCls}>VIP Price (৳)</label>
                       <input type="number" value={form.vipPrice || ""} onChange={(e) => handleChange("vipPrice", parseInt(e.target.value) || 0)} min="1" placeholder="0" className={inputCls} />
                     </motion.div>
                   )}
@@ -176,15 +176,15 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
               </div>
 
               <div className="space-y-6">
-                 <p className="text-[8px] font-black text-blue-600 uppercase tracking-widest pb-2 border-b border-border/50">Deluxe Core</p>
+                 <p className="text-xs font-semibold text-blue-600 pb-2 border-b border-border/50">Deluxe Seats</p>
                 <div>
-                  <label className={labelCls}>Deluxe Node Count</label>
+                  <label className={labelCls}>Deluxe Count</label>
                   <input type="number" value={form.deluxeSeats || ""} onChange={(e) => handleChange("deluxeSeats", parseInt(e.target.value) || 0)} min="0" placeholder="0" className={inputCls} />
                 </div>
                 <AnimatePresence>
                   {form.deluxeSeats > 0 && (
                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
-                      <label className={labelCls}>Deluxe Premium (৳)</label>
+                      <label className={labelCls}>Deluxe Price (৳)</label>
                       <input type="number" value={form.deluxePrice || ""} onChange={(e) => handleChange("deluxePrice", parseInt(e.target.value) || 0)} min="1" placeholder="0" className={inputCls} />
                     </motion.div>
                   )}
@@ -199,8 +199,8 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
                  <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-foreground uppercase tracking-widest leading-none mb-1">Operational Authority</p>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-tight italic opacity-40 leading-none">Status: {form.isActive ? 'ACTIVE' : 'OFFLINE'}</p>
+                <p className="text-sm font-semibold text-foreground leading-none mb-1">Status</p>
+                <p className="text-xs font-medium text-muted-foreground opacity-60 leading-none">{form.isActive ? 'Active' : 'Inactive'}</p>
               </div>
             </div>
             <button onClick={() => handleChange("isActive", !form.isActive)} className={`w-14 h-8 rounded-full transition-all duration-500 relative ${form.isActive ? 'bg-emerald-500' : 'bg-muted-foreground/20'}`}>
@@ -210,12 +210,12 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
         </div>
 
         <div className="px-10 py-8 border-t border-border/50 flex gap-6 shrink-0 bg-card">
-          <Button variant="outline" onClick={onClose} disabled={loading} className="flex-1 border-border text-muted-foreground hover:bg-muted hover:text-foreground h-16 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all">
-            Abort Tuning
+          <Button variant="outline" onClick={onClose} disabled={loading} className="flex-1 border-border text-muted-foreground hover:bg-muted hover:text-foreground h-14 rounded-2xl font-semibold text-base transition-all">
+            Cancel
           </Button>
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={loading} className="flex-[1.5] bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black h-16 rounded-2xl transition-all duration-500 flex items-center justify-center gap-4 uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20">
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={loading} className="flex-[1.5] bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-semibold h-14 rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 text-base shadow-xl shadow-slate-900/20">
             {loading ? <Loader2 className="w-5 h-5 animate-spin text-amber-500" /> : <Zap className="w-5 h-5 text-amber-500 fill-amber-500" />}
-            {loading ? "Synchronizing..." : "Commit Vector Adjustments"}
+            {loading ? "Saving..." : "Save Changes"}
           </motion.button>
         </div>
       </DialogContent>

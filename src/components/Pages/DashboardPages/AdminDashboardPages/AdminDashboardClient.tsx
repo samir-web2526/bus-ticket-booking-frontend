@@ -61,12 +61,12 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
   const typeKeys = Object.keys(busTypeCount);
 
   const metricCards = [
-    { label: 'FLEET CAPACITY', value: stats.totalBuses, sub: `${stats.activeBuses} ACTIVE ASSETS`, icon: Bus, primary: true },
-    { label: 'AUTHORIZED OPERATORS', value: stats.totalOperators, sub: `${stats.activeOperators} VERIFIED NODES`, icon: ShieldCheck, primary: false },
-    { label: 'NETWORK PASSENGERS', value: stats.totalPassengers, sub: `${stats.verifiedPassengers} SECURE USERS`, icon: UserCheck, primary: false },
-    { label: 'TRANSIT VECTORS', value: stats.totalRoutes, sub: `${stats.routesWithSchedules} LIVE PATHS`, icon: Route, primary: false },
-    { label: 'AVG SEAT YIELD', value: `৳${stats.avgPricePerSeat}`, sub: 'MARKET OPTIMIZED', icon: TrendingUp, primary: false },
-    { label: 'SYSTEM THROUGHPUT', value: stats.routesWithSchedules, sub: 'REAL-TIME SYNC', icon: Activity, primary: false },
+    { label: 'Total Buses', value: stats.totalBuses, sub: `${stats.activeBuses} Active`, icon: Bus, primary: true },
+    { label: 'Operators', value: stats.totalOperators, sub: `${stats.activeOperators} Active`, icon: ShieldCheck, primary: false },
+    { label: 'Passengers', value: stats.totalPassengers, sub: `${stats.verifiedPassengers} Verified`, icon: UserCheck, primary: false },
+    { label: 'Routes', value: stats.totalRoutes, sub: `${stats.routesWithSchedules} With Schedules`, icon: Route, primary: false },
+    { label: 'Avg Price', value: `৳${stats.avgPricePerSeat}`, sub: 'Per Seat', icon: TrendingUp, primary: false },
+    { label: 'Schedules', value: stats.routesWithSchedules, sub: 'Active', icon: Activity, primary: false },
   ];
 
   return (
@@ -77,20 +77,20 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— CENTRAL COMMAND UNIT</p>
-            <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-              ADMIN <span className="text-amber-500">TERMINAL</span>
+            <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">Dashboard</p>
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              Admin <span className="text-amber-600">Overview</span>
             </h1>
           </div>
           <div className="flex items-center gap-6 bg-card border border-border px-8 py-4 rounded-[32px] shadow-2xl shadow-slate-900/[0.03] backdrop-blur-xl">
              <div className="flex items-center gap-3">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                <span className="text-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">SYSTEM ONLINE</span>
+                <span className="text-foreground text-sm font-medium leading-none">System Online</span>
              </div>
              <div className="w-[1px] h-4 bg-border/50" />
              <div className="flex items-center gap-3">
                 <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">V 4.0.1</span>
+                <span className="text-muted-foreground text-sm font-medium leading-none">v4.0.1</span>
              </div>
           </div>
         </div>
@@ -109,11 +109,11 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
                 <div className={`w-12 h-12 rounded-[20px] flex items-center justify-center mb-6 shadow-xl transition-all duration-500 ${card.primary ? 'bg-white/10 group-hover:bg-amber-500/20' : 'bg-muted border border-border group-hover:bg-amber-500/10 group-hover:border-amber-500/20 group-hover:rotate-12'}`}>
                   <Icon className={`w-6 h-6 ${card.primary ? 'text-amber-500' : 'text-amber-600'}`} />
                 </div>
-                <p className={`text-[8px] font-black uppercase tracking-[0.2em] mb-2 italic opacity-60 ${card.primary ? 'text-slate-400' : 'text-muted-foreground'}`}>{card.label}</p>
-                <p className="font-black text-4xl font-heading tracking-tighter mb-2 italic">{card.value}</p>
+                <p className={`text-xs font-medium mb-2 opacity-60 ${card.primary ? 'text-slate-400' : 'text-muted-foreground'}`}>{card.label}</p>
+                <p className="font-bold text-3xl tracking-tight mb-2">{card.value}</p>
                 <div className="flex items-center gap-2">
                    <div className={`w-1.5 h-1.5 rounded-full ${card.primary ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
-                   <p className={`text-[10px] font-black italic uppercase tracking-tight ${card.primary ? 'text-emerald-400/80' : 'text-emerald-600'}`}>{card.sub}</p>
+                   <p className={`text-xs font-medium ${card.primary ? 'text-emerald-400/80' : 'text-emerald-600'}`}>{card.sub}</p>
                 </div>
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-amber-500/5 to-transparent rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700" />
               </motion.div>
@@ -125,8 +125,8 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
           <div className="lg:col-span-4 bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] flex flex-col relative overflow-hidden">
              <div className="flex items-center justify-between mb-12 relative z-10">
                 <div>
-                   <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Fleet Intelligence</p>
-                   <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Distribution</h3>
+                   <p className="text-amber-600 text-sm font-medium mb-1">Fleet</p>
+                   <h3 className="text-2xl font-bold tracking-tight">Bus Types</h3>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-muted border border-border flex items-center justify-center">
                    <Database className="w-5 h-5 text-muted-foreground/30" />
@@ -138,9 +138,9 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
                  <div key={k} className="flex items-center justify-between p-4 bg-muted/20 border border-border/50 rounded-2xl hover:bg-muted/40 transition-colors group">
                     <div className="flex items-center gap-4">
                        <span className="w-2.5 h-2.5 rounded-full shadow-lg" style={{ background: TYPE_COLORS[i] }} />
-                       <span className="text-foreground text-[10px] font-black uppercase tracking-widest">{TYPE_LABELS[k] ?? k}</span>
+                       <span className="text-foreground text-sm font-medium">{TYPE_LABELS[k] ?? k}</span>
                     </div>
-                    <span className="text-muted-foreground font-black text-[10px] uppercase opacity-40 italic group-hover:opacity-100 transition-opacity">{Math.round((busTypeCount[k] / stats.totalBuses) * 100)}% Matrix</span>
+                    <span className="text-muted-foreground font-medium text-sm opacity-50 group-hover:opacity-100 transition-opacity">{Math.round((busTypeCount[k] / stats.totalBuses) * 100)}%</span>
                  </div>
                ))}
              </div>
@@ -151,20 +151,20 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
               <div className="bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] relative overflow-hidden">
                 <div className="flex items-center justify-between mb-10">
                    <div>
-                      <p className="text-emerald-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Deployment Stats</p>
-                      <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Operational Status</h3>
+                      <p className="text-emerald-600 text-sm font-medium mb-1">Fleet Status</p>
+                      <h3 className="text-2xl font-bold tracking-tight">Active vs Inactive</h3>
                    </div>
                    <Activity className="w-5 h-5 text-muted-foreground/30" />
                 </div>
                 <div className="relative h-56 mb-8"><canvas ref={fleetRef} /></div>
                 <div className="flex items-center justify-center gap-10">
-                   {[{ label: 'ACTIVE', val: stats.activeBuses, color: '#10b981' }, { label: 'OFFLINE', val: stats.inactiveBuses, color: '#f59e0b' }].map(s => (
+                   {[{ label: 'Active', val: stats.activeBuses, color: '#10b981' }, { label: 'Inactive', val: stats.inactiveBuses, color: '#f59e0b' }].map(s => (
                      <div key={s.label} className="flex flex-col items-center gap-2">
                         <div className="flex items-center gap-2">
                            <span className="w-2.5 h-2.5 rounded-full" style={{ background: s.color }} />
-                           <span className="text-foreground text-[11px] font-black uppercase tracking-widest">{s.label}</span>
+                           <span className="text-foreground text-sm font-medium">{s.label}</span>
                         </div>
-                        <span className="text-2xl font-black font-heading tracking-tighter italic text-muted-foreground">{s.val}</span>
+                        <span className="text-2xl font-bold text-muted-foreground">{s.val}</span>
                      </div>
                    ))}
                 </div>
@@ -173,14 +173,14 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
               <div className="bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] relative overflow-hidden flex flex-col">
                 <div className="flex items-center justify-between mb-2">
                    <div>
-                      <p className="text-blue-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Growth Telemetry</p>
-                      <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">User Base Expansion</h3>
+                      <p className="text-blue-600 text-sm font-medium mb-1">Growth</p>
+                      <h3 className="text-2xl font-bold tracking-tight">Passenger Growth</h3>
                    </div>
                    <Users className="w-5 h-5 text-muted-foreground/30" />
                 </div>
-                <p className="text-4xl font-black font-heading mb-auto tracking-tighter italic text-amber-500">+{passengerGrowth.counts[passengerGrowth.counts.length - 1] || 0} <span className="text-foreground italic text-xl uppercase font-black">UNITS</span></p>
+                <p className="text-3xl font-bold mb-auto tracking-tight text-amber-500">+{passengerGrowth.counts[passengerGrowth.counts.length - 1] || 0} <span className="text-foreground text-lg font-semibold">Passengers</span></p>
                 <div className="h-44 w-full mt-8">
-                  {passengerGrowth.months.length > 0 ? <canvas ref={passengerRef} /> : <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] opacity-20 italic">AWAITING SIGNAL...</div>}
+                  {passengerGrowth.months.length > 0 ? <canvas ref={passengerRef} /> : <div className="flex items-center justify-center h-full text-muted-foreground text-sm font-medium opacity-20">No data available</div>}
                 </div>
               </div>
             </div>
@@ -188,13 +188,13 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
             <div className="bg-card border border-border rounded-[48px] p-12 shadow-2xl shadow-slate-900/[0.02]">
               <div className="flex items-center justify-between mb-12">
                  <div>
-                    <p className="text-slate-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Infrastructure Density</p>
-                    <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">High Traffic Vectors</h3>
+                    <p className="text-slate-600 text-sm font-medium mb-1">Routes</p>
+                    <h3 className="text-2xl font-bold tracking-tight">Top Routes by Schedules</h3>
                  </div>
                  <Route className="w-5 h-5 text-muted-foreground/30" />
               </div>
               <div className="relative" style={{ height: `${Math.max(routesBySchedules.length * 48 + 40, 260)}px` }}>
-                {routesBySchedules.length > 0 ? <canvas ref={routesRef} /> : <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] opacity-20 italic">NO ACTIVE VECTORS DETECTED</div>}
+                {routesBySchedules.length > 0 ? <canvas ref={routesRef} /> : <div className="flex items-center justify-center h-full text-muted-foreground text-sm font-medium opacity-20">No routes available</div>}
               </div>
             </div>
           </div>
@@ -204,13 +204,13 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
            <div className="lg:col-span-5 bg-card border border-border rounded-[48px] p-12 shadow-2xl shadow-slate-900/[0.02]">
              <div className="flex items-center justify-between mb-12">
                 <div>
-                   <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Strategic Alliances</p>
-                   <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Market Authorities</h3>
+                   <p className="text-amber-600 text-sm font-medium mb-1">Top Operators</p>
+                   <h3 className="text-2xl font-bold tracking-tight">Leading Operators</h3>
                 </div>
                 <Globe className="w-5 h-5 text-muted-foreground/30" />
              </div>
              {topOperators.length === 0
-               ? <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] opacity-20 text-center py-20 italic">TELEMETRY DATA UNAVAILABLE</p>
+               ? <p className="text-muted-foreground text-sm font-medium opacity-20 text-center py-20">No operators available</p>
                : <div className="space-y-8">
                  {topOperators.map((op, i) => {
                    const pct = Math.round((op.count / topOperators[0].count) * 100);
@@ -218,12 +218,12 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
                      <div key={op.name} className="group">
                        <div className="flex items-center justify-between mb-4">
                          <div className="flex items-center gap-4">
-                           <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-500 text-sm font-black flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-500 italic">{i + 1}</div>
-                           <span className="text-foreground font-black text-lg font-heading uppercase italic tracking-tighter group-hover:text-amber-500 transition-colors">{op.name}</span>
+                           <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-500 text-sm font-bold flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all duration-500">{i + 1}</div>
+                           <span className="text-foreground font-semibold text-lg tracking-tight group-hover:text-amber-500 transition-colors">{op.name}</span>
                          </div>
                          <div className="text-right">
-                            <span className="text-foreground font-black text-sm font-heading tracking-tight italic uppercase block leading-none">{op.count} UNIT FLEET</span>
-                            <span className="text-muted-foreground text-[8px] font-black uppercase tracking-widest opacity-40 italic">MARKET SHARE: {pct}%</span>
+                            <span className="text-foreground font-semibold text-sm tracking-tight block leading-none">{op.count} buses</span>
+                            <span className="text-muted-foreground text-xs font-medium opacity-50">{pct}% share</span>
                          </div>
                        </div>
                        <div className="w-full h-2 bg-muted/40 rounded-full overflow-hidden p-[2px]">
@@ -239,29 +239,29 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
            <div className="lg:col-span-7 bg-card border border-border rounded-[48px] p-12 shadow-2xl shadow-slate-900/[0.03] flex flex-col">
               <div className="flex items-center justify-between mb-12 shrink-0">
                  <div>
-                    <p className="text-slate-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Personnel Intelligence</p>
-                    <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Authorized Asset Log</h3>
+                    <p className="text-slate-600 text-sm font-medium mb-1">Recent Operators</p>
+                    <h3 className="text-2xl font-bold tracking-tight">Latest Additions</h3>
                  </div>
-                 <button className="flex items-center gap-3 text-[10px] font-black text-amber-600 uppercase tracking-widest hover:translate-x-2 transition-all duration-500 group/btn">ACCESS FULL DIRECTORY <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" /></button>
+                 <button className="flex items-center gap-3 text-sm font-medium text-amber-600 hover:translate-x-2 transition-all duration-500 group/btn">View All <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" /></button>
               </div>
               {recentOperators.length === 0
-                ? <div className="flex-1 flex flex-col items-center justify-center py-20 grayscale opacity-20"><UserCheck className="w-16 h-16 mb-6" /><p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] italic">ZERO ENTRIES DETECTED IN CYCLE</p></div>
+                ? <div className="flex-1 flex flex-col items-center justify-center py-20 grayscale opacity-20"><UserCheck className="w-16 h-16 mb-6" /><p className="text-muted-foreground text-sm font-medium">No recent operators</p></div>
                 : <div className="overflow-x-auto flex-1">
                   <table className="w-full text-left">
                     <thead>
                       <tr className="border-b border-border/50">
-                        {['AUTHORIZED ENTITY', 'COMMUNICATION NODE', 'CLEARANCE', 'joined'].map(h => (
-                          <th key={h} className="text-muted-foreground text-[9px] font-black uppercase tracking-[0.3em] pb-8 pr-8 italic opacity-40">{h}</th>
+                        {['Name', 'Email', 'Status', 'Joined'].map(h => (
+                          <th key={h} className="text-muted-foreground text-xs font-medium pb-6 pr-6 opacity-50">{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/20">
                       {recentOperators.map((op, idx) => (
                         <motion.tr key={op.email} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: idx * 0.05 + 0.5 }} className="group hover:bg-muted/30 transition-all duration-500">
-                          <td className="py-8 pr-8"><p className="text-foreground font-black text-base font-heading uppercase italic tracking-tighter group-hover:text-amber-500 transition-colors">{op.name}</p></td>
-                          <td className="py-8 pr-8"><div className="flex flex-col"><span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest leading-none mb-1 opacity-70">{op.email}</span><span className="text-[8px] font-black text-blue-600/40 uppercase tracking-widest italic leading-none">VERIFIED ENCRYPTION</span></div></td>
-                          <td className="py-8 pr-8"><span className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all duration-500 ${op.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)] group-hover:bg-emerald-500 group-hover:text-white' : 'bg-destructive/10 text-destructive border-destructive/20 group-hover:bg-destructive group-hover:text-white'}`}>{op.status}</span></td>
-                          <td className="py-8 text-muted-foreground text-[10px] font-black uppercase tracking-widest italic opacity-40 group-hover:opacity-100 transition-opacity">{new Date(op.joinedAt).toLocaleDateString('en-BD', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}</td>
+                          <td className="py-6 pr-6"><p className="text-foreground font-semibold text-base tracking-tight group-hover:text-amber-500 transition-colors">{op.name}</p></td>
+                          <td className="py-6 pr-6"><span className="text-muted-foreground text-sm font-medium">{op.email}</span></td>
+                          <td className="py-6 pr-6"><span className={`px-3 py-1 rounded-full text-xs font-medium border transition-all duration-500 ${op.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>{op.status}</span></td>
+                          <td className="py-6 text-muted-foreground text-sm font-medium opacity-50 group-hover:opacity-100 transition-opacity">{new Date(op.joinedAt).toLocaleDateString('en-BD', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                         </motion.tr>
                       ))}
                     </tbody>

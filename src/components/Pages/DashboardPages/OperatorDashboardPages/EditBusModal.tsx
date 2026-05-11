@@ -111,9 +111,9 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
       <DialogContent className="bg-white border border-gray-200 text-gray-900 max-w-lg rounded-3xl p-0 overflow-hidden shadow-xl">
         <DialogHeader className="px-8 pt-8 pb-5 border-b border-gray-100 relative">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-1">— Edit Bus</p>
-            <DialogTitle className="text-gray-900 font-black text-2xl">
-              Update <span className="text-gray-500">Bus</span>
+            <p className="text-gray-400 text-sm font-medium mb-1">Edit Bus</p>
+            <DialogTitle className="text-gray-900 font-bold text-2xl">
+              Update <span className="text-amber-600">Bus</span>
             </DialogTitle>
             <p className="text-gray-400 text-sm mt-2">Edit bus information below</p>
           </motion.div>
@@ -122,12 +122,12 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
         <div className="px-8 py-6 space-y-6 relative max-h-96 overflow-y-auto">
 
           <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">
+            <p className="text-gray-400 text-sm font-medium mb-4 pb-3 border-b border-gray-100">
               Basic Information
             </p>
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Bus Name</label>
+                <label className="text-sm font-semibold text-gray-500 block mb-2">Bus Name</label>
                 <input
                   type="text"
                   value={form.name}
@@ -137,7 +137,7 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Bus Number</label>
+                <label className="text-sm font-semibold text-gray-500 block mb-2">Bus Number</label>
                 <input
                   type="text"
                   value={form.number}
@@ -147,7 +147,7 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Bus Type</label>
+                <label className="text-sm font-semibold text-gray-500 block mb-2">Bus Type</label>
                 <select
                   value={form.type}
                   onChange={(e) => handleChange("type", e.target.value)}
@@ -163,12 +163,12 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
           </div>
 
           <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">
+            <p className="text-gray-400 text-sm font-medium mb-4 pb-3 border-b border-gray-100">
               Seating &amp; Pricing
             </p>
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Total Seats</label>
+                <label className="text-sm font-semibold text-gray-500 block mb-2">Total Seats</label>
                 <input
                   type="number"
                   value={form.totalSeats}
@@ -178,7 +178,7 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Price Per Seat (৳)</label>
+                <label className="text-sm font-semibold text-gray-500 block mb-2">Price Per Seat (৳)</label>
                 <input
                   type="number"
                   value={form.pricePerSeat}
@@ -191,12 +191,12 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
           </div>
 
           <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">
+            <p className="text-gray-400 text-sm font-medium mb-4 pb-3 border-b border-gray-100">
               VIP Seats (Optional)
             </p>
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">VIP Seats</label>
+                <label className="text-sm font-semibold text-gray-500 block mb-2">VIP Seats</label>
                 <input
                   type="number"
                   value={form.vipSeats || ""}
@@ -208,7 +208,7 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
               </div>
               {form.vipSeats > 0 && (
                 <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">VIP Price (৳)</label>
+                  <label className="text-sm font-semibold text-gray-500 block mb-2">VIP Price (৳)</label>
                   <input
                     type="number"
                     value={form.vipPrice || ""}
@@ -223,12 +223,12 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
           </div>
 
           <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">
+            <p className="text-gray-400 text-sm font-medium mb-4 pb-3 border-b border-gray-100">
               Deluxe Seats (Optional)
             </p>
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Deluxe Seats</label>
+                <label className="text-sm font-semibold text-gray-500 block mb-2">Deluxe Seats</label>
                 <input
                   type="number"
                   value={form.deluxeSeats || ""}
@@ -240,7 +240,7 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
               </div>
               {form.deluxeSeats > 0 && (
                 <div>
-                  <label className="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Deluxe Price (৳)</label>
+                  <label className="text-sm font-semibold text-gray-500 block mb-2">Deluxe Price (৳)</label>
                   <input
                     type="number"
                     value={form.deluxePrice || ""}
@@ -255,7 +255,7 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
           </div>
 
           <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">
+            <p className="text-gray-400 text-sm font-medium mb-4 pb-3 border-b border-gray-100">
               Status
             </p>
             <div className="flex items-center gap-3">
@@ -285,7 +285,7 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
             whileTap={{ scale: 0.98 }}
             onClick={handleSubmit}
             disabled={loading}
-            className="flex-1 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm"
+            className="flex-1 bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-semibold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-base"
           >
             {loading
               ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</>

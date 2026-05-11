@@ -94,7 +94,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
           <Link href="/">
             <Button variant="outline" className="border-border text-muted-foreground hover:bg-muted hover:border-amber-500/30 hover:text-foreground rounded-2xl transition-all duration-300 flex items-center gap-2 group shadow-sm bg-background/50 backdrop-blur-sm px-6 h-12">
               <Home className="w-4 h-4 group-hover:-translate-y-0.5 transition-transform" />
-              <span className="font-black uppercase tracking-widest text-[10px]">Back to Home</span>
+              <span className="font-medium text-sm">Back to Home</span>
             </Button>
           </Link>
         </div>
@@ -107,7 +107,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                   <LogIn className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-black text-foreground font-heading tracking-tight mb-1">Welcome Back</h1>
+                  <h1 className="text-3xl font-bold text-foreground tracking-tight mb-1">Welcome Back</h1>
                   <p className="text-muted-foreground text-sm font-medium">Login to your BusHub account</p>
                 </div>
               </motion.div>
@@ -123,7 +123,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
 
               <div className="space-y-5">
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="space-y-2">
-                  <label htmlFor="email" className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Email Address</label>
+                  <label htmlFor="email" className="block text-sm font-medium text-muted-foreground ml-1">Email Address</label>
                   <Input id="email" type="email" placeholder="you@example.com" aria-invalid={!!errors.email} {...register("email")}
                     className="bg-muted/30 border-border text-foreground placeholder:text-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:bg-background rounded-2xl h-14 px-6 transition-all" />
                   {errors.email && <p className="text-xs text-destructive font-bold ml-1">{errors.email.message}</p>}
@@ -131,8 +131,8 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
 
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="space-y-2">
                   <div className="flex items-center justify-between ml-1">
-                    <label htmlFor="password" className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest">Password</label>
-                    <a href="/forgot-password" className="text-[10px] font-black text-amber-600 hover:text-amber-500 transition-colors uppercase tracking-widest">Forgot?</a>
+                    <label htmlFor="password" className="block text-sm font-medium text-muted-foreground">Password</label>
+                    <a href="/forgot-password" className="text-sm font-medium text-amber-600 hover:text-amber-500 transition-colors">Forgot?</a>
                   </div>
                   <Input id="password" type="password" placeholder="••••••••" aria-invalid={!!errors.password} {...register("password")}
                     className="bg-muted/30 border-border text-foreground placeholder:text-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:bg-background rounded-2xl h-14 px-6 transition-all" />
@@ -143,7 +143,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
               {/* Login Button */}
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                 <Button type="submit" disabled={isSubmitting}
-                  className="w-full h-14 rounded-2xl font-black uppercase tracking-widest bg-amber-500 hover:bg-amber-400 text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.98] group">
+                  className="w-full h-14 rounded-2xl font-semibold text-base bg-amber-500 hover:bg-amber-400 text-white transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-[0.98] group">
                   {isSubmitting ? (<><Loader2 className="w-5 h-5 animate-spin" />Processing...</>) : (<><LogIn className="w-5 h-5 group-hover:translate-x-1 transition-transform" />Login Now</>)}
                 </Button>
               </motion.div>
@@ -152,13 +152,13 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="space-y-3">
                 <div className="relative flex items-center gap-4 py-2">
                   <div className="flex-1 h-px bg-border" />
-                  <span className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Quick Access</span>
+                  <span className="text-sm text-muted-foreground font-medium">Or continue with</span>
                   <div className="flex-1 h-px bg-border" />
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   {ROLE_CONFIG.map(({ role, label }) => (
                     <button key={role} type="button" onClick={() => fillCredentials(role)}
-                      className="px-2 py-3 text-[10px] font-black uppercase tracking-widest border border-border rounded-xl text-muted-foreground bg-muted/20 hover:bg-background hover:border-amber-500/30 hover:text-amber-600 transition-all duration-300 shadow-sm active:scale-95">
+                      className="px-4 py-3 text-sm font-medium border border-border rounded-xl text-muted-foreground bg-muted/20 hover:bg-background hover:border-amber-500/30 hover:text-amber-600 transition-all duration-300 shadow-sm active:scale-95">
                       {label}
                     </button>
                   ))}
@@ -167,14 +167,14 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
 
               <div className="relative flex items-center gap-4 py-2">
                 <div className="flex-1 h-px bg-border" />
-                <span className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">Social Connect</span>
+                <span className="text-sm text-muted-foreground font-medium">Or sign in with</span>
                 <div className="flex-1 h-px bg-border" />
               </div>
 
               {/* Google Sign-In Button */}
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                 <button type="button" onClick={handleGoogleSignIn} disabled={isGoogleLoading}
-                  className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[11px] border border-border bg-background hover:bg-muted hover:border-amber-500/30 text-foreground transition-all duration-300 flex items-center justify-center gap-3 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed group active:scale-[0.98]">
+                  className="w-full h-14 rounded-2xl font-medium text-sm border border-border bg-background hover:bg-muted hover:border-amber-500/30 text-foreground transition-all duration-300 flex items-center justify-center gap-3 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed group active:scale-95">
                   {isGoogleLoading ? (
                     <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
                   ) : (
@@ -191,12 +191,12 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
 
               <p className="text-muted-foreground text-sm text-center font-medium">
                 Don&apos;t have an account?{" "}
-                <Link href="/register" className="text-amber-600 hover:text-amber-500 font-black transition-colors">Sign up free</Link>
+                <Link href="/register" className="text-amber-600 hover:text-amber-500 font-semibold transition-colors">Create one</Link>
               </p>
             </form>
 
             <div className="px-8 py-6 border-t border-border bg-muted/20">
-              <p className="text-[10px] text-muted-foreground text-center font-black uppercase tracking-widest leading-relaxed">
+              <p className="text-sm text-muted-foreground text-center font-normal leading-relaxed">
                 Securely managed by BusHub systems. <br />
                 <Link href="#" className="text-foreground hover:text-amber-600 transition-colors">Privacy</Link> & <Link href="#" className="text-foreground hover:text-amber-600 transition-colors">Terms</Link>
               </p>
@@ -215,13 +215,13 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
               </div>
               
               <div className="space-y-3">
-                <h3 className="text-2xl font-black text-white font-heading italic">Ready to <span className="text-amber-500">Travel?</span></h3>
-                <p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xs mx-auto uppercase tracking-widest text-[10px]">Bangladesh&apos;s most trusted booking platform</p>
+                <h3 className="text-2xl font-bold text-white">Ready to <span className="text-amber-500">Travel?</span></h3>
+                <p className="text-slate-400 text-sm font-normal leading-relaxed max-w-xs mx-auto">Bangladesh&apos;s most trusted booking platform</p>
               </div>
               
               <div className="flex items-center gap-3 px-6 py-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-full shadow-xl">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse block" />
-                <span className="text-[10px] text-white font-black uppercase tracking-widest">500+ daily routes</span>
+                <span className="text-sm text-white font-medium">500+ daily routes</span>
               </div>
               
               <div className="grid grid-cols-1 gap-3 w-full">
@@ -232,8 +232,8 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
                   <div key={f.label} className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-4 shadow-xl text-left group hover:bg-white/10 transition-colors">
                     <span className="text-2xl group-hover:scale-110 transition-transform">{f.emoji}</span>
                     <div>
-                      <p className="text-xs font-black text-white uppercase tracking-widest leading-none">{f.label}</p>
-                      <p className="text-[10px] text-slate-400 mt-1 font-medium">{f.sub}</p>
+                      <p className="text-sm font-semibold text-white leading-none">{f.label}</p>
+                      <p className="text-xs text-slate-400 mt-1 font-normal">{f.sub}</p>
                     </div>
                   </div>
                 ))}
@@ -242,7 +242,7 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
           </motion.div>
         </div>
 
-        <p className="mt-8 text-center text-muted-foreground text-[10px] font-black uppercase tracking-widest lg:hidden">
+        <p className="mt-8 text-center text-muted-foreground text-sm font-medium lg:hidden">
           Trusted by <span className="text-foreground">500K+</span> travelers daily
         </p>
       </motion.div>

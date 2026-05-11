@@ -33,10 +33,10 @@ export default function BlogSection() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
-            <p className="text-amber-600 text-xs font-black tracking-[0.2em] uppercase mb-4">Travel Guides</p>
-            <h2 className="text-4xl lg:text-5xl font-black text-foreground font-heading">Latest from <span className="text-amber-500">Our Blog</span></h2>
+            <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-3">Travel Guides</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground">Latest from <span className="text-amber-600">Our Blog</span></h2>
           </div>
-          <button className="flex items-center gap-2 text-foreground font-black uppercase tracking-widest text-xs hover:text-amber-600 transition-colors group">
+          <button className="flex items-center gap-2 text-foreground font-medium text-sm hover:text-amber-600 transition-colors group">
             View All Posts
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
@@ -58,20 +58,20 @@ export default function BlogSection() {
                   alt={blog.title} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-foreground border border-border">
+                <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-medium text-foreground border border-border">
                   Travel Tips
                 </div>
               </div>
               
-              <div className="flex items-center gap-4 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+              <div className="flex items-center gap-4 text-muted-foreground text-sm font-medium mb-4">
                 <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-amber-500" /> {blog.date}</span>
                 <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5 text-amber-500" /> {blog.author}</span>
               </div>
               
-              <h3 className="text-2xl font-black text-foreground mb-4 group-hover:text-amber-600 transition-colors font-heading leading-tight">
+              <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-amber-600 transition-colors leading-tight">
                 {blog.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed mb-8 line-clamp-2 font-medium">
+              <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-2 font-normal">
                 {blog.excerpt}
               </p>
               

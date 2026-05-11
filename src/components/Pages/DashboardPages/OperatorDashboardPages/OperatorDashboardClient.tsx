@@ -179,20 +179,20 @@ export default function OperatorDashboardClient({
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— OPERATIONAL UPLINK</p>
-            <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-              MISSION <span className="text-amber-500">CONTROL</span>
+            <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">Operator Dashboard</p>
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              Fleet <span className="text-amber-600">Overview</span>
             </h1>
           </div>
           <div className="flex items-center gap-6 bg-card border border-border px-8 py-4 rounded-[32px] shadow-2xl shadow-slate-900/[0.03] backdrop-blur-xl">
              <div className="flex items-center gap-3">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                <span className="text-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">LIVE CHANNEL ALPHA</span>
+                <span className="text-foreground text-sm font-medium leading-none">Live Session</span>
              </div>
              <div className="w-[1px] h-4 bg-border/50" />
              <div className="flex items-center gap-3">
                 <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">SECURE LINK</span>
+                <span className="text-muted-foreground text-sm font-medium leading-none">Secure</span>
              </div>
           </div>
         </div>
@@ -202,30 +202,30 @@ export default function OperatorDashboardClient({
           {[
             {
               icon: Bus,
-              label: 'FLEET MANAGEMENT',
+              label: 'Fleet Management',
               value: stats.totalBuses,
-              sub: `${stats.activeBuses} ACTIVE ASSETS`,
+              sub: `${stats.activeBuses} Active Buses`,
               accent: true,
             },
             {
               icon: Armchair,
-              label: 'CAPACITY LOG',
+              label: 'Total Seats',
               value: stats.totalSeats.toLocaleString(),
-              sub: `YIELD ৳${stats.avgPrice}/SEAT`,
+              sub: `৳${stats.avgPrice} Average Price`,
               accent: false,
             },
             {
               icon: Users,
-              label: 'TOTAL PASSENGERS',
+              label: 'Total Passengers',
               value: stats.totalPassengers.toLocaleString(),
-              sub: `${stats.activePassengers} ACTIVE NODES`,
+              sub: `${stats.activePassengers} Active Users`,
               accent: false,
             },
             {
               icon: ShieldCheck,
-              label: 'SECURITY CLEARANCE',
+              label: 'Verified Users',
               value: stats.verifiedPassengers,
-              sub: `FULL SYNC REQUIRED`,
+              sub: `Fully Verified`,
               accent: false,
             },
           ].map((c, i) => (
@@ -247,15 +247,15 @@ export default function OperatorDashboardClient({
               }`}>
                 <c.icon className={`w-6 h-6 ${c.accent ? 'text-amber-500' : 'text-amber-600'}`} />
               </div>
-              <p className={`text-[8px] font-black uppercase tracking-[0.2em] mb-2 italic opacity-60 ${c.accent ? 'text-slate-400' : 'text-muted-foreground'}`}>
+              <p className={`text-xs font-medium mb-2 opacity-60 ${c.accent ? 'text-slate-400' : 'text-muted-foreground'}`}>
                 {c.label}
               </p>
-              <p className="font-black text-4xl font-heading tracking-tighter mb-2 italic">
+              <p className="font-bold text-3xl tracking-tight mb-2">
                 {c.value}
               </p>
               <div className="flex items-center gap-2">
                  <div className={`w-1.5 h-1.5 rounded-full ${c.accent ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
-                 <p className={`text-[10px] font-black italic uppercase tracking-tight ${c.accent ? 'text-emerald-400/80' : 'text-emerald-600'}`}>
+                 <p className={`text-xs font-medium ${c.accent ? 'text-emerald-400/80' : 'text-emerald-600'}`}>
                    {c.sub}
                  </p>
               </div>
@@ -270,8 +270,8 @@ export default function OperatorDashboardClient({
           <div className="lg:col-span-4 bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] flex flex-col relative overflow-hidden">
              <div className="flex items-center justify-between mb-12 relative z-10">
                 <div>
-                   <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Fleet Composition</p>
-                   <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Distribution</h3>
+                   <p className="text-amber-600 text-sm font-medium tracking-wide mb-1">Bus Types</p>
+                   <h3 className="text-2xl font-bold tracking-tight">Distribution</h3>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-muted border border-border flex items-center justify-center">
                    <Database className="w-5 h-5 text-muted-foreground/30" />
@@ -281,8 +281,8 @@ export default function OperatorDashboardClient({
               {typeKeys.length > 0 ? (
                 <canvas ref={donutRef} />
               ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] opacity-20 italic">
-                  DATA OFFLINE
+                <div className="flex items-center justify-center h-full text-muted-foreground text-sm font-medium opacity-40">
+                  No data available
                 </div>
               )}
             </div>
@@ -291,10 +291,10 @@ export default function OperatorDashboardClient({
                  <div key={k} className="flex items-center justify-between p-4 bg-muted/20 border border-border/50 rounded-2xl hover:bg-muted/40 transition-colors group">
                     <div className="flex items-center gap-4">
                        <span className="w-2.5 h-2.5 rounded-full shadow-lg" style={{ background: COLORS[i] }} />
-                       <span className="text-foreground text-[10px] font-black uppercase tracking-widest">{TYPE_LABEL[k] ?? k}</span>
+                       <span className="text-foreground text-sm font-medium">{TYPE_LABEL[k] ?? k}</span>
                     </div>
-                    <span className="text-muted-foreground font-black text-[10px] uppercase opacity-40 italic group-hover:opacity-100 transition-opacity">
-                      {busTypeCount[k]} ASSETS
+                    <span className="text-muted-foreground text-sm font-medium opacity-50 group-hover:opacity-100 transition-opacity">
+                      {busTypeCount[k]} buses
                     </span>
                  </div>
                ))}
@@ -306,8 +306,8 @@ export default function OperatorDashboardClient({
               <div className="bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] relative overflow-hidden flex flex-col">
                 <div className="flex items-center justify-between mb-10 shrink-0">
                    <div>
-                      <p className="text-emerald-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Readiness Level</p>
-                      <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Fleet Status</h3>
+                      <p className="text-emerald-600 text-sm font-medium tracking-wide mb-1">Fleet Status</p>
+                      <h3 className="text-2xl font-bold tracking-tight">Bus Availability</h3>
                    </div>
                    <Globe className="w-5 h-5 text-muted-foreground/30" />
                 </div>
@@ -315,13 +315,13 @@ export default function OperatorDashboardClient({
                   <canvas ref={fleetRef} />
                 </div>
                 <div className="flex items-center justify-center gap-10 shrink-0">
-                   {[{ label: 'ACTIVE', val: stats.activeBuses, color: '#10b981' }, { label: 'STANDBY', val: stats.inactiveBuses, color: '#f59e0b' }].map((s) => (
+                   {[{ label: 'Active', val: stats.activeBuses, color: '#10b981' }, { label: 'Inactive', val: stats.inactiveBuses, color: '#f59e0b' }].map((s) => (
                      <div key={s.label} className="flex flex-col items-center gap-2">
                         <div className="flex items-center gap-2">
                            <span className="w-2.5 h-2.5 rounded-full" style={{ background: s.color }} />
-                           <span className="text-foreground text-[11px] font-black uppercase tracking-widest">{s.label}</span>
+                           <span className="text-foreground text-sm font-medium">{s.label}</span>
                         </div>
-                        <span className="text-2xl font-black font-heading tracking-tighter italic text-muted-foreground">{s.val}</span>
+                        <span className="text-2xl font-bold tracking-tight text-muted-foreground">{s.val}</span>
                      </div>
                    ))}
                 </div>
@@ -330,8 +330,8 @@ export default function OperatorDashboardClient({
               <div className="bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] relative overflow-hidden flex flex-col">
                 <div className="flex items-center justify-between mb-2">
                    <div>
-                      <p className="text-blue-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Growth Analytics</p>
-                      <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Passenger Scaling</h3>
+                      <p className="text-blue-600 text-sm font-medium tracking-wide mb-1">Growth Analytics</p>
+                      <h3 className="text-2xl font-bold tracking-tight">Passenger Growth</h3>
                    </div>
                    <Activity className="w-5 h-5 text-muted-foreground/30" />
                 </div>
@@ -339,8 +339,8 @@ export default function OperatorDashboardClient({
                   {passengerGrowth.months.length > 0 ? (
                     <canvas ref={barRef} />
                   ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] opacity-20 italic">
-                      TELEMETRY INTERRUPTED
+                    <div className="flex items-center justify-center h-full text-muted-foreground text-sm font-medium opacity-40">
+                      No data available
                     </div>
                   )}
                 </div>
@@ -352,8 +352,8 @@ export default function OperatorDashboardClient({
                <div className="bg-card border border-border rounded-[48px] overflow-hidden shadow-2xl shadow-slate-900/[0.03] flex flex-col">
                   <div className="flex items-center justify-between p-10 border-b border-border/50 shrink-0">
                     <div>
-                       <p className="text-slate-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Fleet Registry</p>
-                       <h3 className="text-xl font-black font-heading uppercase italic tracking-tighter">Recent Assets</h3>
+                       <p className="text-slate-600 text-sm font-medium tracking-wide mb-1">Fleet Registry</p>
+                       <h3 className="text-xl font-bold tracking-tight">Recent Buses</h3>
                     </div>
                     <Link href="/operator-dashboard/buses" className="w-10 h-10 rounded-xl bg-muted border border-border flex items-center justify-center hover:bg-slate-900 hover:text-amber-500 transition-all duration-500 shadow-xl group">
                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -361,7 +361,7 @@ export default function OperatorDashboardClient({
                   </div>
                   <div className="divide-y divide-border/20 flex-1">
                     {recentBuses.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center py-20 grayscale opacity-20"><Bus className="w-12 h-12 mb-4" /><p className="text-[10px] font-black uppercase tracking-widest italic leading-none">NO ASSETS DETECTED</p></div>
+                      <div className="flex flex-col items-center justify-center py-20 grayscale opacity-30"><Bus className="w-12 h-12 mb-4" /><p className="text-base font-medium">No buses found</p></div>
                     ) : (
                       recentBuses.map((bus) => (
                         <div key={bus.id} className="flex items-center gap-6 p-8 hover:bg-muted/30 transition-all duration-500 group">
@@ -369,13 +369,13 @@ export default function OperatorDashboardClient({
                             <Bus className="w-6 h-6 text-muted-foreground group-hover:text-amber-500 transition-colors" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-foreground font-black text-base font-heading uppercase italic tracking-tighter mb-1 group-hover:text-amber-500 transition-colors">{bus.name}</p>
-                            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] opacity-40 italic">S/N #{bus.number} · {bus.totalSeats} NODES</p>
+                            <p className="text-foreground font-semibold text-base tracking-tight mb-1 group-hover:text-amber-500 transition-colors">{bus.name}</p>
+                            <p className="text-muted-foreground text-sm font-medium opacity-50">#{bus.number} · {bus.totalSeats} Seats</p>
                           </div>
                           <div className="text-right shrink-0">
-                            <p className="text-foreground font-black text-sm font-heading italic leading-none mb-2 group-hover:text-emerald-500 transition-colors">৳{bus.pricePerSeat}</p>
-                            <span className={`text-[8px] font-black uppercase tracking-[0.3em] italic px-3 py-1 rounded-full border ${bus.isActive ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>
-                              {bus.isActive ? 'READY' : 'STANDBY'}
+                            <p className="text-foreground font-semibold text-base leading-none mb-2 group-hover:text-emerald-500 transition-colors">৳{bus.pricePerSeat}</p>
+                            <span className={`text-xs font-medium px-3 py-1 rounded-full border ${bus.isActive ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>
+                              {bus.isActive ? 'Active' : 'Inactive'}
                             </span>
                           </div>
                         </div>
@@ -388,8 +388,8 @@ export default function OperatorDashboardClient({
                <div className="bg-card border border-border rounded-[48px] overflow-hidden shadow-2xl shadow-slate-900/[0.03] flex flex-col">
                   <div className="flex items-center justify-between p-10 border-b border-border/50 shrink-0">
                     <div>
-                       <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Passenger Manifest</p>
-                       <h3 className="text-xl font-black font-heading uppercase italic tracking-tighter">Biological Data</h3>
+                       <p className="text-amber-600 text-sm font-medium tracking-wide mb-1">Passenger List</p>
+                       <h3 className="text-xl font-bold tracking-tight">Recent Passengers</h3>
                     </div>
                     <Link href="/operator-dashboard/my-passengers" className="w-10 h-10 rounded-xl bg-muted border border-border flex items-center justify-center hover:bg-slate-900 hover:text-amber-500 transition-all duration-500 shadow-xl group">
                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -397,37 +397,37 @@ export default function OperatorDashboardClient({
                   </div>
                   <div className="divide-y divide-border/20 flex-1">
                     {recentPassengers.length === 0 ? (
-                      <div className="flex flex-col items-center justify-center py-20 grayscale opacity-20"><Users className="w-12 h-12 mb-4" /><p className="text-[10px] font-black uppercase tracking-widest italic leading-none">AWAITING SIGNAL</p></div>
+                      <div className="flex flex-col items-center justify-center py-20 grayscale opacity-30"><Users className="w-12 h-12 mb-4" /><p className="text-base font-medium">No passengers found</p></div>
                     ) : (
                       recentPassengers.map((p) => (
                         <div key={p.id} className="flex items-center gap-6 p-8 hover:bg-muted/30 transition-all duration-500 group">
-                          <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 text-muted-foreground font-black text-xl font-heading uppercase italic group-hover:bg-slate-900 group-hover:text-amber-500 transition-all duration-700 shadow-lg">
+                          <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 text-muted-foreground font-bold text-xl group-hover:bg-slate-900 group-hover:text-amber-500 transition-all duration-700 shadow-lg">
                             {p.name?.charAt(0)?.toUpperCase()}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-3 mb-1">
-                              <p className="text-foreground font-black text-base font-heading uppercase italic tracking-tighter group-hover:text-amber-500 transition-colors">{p.name}</p>
+                              <p className="text-foreground font-semibold text-base tracking-tight group-hover:text-amber-500 transition-colors">{p.name}</p>
                               {p.isVerified && (
                                 <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.2)]">
                                    <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />
                                 </div>
                               )}
                             </div>
-                            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest opacity-40 italic truncate">{p.email}</p>
+                            <p className="text-muted-foreground text-sm font-medium opacity-60 truncate">{p.email}</p>
                           </div>
                           <div className="text-right shrink-0">
-                            <span className={`text-[8px] font-black uppercase tracking-[0.3em] italic px-3 py-1.5 rounded-full border transition-all duration-500 ${
+                            <span className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-all duration-500 ${
                               p.status === 'ACTIVE'
                                 ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-white'
                                 : 'bg-destructive/10 text-destructive border-destructive/20 group-hover:bg-destructive group-hover:text-white'
                             }`}>
                               {p.status}
                             </span>
-                            <p className="text-muted-foreground text-[8px] font-black uppercase tracking-widest italic opacity-30 group-hover:opacity-100 transition-opacity mt-2">
+                            <p className="text-muted-foreground text-xs font-medium opacity-40 group-hover:opacity-100 transition-opacity mt-2">
                               {new Date(p.joinedAt).toLocaleDateString('en-BD', {
                                 month: 'short',
                                 day: 'numeric',
-                              }).toUpperCase()}
+                              })}
                             </p>
                           </div>
                         </div>
@@ -442,9 +442,9 @@ export default function OperatorDashboardClient({
         {/* FAST ACTIONS HUB */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12">
           {[
-            { label: 'ASSET MANAGEMENT', href: '/operator-dashboard/buses', icon: Bus, desc: 'MODIFY FLEET VECTORS' },
-            { label: 'PERSONNEL REGISTRY', href: '/operator-dashboard/my-passengers', icon: Users, desc: 'ACCESS GUEST MANIFEST' },
-            { label: 'TRAFFIC ANALYTICS', href: '/operator-dashboard/bookings', icon: Activity, desc: 'MONITOR THRUPUT CYCLE' },
+            { label: 'Manage Buses', href: '/operator-dashboard/buses', icon: Bus, desc: 'View and edit fleet' },
+            { label: 'Passengers', href: '/operator-dashboard/my-passengers', icon: Users, desc: 'View passenger list' },
+            { label: 'Bookings', href: '/operator-dashboard/bookings', icon: Activity, desc: 'Monitor reservations' },
           ].map((link, idx) => (
             <Link
               key={link.href}
@@ -456,10 +456,10 @@ export default function OperatorDashboardClient({
                    <link.icon className="w-6 h-6 text-muted-foreground group-hover:text-amber-500 transition-colors" />
                 </div>
                 <div>
-                   <span className="text-foreground font-black text-lg font-heading uppercase italic tracking-tighter block group-hover:text-amber-500 transition-colors leading-none mb-1">
+                   <span className="text-foreground font-semibold text-lg block group-hover:text-amber-500 transition-colors leading-none mb-1">
                      {link.label}
                    </span>
-                   <span className="text-[8px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40 group-hover:opacity-100 transition-opacity">
+                   <span className="text-xs font-medium text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity">
                      {link.desc}
                    </span>
                 </div>

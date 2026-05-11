@@ -103,7 +103,7 @@ export default function CreateSchedule() {
 
   const inputCls = "bg-muted/50 border-border text-foreground placeholder:text-muted-foreground focus:border-amber-500 focus:ring-amber-500/20 rounded-2xl h-14 transition-all duration-300";
   const selectCls = "w-full bg-muted/50 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none transition-all duration-300 appearance-none";
-  const labelCls = "text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] block mb-3 ml-1";
+  const labelCls = "text-sm font-semibold text-amber-600 block mb-3 ml-1";
 
   return (
     <section className="min-h-screen bg-background relative overflow-hidden p-6 lg:p-12">
@@ -113,9 +113,9 @@ export default function CreateSchedule() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-16">
-          <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-4">Operations Scheduling</p>
-          <h1 className="text-4xl lg:text-6xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-            Assign <span className="text-amber-500">Service</span>
+          <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">Schedule Management</p>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+            Create <span className="text-amber-600">Schedule</span>
           </h1>
         </motion.div>
 
@@ -126,37 +126,37 @@ export default function CreateSchedule() {
                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600">
                     <CalendarClock className="w-6 h-6" />
                  </div>
-                 <h2 className="text-2xl font-black text-foreground font-heading tracking-tight uppercase italic">Service Parameters</h2>
+                 <h2 className="text-2xl font-bold text-foreground tracking-tight">Schedule Details</h2>
               </div>
 
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-24 gap-4">
                   <Loader2 className="w-12 h-12 text-amber-500 animate-spin" />
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest animate-pulse">Syncing Fleet & Route Data...</p>
+                  <p className="text-base font-medium text-muted-foreground animate-pulse">Loading data...</p>
                 </div>
               ) : (
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className={labelCls}>Asset Selection (Bus)</label>
+                      <label className={labelCls}>Select Bus</label>
                       <div className="relative">
                         <select {...register("busId")} className={selectCls}>
-                          <option value="">Authorize Asset...</option>
+                          <option value="">Choose a bus...</option>
                           {buses.map((bus) => (
-                            <option key={bus.id} value={bus.id}>{bus.name.toUpperCase()} — {bus.number}</option>
+                            <option key={bus.id} value={bus.id}>{bus.name} — {bus.number}</option>
                           ))}
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                           <Bus className="w-4 h-4 opacity-40" />
                         </div>
                       </div>
-                      {errors.busId && <p className="text-destructive text-[10px] font-black uppercase mt-2 ml-1">{errors.busId.message}</p>}
+                      {errors.busId && <p className="text-destructive text-sm font-medium mt-2 ml-1">{errors.busId.message}</p>}
                     </div>
                     <div>
-                      <label className={labelCls}>Vector Selection (Route)</label>
+                      <label className={labelCls}>Select Route</label>
                       <div className="relative">
                         <select {...register("routeId")} className={selectCls}>
-                          <option value="">Authorize Path...</option>
+                          <option value="">Choose a route...</option>
                           {routes.map((route) => (
                             <option key={route.id} value={route.id}>
                               {route.sourceCity} → {route.destinationCity}
@@ -167,28 +167,28 @@ export default function CreateSchedule() {
                           <Navigation className="w-4 h-4 opacity-40" />
                         </div>
                       </div>
-                      {errors.routeId && <p className="text-destructive text-[10px] font-black uppercase mt-2 ml-1">{errors.routeId.message}</p>}
+                      {errors.routeId && <p className="text-destructive text-sm font-medium mt-2 ml-1">{errors.routeId.message}</p>}
                     </div>
                   </div>
 
                   <div className="p-8 bg-muted/30 border border-border/50 rounded-[32px] space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className={labelCls}>Service Commencement</label>
+                        <label className={labelCls}>Departure Time</label>
                         <Input type="datetime-local" {...register("departure")} min={values.arrival || minDateTime}
                           className={inputCls} />
-                        {errors.departure && <p className="text-destructive text-[10px] font-black uppercase mt-2 ml-1">{errors.departure.message}</p>}
+                        {errors.departure && <p className="text-destructive text-sm font-medium mt-2 ml-1">{errors.departure.message}</p>}
                       </div>
                       <div>
-                        <label className={labelCls}>Service Conclusion</label>
+                        <label className={labelCls}>Arrival Time</label>
                         <Input type="datetime-local" {...register("arrival")} min={values.departure || minDateTime}
                           className={inputCls} />
-                        {errors.arrival && <p className="text-destructive text-[10px] font-black uppercase mt-2 ml-1">{errors.arrival.message}</p>}
+                        {errors.arrival && <p className="text-destructive text-sm font-medium mt-2 ml-1">{errors.arrival.message}</p>}
                       </div>
                     </div>
 
                     <div>
-                      <label className={labelCls}>Operational Status</label>
+                      <label className={labelCls}>Schedule Status</label>
                       <div className="relative">
                         <select {...register("status")} className={selectCls}>
                           <option value="scheduled">Scheduled</option>
@@ -202,9 +202,9 @@ export default function CreateSchedule() {
                     </div>
                   </div>
 
-                  <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="w-full h-16 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black rounded-2xl transition-all duration-500 flex items-center justify-center gap-4 disabled:cursor-not-allowed uppercase tracking-[0.2em] text-xs shadow-2xl shadow-slate-900/20">
+                  <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} onClick={handleSubmit(onSubmit)} disabled={isSubmitting} className="w-full h-14 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-semibold rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 disabled:cursor-not-allowed text-base shadow-xl shadow-slate-900/20">
                     {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin text-amber-500" /> : <Zap className="w-5 h-5 text-amber-500" />}
-                    {isSubmitting ? "Finalizing Manifest..." : "Initialize Service Cycle"}
+                    {isSubmitting ? "Creating..." : "Create Schedule"}
                   </motion.button>
                 </div>
               )}
@@ -217,7 +217,7 @@ export default function CreateSchedule() {
                  <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-600">
                     <ShieldCheck className="w-6 h-6" />
                  </div>
-                 <h2 className="text-2xl font-black text-foreground font-heading tracking-tight uppercase italic">Service Manifest</h2>
+                 <h2 className="text-2xl font-bold text-foreground tracking-tight">Preview</h2>
               </div>
 
               <div className="mb-10 p-10 bg-muted/30 rounded-[40px] border border-border/50 relative overflow-hidden">
@@ -229,39 +229,39 @@ export default function CreateSchedule() {
                   </div>
                   <div className="flex flex-col justify-between h-[152px] flex-1">
                     <div>
-                      <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1 italic opacity-60">Origin Entry</p>
-                      <p className="text-2xl font-black text-foreground font-heading uppercase italic tracking-tighter truncate leading-none">
-                        {selectedRoute?.sourceCity ?? "Unresolved"}
+                      <p className="text-xs font-medium text-emerald-600 mb-1 opacity-70">From</p>
+                      <p className="text-2xl font-bold text-foreground tracking-tight truncate leading-none">
+                        {selectedRoute?.sourceCity ?? "Select route"}
                       </p>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-tight mt-2 opacity-40 italic">{formatDateTime(values.departure) ?? "TBD"}</p>
+                      <p className="text-sm font-medium text-muted-foreground mt-2 opacity-60">{formatDateTime(values.departure) ?? "Not set"}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1 italic opacity-60">Terminal Exit</p>
-                      <p className="text-2xl font-black text-foreground font-heading uppercase italic tracking-tighter truncate leading-none">
-                        {selectedRoute?.destinationCity ?? "Unresolved"}
+                      <p className="text-xs font-medium text-amber-600 mb-1 opacity-70">To</p>
+                      <p className="text-2xl font-bold text-foreground tracking-tight truncate leading-none">
+                        {selectedRoute?.destinationCity ?? "Select route"}
                       </p>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-tight mt-2 opacity-40 italic">{formatDateTime(values.arrival) ?? "TBD"}</p>
+                      <p className="text-sm font-medium text-muted-foreground mt-2 opacity-60">{formatDateTime(values.arrival) ?? "Not set"}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-6">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-4 opacity-40">System Integration Status</p>
+                <p className="text-sm font-medium text-muted-foreground mb-4 opacity-60">Summary</p>
                 
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   {[
-                    { icon: Bus,          label: "Asset",       value: selectedBus   ? `${selectedBus.name}` : "—", color: "text-blue-500" },
-                    { icon: Route,        label: "Span",        value: selectedRoute ? `${selectedRoute.distanceKm} KM` : "—", color: "text-emerald-500" },
-                    { icon: Clock,        label: "Cycle",       value: getDuration() ?? "—", color: "text-amber-500" },
-                    { icon: ShieldCheck,  label: "Integrity",   value: values.status ? values.status.toUpperCase() : "—", color: "text-purple-500" },
+                    { icon: Bus,          label: "Bus",         value: selectedBus   ? `${selectedBus.name}` : "—", color: "text-blue-500" },
+                    { icon: Route,        label: "Distance",    value: selectedRoute ? `${selectedRoute.distanceKm} km` : "—", color: "text-emerald-500" },
+                    { icon: Clock,        label: "Duration",    value: getDuration() ?? "—", color: "text-amber-500" },
+                    { icon: ShieldCheck,  label: "Status",      value: values.status ? values.status.charAt(0).toUpperCase() + values.status.slice(1) : "—", color: "text-purple-500" },
                   ].map(({ icon: Icon, label, value, color }) => (
                     <div key={label} className="p-5 bg-muted/20 border border-border/50 rounded-[28px] group hover:bg-muted/40 transition-all duration-500">
                       <div className={`w-8 h-8 rounded-xl bg-slate-900 ${color} flex items-center justify-center mb-4 shadow-lg shadow-slate-900/10`}>
                         <Icon className="h-4 w-4" />
                       </div>
-                      <p className="text-[8px] text-muted-foreground font-black uppercase tracking-widest mb-1 opacity-40 italic">{label}</p>
-                      <p className="text-sm font-black text-foreground font-heading tracking-tight italic uppercase truncate">{value}</p>
+                      <p className="text-xs text-muted-foreground font-medium mb-1 opacity-60">{label}</p>
+                      <p className="text-sm font-semibold text-foreground tracking-tight truncate">{value}</p>
                     </div>
                   ))}
                 </div>
@@ -272,9 +272,9 @@ export default function CreateSchedule() {
                       <CheckCircle2 className="h-5 w-5" />
                     </div>
                     <div>
-                       <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic leading-none mb-1">Efficiency Match</p>
-                       <p className="text-[10px] font-black text-foreground/60 uppercase tracking-tight italic leading-none">
-                         Synchronized with Route Est. {Math.floor(selectedRoute.estimatedTimeMinutes / 60)}H {selectedRoute.estimatedTimeMinutes % 60}M
+                       <p className="text-sm font-medium text-emerald-600 leading-none mb-1">Time Estimate</p>
+                       <p className="text-sm font-medium text-foreground/60 leading-none">
+                         {Math.floor(selectedRoute.estimatedTimeMinutes / 60)}h {selectedRoute.estimatedTimeMinutes % 60}m estimated
                        </p>
                     </div>
                   </div>
@@ -282,12 +282,12 @@ export default function CreateSchedule() {
 
                 <div className="pt-8 border-t border-border/50 flex items-center justify-between">
                    <div>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-40 italic mb-1">Service Status</p>
+                      <p className="text-sm font-medium text-muted-foreground opacity-60 mb-1">Status</p>
                       <div className="flex items-center gap-2">
                         <div className={`w-2 h-2 rounded-full animate-pulse ${
                           values.status === "scheduled" ? "bg-blue-500" : values.status === "cancelled" ? "bg-destructive" : "bg-emerald-500"
                         }`} />
-                        <p className="text-xl font-black text-foreground font-heading tracking-tighter italic uppercase">{values.status}</p>
+                        <p className="text-xl font-semibold text-foreground tracking-tight capitalize">{values.status}</p>
                       </div>
                    </div>
                    <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center text-amber-500 shadow-xl">

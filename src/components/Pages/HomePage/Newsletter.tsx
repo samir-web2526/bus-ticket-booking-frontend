@@ -14,11 +14,11 @@ export default function NewsletterSection() {
 
           <div className="relative z-10 grid lg:grid-cols-2 items-center gap-20">
             <div>
-              <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-8">Newsletter</p>
-              <h2 className="text-4xl lg:text-7xl font-black text-foreground font-heading leading-tight mb-8 tracking-tighter">
-                Don&apos;t miss the <br /><span className="text-amber-500 italic">Elite Deals.</span>
+              <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-6">Newsletter</p>
+              <h2 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight mb-6 tracking-tight">
+                Don&apos;t miss the <br /><span className="text-amber-600">Special Deals.</span>
               </h2>
-              <p className="text-muted-foreground text-xl font-medium mb-12 max-w-lg leading-relaxed italic">
+              <p className="text-muted-foreground text-xl font-normal mb-10 max-w-lg leading-relaxed">
                 Subscribe to our newsletter and be the first to receive exclusive discounts, luxury travel guides, and new route alerts.
               </p>
 
@@ -29,7 +29,7 @@ export default function NewsletterSection() {
                     className="h-16 px-8 rounded-2xl border-border bg-muted/30 text-foreground placeholder:text-muted-foreground/40 focus-visible:ring-amber-500/50 shadow-xl"
                   />
                 </div>
-                <Button className="h-16 px-12 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-widest text-xs shadow-2xl shadow-slate-900/20 flex items-center gap-3 border-none transition-all active:scale-95">
+                <Button className="h-14 px-10 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-base shadow-xl shadow-slate-900/20 flex items-center gap-3 border-none transition-all active:scale-95">
                   Subscribe
                   <Send className="w-5 h-5" />
                 </Button>
@@ -37,7 +37,7 @@ export default function NewsletterSection() {
 
               <div className="mt-12 flex flex-wrap gap-8">
                 {['Weekly updates', 'No spam policy', 'Cancel anytime'].map(text => (
-                  <div key={text} className="flex items-center gap-3 text-muted-foreground text-[10px] font-black uppercase tracking-widest">
+                  <div key={text} className="flex items-center gap-3 text-muted-foreground text-sm font-medium">
                     <CheckCircle2 className="w-4 h-4 text-amber-500" />
                     {text}
                   </div>

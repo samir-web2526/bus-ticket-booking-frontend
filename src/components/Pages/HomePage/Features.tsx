@@ -76,14 +76,13 @@ export default function FeaturesSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">
-            — Why Us
+          <p className="text-amber-600 text-sm font-medium mb-3">
+            Why Us
           </p>
           <h2
-            className="text-4xl lg:text-5xl font-black text-gray-900"
-            style={{ fontFamily: "'Sora', sans-serif" }}
+            className="text-4xl lg:text-5xl font-bold text-gray-900"
           >
-            Built for the <span className="text-amber-500">Modern Traveler</span>
+            Built for the <span className="text-amber-600">Modern Traveler</span>
           </h2>
           <p className="mt-4 text-gray-500 text-lg max-w-xl mx-auto">
             Everything you need for a seamless journey — from booking to boarding.

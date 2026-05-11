@@ -16,9 +16,9 @@ export default async function BusDetailsPage({ params }: { params: Promise<{ id:
         <div className="max-w-4xl mx-auto relative z-10">
           <Link
             href="/admin-dashboard/buses"
-            className="inline-flex items-center gap-4 text-muted-foreground hover:text-foreground text-[10px] font-black uppercase tracking-widest mb-12 transition-all group italic"
+            className="inline-flex items-center gap-4 text-muted-foreground hover:text-foreground text-base font-medium mb-12 transition-all group"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform text-amber-500" /> BACK TO REGISTRY
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform text-amber-500" /> Back to Buses
           </Link>
           
           <div className="flex items-center justify-center h-[500px] bg-card border border-border rounded-[56px] shadow-2xl relative overflow-hidden group">
@@ -28,16 +28,16 @@ export default async function BusDetailsPage({ params }: { params: Promise<{ id:
               <div className="w-20 h-20 rounded-[32px] bg-destructive/10 border border-destructive/20 flex items-center justify-center text-destructive mx-auto mb-8 animate-pulse">
                 <ShieldAlert className="h-10 w-10" />
               </div>
-              <h3 className="text-4xl font-black text-foreground mb-4 font-heading italic tracking-tighter uppercase leading-none">Diagnostic Error</h3>
-              <p className="text-muted-foreground font-medium italic mb-2">FAILED TO ESTABLISH ASSET LINK</p>
-              <p className="text-destructive text-[10px] font-black uppercase tracking-widest mt-6 bg-destructive/10 px-6 py-2 rounded-full inline-block italic border border-destructive/20">
+              <h3 className="text-3xl font-bold text-foreground mb-4 tracking-tight leading-none">Error</h3>
+              <p className="text-muted-foreground font-normal text-base mb-2">Failed to load bus details</p>
+              <p className="text-destructive text-sm font-medium mt-6 bg-destructive/10 px-4 py-2 rounded-full inline-block border border-destructive/20">
                 {result.error}
               </p>
             </div>
           </div>
           
-          <div className="mt-12 flex items-center justify-center gap-4 text-muted-foreground/20 text-[9px] font-black uppercase tracking-[0.5em] italic">
-             <Activity className="w-4 h-4" /> SECURE HANDSHAKE FAILED
+          <div className="mt-12 flex items-center justify-center gap-4 text-muted-foreground/30 text-sm font-medium">
+             <Activity className="w-4 h-4" /> Connection failed
           </div>
         </div>
       </section>

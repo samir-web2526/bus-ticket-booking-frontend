@@ -87,7 +87,7 @@ function InfoCard({ title, icon: Icon, children }: {
         <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600">
           <Icon className="w-4 h-4" />
         </div>
-        <p className="text-gray-900 font-bold text-sm uppercase tracking-wider">{title}</p>
+        <p className="text-gray-900 font-semibold text-base">{title}</p>
       </div>
       <div className="p-6 space-y-1">{children}</div>
     </motion.div>
@@ -101,7 +101,7 @@ function FieldRow({ label, value }: { label: string; value: string | number | nu
       : value;
   return (
     <div className="flex items-start justify-between gap-4 py-3 border-b border-gray-100 last:border-0">
-      <p className="text-gray-400 text-xs uppercase tracking-wider shrink-0 pt-0.5">{label}</p>
+      <p className="text-gray-400 text-sm shrink-0 pt-0.5">{label}</p>
       <p className="text-gray-900 text-sm font-semibold text-right">{display}</p>
     </div>
   );
@@ -162,7 +162,7 @@ export default function BusDetailsClient({ bus }: { bus: BusDetail }) {
                 </div>
                 <div className="pb-1">
                   <div className="flex items-center gap-3 mb-1 flex-wrap">
-                    <h1 className="text-gray-900 font-black text-2xl lg:text-3xl">{bus.name}</h1>
+                    <h1 className="text-gray-900 font-bold text-2xl lg:text-3xl">{bus.name}</h1>
                     <Badge className={`border text-xs font-semibold ${tagColors[tag] ?? ""}`}>{tag}</Badge>
                     {bus.isActive && (
                       <span className="flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
@@ -181,7 +181,7 @@ export default function BusDetailsClient({ bus }: { bus: BusDetail }) {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setEditOpen(true)}
-                  className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-sm transition-all"
+                  className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-5 py-2.5 rounded-xl text-base shadow-sm transition-all"
                 >
                   <Pencil className="w-4 h-4" /> Edit
                 </motion.button>
@@ -189,7 +189,7 @@ export default function BusDetailsClient({ bus }: { bus: BusDetail }) {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setDeleteOpen(true)}
-                  className="flex items-center gap-2 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 text-red-600 font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider transition-all"
+                  className="flex items-center gap-2 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 text-red-600 font-semibold px-5 py-2.5 rounded-xl text-base transition-all"
                 >
                   <Trash2 className="w-4 h-4" /> Delete
                 </motion.button>
@@ -254,8 +254,8 @@ export default function BusDetailsClient({ bus }: { bus: BusDetail }) {
             <div className="w-14 h-14 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center text-red-500 mb-5">
               <Trash2 className="w-6 h-6" />
             </div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-2">— Danger Zone</p>
-            <h2 className="text-gray-900 font-black text-2xl mb-2">Delete Bus?</h2>
+            <p className="text-gray-400 text-sm font-medium mb-2">Delete Bus</p>
+            <h2 className="text-gray-900 font-bold text-2xl mb-2">Delete Bus?</h2>
             <p className="text-gray-500 text-sm mb-8">
               Are you sure you want to delete{" "}
               <span className="text-gray-900 font-semibold">{bus.name}</span>? This action cannot be undone.
@@ -264,7 +264,7 @@ export default function BusDetailsClient({ bus }: { bus: BusDetail }) {
               <button
                 onClick={() => setDeleteOpen(false)}
                 disabled={deleteLoading}
-                className="flex-1 border border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300 hover:text-gray-900 rounded-xl h-11 font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-50"
+                className="flex-1 border border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300 hover:text-gray-900 rounded-xl h-11 font-semibold text-base transition-all disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -273,7 +273,7 @@ export default function BusDetailsClient({ bus }: { bus: BusDetail }) {
                 whileTap={{ scale: 0.98 }}
                 onClick={handleDelete}
                 disabled={deleteLoading}
-                className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm"
+                className="flex-1 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-semibold py-2 rounded-xl transition-all flex items-center justify-center gap-2 text-base"
               >
                 {deleteLoading ? (<><Loader2 className="w-4 h-4 animate-spin" />Deleting…</>) : (<><Trash2 className="w-4 h-4" />Delete</>)}
               </motion.button>

@@ -162,7 +162,7 @@ const Navbar = ({
               <div className="relative w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-200">
                 <img src={logo.src} className="w-6 h-6 brightness-0 invert" alt={logo.alt} />
               </div>
-              <span className="text-2xl font-black bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tighter">
+              <span className="text-2xl font-bold text-foreground tracking-tight">
                 {logo.title}
               </span>
             </motion.a>
@@ -206,8 +206,8 @@ const Navbar = ({
                       className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full border border-slate-200 hover:border-amber-300 hover:bg-amber-50 transition-all outline-none"
                     >
                       <div className="text-right hidden sm:block">
-                        <p className="text-xs font-bold text-slate-900">{user.name}</p>
-                        <p className="text-[10px] text-slate-400 uppercase tracking-wider">{user.role}</p>
+                        <p className="text-sm font-semibold text-slate-900">{user.name}</p>
+                        <p className="text-xs text-slate-400">{user.role}</p>
                       </div>
                       <Avatar className="w-8 h-8 border border-slate-100">
                         <AvatarImage src={user.profileImage} />
@@ -274,10 +274,10 @@ const Navbar = ({
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <Button asChild variant="ghost" className="text-slate-600 font-bold hover:text-amber-600 hover:bg-amber-50 rounded-xl">
+                <Button asChild variant="ghost" className="text-slate-600 font-medium hover:text-amber-600 hover:bg-amber-50 rounded-xl">
                   <a href="/login">Login</a>
                 </Button>
-                <Button asChild className="bg-amber-500 hover:bg-amber-400 text-white font-bold rounded-xl px-6 shadow-lg shadow-amber-200 border-none transition-all hover:scale-105 active:scale-95">
+                <Button asChild className="bg-amber-500 hover:bg-amber-400 text-white font-semibold rounded-xl px-6 shadow-lg shadow-amber-200 border-none transition-all hover:scale-105 active:scale-95">
                   <a href="/register">Sign Up</a>
                 </Button>
               </div>
@@ -405,7 +405,7 @@ const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger className="text-foreground hover:text-amber-600 data-[state=open]:text-amber-600 data-[state=open]:bg-amber-50/50 hover:bg-amber-50/50 rounded-xl transition-all duration-300 font-black uppercase tracking-widest text-[10px] bg-transparent border-none outline-none">
+        <NavigationMenuTrigger className="text-foreground hover:text-amber-600 data-[state=open]:text-amber-600 data-[state=open]:bg-amber-50/50 hover:bg-amber-50/50 rounded-xl transition-all duration-300 font-medium text-sm bg-transparent border-none outline-none px-4 py-2">
           {item.title}
         </NavigationMenuTrigger>
         <NavigationMenuContent className="bg-card border border-border rounded-[32px] shadow-2xl overflow-hidden">
@@ -421,10 +421,10 @@ const renderMenuItem = (item: MenuItem) => {
               <div className="col-span-1 bg-slate-900 rounded-3xl p-8 text-white flex flex-col justify-between shadow-xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                 <div className="relative z-10">
-                  <h4 className="font-black text-2xl mb-3 font-heading leading-tight italic">Summer <span className="text-amber-500">Sale!</span></h4>
-                  <p className="text-slate-300 text-[10px] font-black uppercase tracking-widest leading-relaxed mb-8">Get up to 30% off on all AC routes this weekend. Book now and save big.</p>
+                  <h4 className="font-bold text-2xl mb-3 leading-tight">Summer <span className="text-amber-500">Sale!</span></h4>
+                  <p className="text-slate-300 text-sm font-normal leading-relaxed mb-8">Get up to 30% off on all AC routes this weekend. Book now and save big.</p>
                 </div>
-                <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-400 font-black uppercase tracking-widest text-[10px] h-10 px-6 rounded-xl border-none w-fit shadow-lg shadow-amber-500/20">
+                <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-400 font-semibold text-sm h-10 px-6 rounded-xl border-none w-fit shadow-lg shadow-amber-500/20">
                   Explore Deals
                 </Button>
               </div>
@@ -446,7 +446,7 @@ const renderMenuItem = (item: MenuItem) => {
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
         href={item.url}
-        className="group inline-flex h-10 w-max items-center justify-center rounded-xl bg-transparent px-4 text-[10px] font-black uppercase tracking-widest text-foreground transition-all duration-300 hover:text-amber-600 hover:bg-amber-50/50"
+        className="group inline-flex h-10 w-max items-center justify-center rounded-xl bg-transparent px-4 text-sm font-medium text-foreground transition-all duration-300 hover:text-amber-600 hover:bg-amber-50/50"
       >
         {item.title}
       </NavigationMenuLink>

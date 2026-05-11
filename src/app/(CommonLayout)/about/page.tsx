@@ -16,10 +16,10 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-8">Our Story</p>
-            <h1 className="text-5xl md:text-8xl font-black text-foreground mb-10 tracking-tighter font-heading leading-[1.1]">
+            <p className="text-amber-600 text-sm font-medium mb-4">Our Story</p>
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-8 tracking-tight leading-tight">
               Redefining <br />
-              <span className="text-amber-500 italic">Travel in Bangladesh</span>
+              <span className="text-amber-500">Travel in Bangladesh</span>
             </h1>
             <p className="text-muted-foreground text-xl max-w-3xl mx-auto font-medium leading-relaxed">
               We are Bangladesh&apos;s leading bus ticket booking platform, dedicated to making inter-city travel 
@@ -42,7 +42,7 @@ export default function AboutPage() {
               <div className="w-20 h-20 bg-amber-500/10 rounded-[28px] flex items-center justify-center mb-10 shadow-sm border border-amber-500/10">
                 <Globe className="w-10 h-10 text-amber-600" />
               </div>
-              <h2 className="text-4xl lg:text-6xl font-black text-foreground mb-10 font-heading tracking-tight leading-tight">Our <span className="text-amber-500">Vision</span></h2>
+              <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-8 leading-tight">Our <span className="text-amber-500">Vision</span></h2>
               <p className="text-muted-foreground text-xl leading-relaxed font-medium">
                 To revolutionize the transportation industry in Bangladesh by leveraging technology 
                 to provide the most efficient and user-friendly travel experience. We aim to connect 
@@ -60,7 +60,7 @@ export default function AboutPage() {
               <div className="w-24 h-24 bg-emerald-500/10 rounded-[32px] flex items-center justify-center mb-12 shadow-sm relative z-10 group-hover:scale-110 transition-transform duration-500 border border-emerald-500/10">
                 <ShieldCheck className="w-12 h-12 text-emerald-600" />
               </div>
-              <h2 className="text-4xl lg:text-6xl font-black text-foreground mb-10 font-heading tracking-tight relative z-10 leading-tight">Our <span className="text-emerald-500">Mission</span></h2>
+              <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-8 relative z-10 leading-tight">Our <span className="text-emerald-500">Mission</span></h2>
               <p className="text-muted-foreground text-xl leading-relaxed font-medium relative z-10">
                 Our mission is to provide travelers with real-time access to bus schedules, 
                 seat availability, and secure booking options, while supporting bus operators 
@@ -75,9 +75,9 @@ export default function AboutPage() {
       <section className="py-32 bg-muted/20 border-y border-border">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-24">
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-6">Core Values</p>
-            <h2 className="text-4xl lg:text-7xl font-black text-foreground mb-8 font-heading tracking-tighter">Why Thousands Trust Us</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto font-medium text-xl leading-relaxed italic">We prioritize your comfort and safety above everything else.</p>
+            <p className="text-amber-600 text-sm font-medium mb-4">Core Values</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">Why Thousands Trust Us</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto font-medium text-lg leading-relaxed">We prioritize your comfort and safety above everything else.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-10">
             {[
@@ -96,7 +96,7 @@ export default function AboutPage() {
                 <div className={`w-20 h-20 ${feature.color} border rounded-[28px] flex items-center justify-center mx-auto mb-10 group-hover:scale-110 transition-transform duration-500 shadow-sm`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-3xl font-black text-foreground mb-6 font-heading tracking-tight">{feature.title}</h3>
+                <h3 className="text-3xl font-bold text-foreground mb-6">{feature.title}</h3>
                 <p className="text-muted-foreground text-base leading-relaxed font-medium">{feature.desc}</p>
               </motion.div>
             ))}
@@ -121,8 +121,8 @@ export default function AboutPage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <p className="text-5xl lg:text-7xl font-black text-amber-500 mb-6 font-heading tracking-tighter italic">{stat.value}</p>
-                <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.4em]">{stat.label}</p>
+                <p className="text-5xl lg:text-6xl font-bold text-amber-500 mb-4">{stat.value}</p>
+                <p className="text-muted-foreground text-sm font-medium">{stat.label}</p>
               </motion.div>
             ))}
           </div>

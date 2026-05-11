@@ -71,8 +71,8 @@ function StatCard({
         <Icon className={`w-6 h-6 ${primary ? 'text-amber-500' : 'text-amber-600'}`} />
       </div>
       <div>
-        <p className={`text-[10px] font-black uppercase tracking-widest mb-1 ${primary ? 'text-slate-400' : 'text-muted-foreground'}`}>{label}</p>
-        <p className="font-black text-2xl font-heading tracking-tighter">
+        <p className={`text-sm font-medium mb-1 ${primary ? 'text-slate-400' : 'text-muted-foreground'}`}>{label}</p>
+        <p className="font-bold text-2xl tracking-tight">
           {value}
         </p>
       </div>
@@ -86,13 +86,13 @@ function PaymentBadge({ payment }: { payment: Payment | null }) {
   if (!payment) return null;
   const isPaid = payment.status === 'PAID';
   return (
-    <span className={`inline-flex items-center gap-2 text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border ${
+    <span className={`inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full border ${
       isPaid
         ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
         : 'bg-destructive/10 text-destructive border-destructive/20'
     }`}>
       <Banknote className="w-3 h-3" />
-      {isPaid ? 'Secured' : 'Unpaid'}
+      {isPaid ? 'Paid' : 'Unpaid'}
     </span>
   );
 }
@@ -118,15 +118,15 @@ function BookingCard({ booking }: { booking: Booking }) {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                 <p className="text-foreground font-black text-xl font-heading tracking-tight italic uppercase">
+                 <p className="text-foreground font-semibold text-xl tracking-tight">
                    {booking.schedule.route.sourceCity}
                  </p>
                  <ArrowRightCircle className="w-4 h-4 text-muted-foreground/30" />
-                 <p className="text-foreground font-black text-xl font-heading tracking-tight italic uppercase">
+                 <p className="text-foreground font-semibold text-xl tracking-tight">
                    {booking.schedule.route.destinationCity}
                  </p>
               </div>
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">
+              <p className="text-sm font-medium text-muted-foreground opacity-70">
                 {booking.schedule.bus.name} · {busTypeLabel[booking.schedule.bus.type] ?? booking.schedule.bus.type}
               </p>
             </div>
@@ -134,29 +134,29 @@ function BookingCard({ booking }: { booking: Booking }) {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
             <div className="space-y-1">
-              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Departure</p>
+              <p className="text-xs font-medium text-muted-foreground">Departure</p>
               <div className="flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5 text-amber-600" />
-                <span className="text-xs font-black text-foreground uppercase tracking-tight italic">{fmt(booking.schedule.departure)}</span>
+                <span className="text-sm font-medium text-foreground">{fmt(booking.schedule.departure)}</span>
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Selected Seats</p>
+              <p className="text-xs font-medium text-muted-foreground">Seats</p>
               <div className="flex items-center gap-2">
                 <Armchair className="w-3.5 h-3.5 text-amber-600" />
-                <span className="text-xs font-black text-foreground uppercase tracking-tight">{seatNumbers}</span>
+                <span className="text-sm font-medium text-foreground">{seatNumbers}</span>
                 {seatType && (
-                   <span className="px-2 py-0.5 rounded-md bg-muted text-muted-foreground text-[8px] font-black uppercase tracking-widest border border-border">
+                   <span className="px-2 py-0.5 rounded-md bg-muted text-muted-foreground text-xs font-medium border border-border">
                      {seatType}
                    </span>
                 )}
               </div>
             </div>
             <div className="space-y-1">
-              <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Total Fare</p>
+              <p className="text-xs font-medium text-muted-foreground">Total Fare</p>
               <div className="flex items-center gap-2">
                 <CreditCard className="w-3.5 h-3.5 text-amber-600" />
-                <span className="text-sm font-black text-foreground font-heading italic">৳{booking.totalFare.toLocaleString()}</span>
+                <span className="text-lg font-bold text-foreground">৳{booking.totalFare.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -164,7 +164,7 @@ function BookingCard({ booking }: { booking: Booking }) {
 
         {/* Right Section: Status & Actions */}
         <div className="flex flex-col items-start lg:items-end gap-4 shrink-0 pt-6 lg:pt-0 border-t lg:border-t-0 border-border lg:pl-8 lg:border-l">
-          <div className={`flex items-center gap-2 px-5 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest ${cfg.cls} shadow-sm`}>
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${cfg.cls} shadow-sm`}>
             <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${cfg.dot}`} />
             <StatusIcon className="w-3.5 h-3.5" />
             {cfg.label}
@@ -172,12 +172,12 @@ function BookingCard({ booking }: { booking: Booking }) {
           
           <div className="flex items-center gap-3">
              <PaymentBadge payment={booking.payment} />
-             <span className="text-muted-foreground text-[9px] font-black uppercase tracking-widest italic opacity-40">
+             <span className="text-muted-foreground text-sm font-medium opacity-50">
                Booked {fmt(booking.createdAt)}
              </span>
           </div>
 
-          <button className="hidden lg:flex items-center gap-2 text-[10px] font-black text-amber-600 hover:text-amber-500 uppercase tracking-widest transition-all group-hover:translate-x-1">
+          <button className="hidden lg:flex items-center gap-2 text-sm font-semibold text-amber-600 hover:text-amber-500 transition-all group-hover:translate-x-1">
              Download Ticket <ArrowRight className="w-3 h-3" />
           </button>
         </div>
@@ -208,20 +208,20 @@ export default async function AllMyBookings() {
         {/* Header */}
         <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
           <div>
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— COMMAND HISTORY</p>
-            <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-              MY <span className="text-amber-500">BOOKINGS</span>
+            <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">My Bookings</p>
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              Booking <span className="text-amber-600">History</span>
             </h1>
           </div>
           <div className="flex items-center gap-6 bg-card border border-border px-8 py-4 rounded-[32px] shadow-2xl shadow-slate-900/[0.03] backdrop-blur-xl">
              <div className="flex items-center gap-3">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                <span className="text-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">ACTIVE SESSION</span>
+                <span className="text-foreground text-sm font-medium leading-none">Active Session</span>
              </div>
              <div className="w-[1px] h-4 bg-border/50" />
              <div className="flex items-center gap-3">
                 <Ticket className="w-4 h-4 text-amber-500" />
-                <span className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">{bookings.length} TOTAL LOGS</span>
+                <span className="text-muted-foreground text-sm font-medium leading-none">{bookings.length} Bookings</span>
              </div>
           </div>
         </div>
@@ -233,9 +233,9 @@ export default async function AllMyBookings() {
                <AlertCircle className="w-6 h-6 text-destructive" />
             </div>
             <div>
-               <p className="text-destructive text-[10px] font-black uppercase tracking-[0.3em] mb-1 italic leading-none">SYSTEM SYNC FAILURE</p>
-               <p className="text-foreground/70 text-sm font-medium italic">
-                 {(res as { error: string }).error ?? 'Failed to synchronize booking database'}
+               <p className="text-destructive text-sm font-medium mb-1 leading-none">Error</p>
+               <p className="text-foreground/70 text-base font-normal">
+                 {(res as { error: string }).error ?? 'Failed to load bookings'}
                </p>
             </div>
           </div>
@@ -244,9 +244,9 @@ export default async function AllMyBookings() {
         {/* Stats Grid */}
         {!hasError && bookings.length > 0 && (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            <StatCard label="Total Log"     value={bookings.length} accent="" icon={Ticket} primary />
+            <StatCard label="Total Bookings" value={bookings.length} accent="" icon={Ticket} primary />
             <StatCard label="Confirmed"    value={confirmed}       accent="" icon={CheckCircle2} />
-            <StatCard label="Action Needed" value={pending}         accent="" icon={Clock} />
+            <StatCard label="Pending" value={pending} accent="" icon={Clock} />
             <StatCard label="Cancelled"    value={cancelled}       accent="" icon={XCircle} />
           </div>
         )}
@@ -257,8 +257,8 @@ export default async function AllMyBookings() {
             <div className="w-24 h-24 bg-muted rounded-[40px] flex items-center justify-center mb-8 shadow-xl">
                <Ticket className="w-10 h-10 text-muted-foreground/30" />
             </div>
-            <h3 className="text-foreground font-black text-3xl font-heading tracking-tighter mb-4 italic uppercase">NO ACTIVE SESSIONS</h3>
-            <p className="text-muted-foreground text-[11px] font-black uppercase tracking-[0.3em] italic">START YOUR JOURNEY BY EXPLORING THE VECTOR NETWORK</p>
+            <h3 className="text-foreground font-bold text-2xl tracking-tight mb-3">No Bookings Yet</h3>
+            <p className="text-muted-foreground text-base font-normal">Start your journey by searching for buses</p>
           </div>
         )}
 
@@ -279,9 +279,9 @@ export default async function AllMyBookings() {
         )}
 
         <div className="text-center mt-24 pt-12 border-t border-border/30">
-          <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.5em] opacity-40 italic">MANAGING <span className="text-foreground font-black">{bookings.length}</span> SECURED TRANSACTIONS — DATA ENCRYPTED</p>
+          <p className="text-muted-foreground text-sm font-medium opacity-50">Managing <span className="text-foreground font-semibold">{bookings.length}</span> bookings securely</p>
         </div>
       </div>
     </section>
   );
-}
+}

@@ -51,8 +51,8 @@ export default function CreateOperator() {
   const filledFields = requiredFields.filter(field => isFieldValid(field as keyof OperatorFormValues)).length;
   const completionPercentage = Math.round((filledFields / requiredFields.length) * 100);
 
-  const inputCls = "bg-muted/30 border-border text-foreground placeholder:text-muted-foreground focus:border-amber-500 focus:ring-amber-500/20 rounded-[20px] h-16 transition-all duration-500 font-black uppercase tracking-tight italic";
-  const labelCls = "text-[10px] font-black text-amber-600 uppercase tracking-[0.4em] block mb-4 ml-2 italic";
+  const inputCls = "bg-muted/30 border-border text-foreground placeholder:text-muted-foreground focus:border-amber-500 focus:ring-amber-500/20 rounded-2xl h-14 transition-all duration-500 font-normal text-base";
+  const labelCls = "text-sm font-semibold text-amber-600 block mb-3 ml-1";
 
   return (
     <section className="min-h-screen bg-background relative overflow-hidden p-6 lg:p-12">
@@ -62,9 +62,9 @@ export default function CreateOperator() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-16">
-          <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— AUTHORITY ONBOARDING</p>
-          <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-            REGISTER <span className="text-amber-500">OPERATOR</span>
+          <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">Operator Management</p>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+            Create <span className="text-amber-600">Operator</span>
           </h1>
         </motion.div>
 
@@ -77,32 +77,32 @@ export default function CreateOperator() {
                     <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-xl">
                       <Users className="w-6 h-6" />
                     </div>
-                    <h3 className="text-3xl font-black text-foreground uppercase tracking-tighter font-heading italic">Personal Credentials</h3>
+                    <h3 className="text-2xl font-bold text-foreground tracking-tight">Personal Info</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-1">
-                      <label className={labelCls}>Full Legal Designation</label>
-                      <Input placeholder="JOHN DOE" {...register("name")} className={inputCls} />
-                      {formState.errors.name && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.name.message}</p>}
+                      <label className={labelCls}>Full Name</label>
+                      <Input placeholder="Enter full name" {...register("name")} className={inputCls} />
+                      {formState.errors.name && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.name.message}</p>}
                     </div>
                     <div className="space-y-1">
-                      <label className={labelCls}>Contact Signal (NODE)</label>
+                      <label className={labelCls}>Phone Number</label>
                       <Input placeholder="+880 1XXX XXXXXX" {...register("phone")} className={inputCls} />
-                      {formState.errors.phone && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.phone.message}</p>}
+                      {formState.errors.phone && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.phone.message}</p>}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-1">
-                      <label className={labelCls}>Uplink Address (EMAIL)</label>
-                      <Input type="email" placeholder="OPERATOR@TERMINAL.NET" {...register("email")} className={inputCls} />
-                      {formState.errors.email && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.email.message}</p>}
+                      <label className={labelCls}>Email</label>
+                      <Input type="email" placeholder="operator@example.com" {...register("email")} className={inputCls} />
+                      {formState.errors.email && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.email.message}</p>}
                     </div>
                     <div className="space-y-1">
-                      <label className={labelCls}>Access Cipher (KEY)</label>
+                      <label className={labelCls}>Password</label>
                       <Input type="password" placeholder="••••••••" {...register("password")} className={inputCls} />
-                      {formState.errors.password && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.password.message}</p>}
+                      {formState.errors.password && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.password.message}</p>}
                     </div>
                   </div>
                 </div>
@@ -112,32 +112,32 @@ export default function CreateOperator() {
                     <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-xl">
                       <Building className="w-6 h-6" />
                     </div>
-                    <h3 className="text-3xl font-black text-foreground uppercase tracking-tighter font-heading italic">Corporate Entity</h3>
+                    <h3 className="text-2xl font-bold text-foreground tracking-tight">Company Info</h3>
                   </div>
 
                   <div className="space-y-1">
-                    <label className={labelCls}>Company Specification</label>
-                    <Input placeholder="SKY LINE BUS SERVICE" {...register("companyName")} className={inputCls} />
-                    {formState.errors.companyName && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.companyName.message}</p>}
+                    <label className={labelCls}>Company Name</label>
+                    <Input placeholder="Enter company name" {...register("companyName")} className={inputCls} />
+                    {formState.errors.companyName && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.companyName.message}</p>}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-1">
-                      <label className={labelCls}>Trade License Index</label>
-                      <Input placeholder="TL-X-123456" {...register("tradeLicense")} className={inputCls} />
-                      {formState.errors.tradeLicense && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.tradeLicense.message}</p>}
+                      <label className={labelCls}>Trade License</label>
+                      <Input placeholder="Enter trade license" {...register("tradeLicense")} className={inputCls} />
+                      {formState.errors.tradeLicense && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.tradeLicense.message}</p>}
                     </div>
                     <div className="space-y-1">
-                      <label className={labelCls}>National Identity Unit</label>
-                      <Input placeholder="NID-1234567890" {...register("nid")} className={inputCls} />
-                      {formState.errors.nid && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.nid.message}</p>}
+                      <label className={labelCls}>National ID (NID)</label>
+                      <Input placeholder="Enter NID number" {...register("nid")} className={inputCls} />
+                      {formState.errors.nid && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.nid.message}</p>}
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <label className={labelCls}>Headquarters Geographic Location</label>
-                    <Input placeholder="DHAKA CENTRAL HUB" {...register("address")} className={inputCls} />
-                    {formState.errors.address && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.address.message}</p>}
+                    <label className={labelCls}>Address</label>
+                    <Input placeholder="Enter address" {...register("address")} className={inputCls} />
+                    {formState.errors.address && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.address.message}</p>}
                   </div>
                 </div>
 
@@ -146,16 +146,16 @@ export default function CreateOperator() {
                   whileTap={{ scale: 0.98 }} 
                   type="submit" 
                   disabled={formState.isSubmitting} 
-                  className="w-full h-20 bg-slate-900 border border-slate-800 disabled:opacity-50 text-white font-black rounded-[24px] transition-all duration-700 flex items-center justify-center gap-6 disabled:cursor-not-allowed uppercase tracking-[0.3em] text-xs shadow-2xl shadow-slate-900/30 italic group/btn"
+                  className="w-full h-16 bg-slate-900 border border-slate-800 disabled:opacity-50 text-white font-semibold rounded-2xl transition-all duration-700 flex items-center justify-center gap-4 disabled:cursor-not-allowed text-base shadow-2xl shadow-slate-900/30 group/btn"
                 >
                   {formState.isSubmitting ? <Activity className="w-6 h-6 animate-spin text-amber-500" /> : <UserCheck className="w-6 h-6 text-amber-500 group-hover/btn:text-white transition-colors" />}
-                  {formState.isSubmitting ? "SYNCING AUTHORITY..." : "AUTHORIZE OPERATOR"}
+                  {formState.isSubmitting ? "Creating..." : "Create Operator"}
                 </motion.button>
               </form>
               
               {/* Corner Decor */}
               <div className="absolute top-0 right-0 p-8 opacity-[0.03] select-none pointer-events-none">
-                 <p className="text-[140px] font-black font-heading leading-none">AUTH</p>
+                 <p className="text-[140px] font-bold leading-none">OP</p>
               </div>
             </div>
           </motion.div>
@@ -167,11 +167,11 @@ export default function CreateOperator() {
                     <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 shadow-xl">
                        <Shield className="w-6 h-6" />
                     </div>
-                    <h2 className="text-3xl font-black text-foreground font-heading tracking-tighter uppercase italic">Registry View</h2>
+                    <h2 className="text-2xl font-bold text-foreground tracking-tight">Progress</h2>
                  </div>
                  <div className="text-right">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-40 italic">Integrity</p>
-                    <p className="text-4xl font-black text-foreground font-heading tracking-tighter italic leading-none">{completionPercentage}%</p>
+                    <p className="text-sm font-medium text-muted-foreground opacity-50">Completion</p>
+                    <p className="text-3xl font-bold text-foreground tracking-tight leading-none">{completionPercentage}%</p>
                  </div>
               </div>
 
@@ -182,10 +182,10 @@ export default function CreateOperator() {
               <div className="space-y-6 relative z-10">
                 <AnimatePresence mode="popLayout">
                   {[
-                    { field: 'name', label: 'Designation', icon: UserCheck, display: values.name },
-                    { field: 'email', label: 'Uplink', icon: Mail, display: values.email, extra: !isFieldValid('email') },
-                    { field: 'companyName', label: 'Organization', icon: Building, display: values.companyName },
-                    { field: 'phone', label: 'Signal', icon: Phone, display: values.phone, extra: !isFieldValid('phone') }
+                    { field: 'name', label: 'Name', icon: UserCheck, display: values.name },
+                    { field: 'email', label: 'Email', icon: Mail, display: values.email, extra: !isFieldValid('email') },
+                    { field: 'companyName', label: 'Company', icon: Building, display: values.companyName },
+                    { field: 'phone', label: 'Phone', icon: Phone, display: values.phone, extra: !isFieldValid('phone') }
                   ].map((item, idx) => (
                     item.display && (
                       <motion.div key={idx} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, scale: 0.95 }} className="p-8 bg-muted/10 border border-border/40 rounded-[32px] flex items-center justify-between group hover:bg-muted/30 transition-all duration-500">
@@ -194,8 +194,8 @@ export default function CreateOperator() {
                               <item.icon className="w-5 h-5" />
                            </div>
                            <div className="min-w-0">
-                              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-[0.3em] mb-1.5 opacity-40 italic leading-none">{item.label}</p>
-                              <p className="text-lg font-black text-foreground font-heading uppercase tracking-tight italic truncate leading-none">{item.display}</p>
+                              <p className="text-xs text-muted-foreground font-medium mb-1.5 opacity-50 leading-none">{item.label}</p>
+                              <p className="text-base font-semibold text-foreground truncate leading-none">{item.display}</p>
                            </div>
                         </div>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${item.extra ? 'bg-destructive/10 text-destructive' : 'bg-emerald-500/10 text-emerald-500'}`}>
@@ -211,23 +211,23 @@ export default function CreateOperator() {
                     <div className="w-24 h-24 rounded-[32px] bg-muted/40 flex items-center justify-center mb-8 border border-border border-dashed animate-pulse">
                        <Zap className="w-10 h-10 text-muted-foreground/20" />
                     </div>
-                    <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.4em] italic leading-relaxed max-w-[200px] mx-auto text-center opacity-40">INITIALIZE FORM ENTRY FOR REAL-TIME DIAGNOSTICS</p>
+                    <p className="text-muted-foreground text-sm font-medium leading-relaxed max-w-[200px] mx-auto text-center opacity-60">Start filling the form to see your progress</p>
                   </div>
                 )}
               </div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-16 pt-10 border-t border-border/50 relative z-10">
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-8 opacity-40 italic">Compliance Checksum</p>
+                <p className="text-sm font-medium text-muted-foreground mb-8 opacity-60">Requirements</p>
                 <div className="grid grid-cols-2 gap-6">
                   {[
-                    { label: 'Cipher Lock', valid: values.password && values.password.length >= 6 },
-                    { label: 'Uplink Sync', valid: isFieldValid('email') },
-                    { label: 'Entity Check', valid: values.nid && values.nid.length >= 10 },
-                    { label: 'Full Integrity', valid: filledFields === requiredFields.length }
+                    { label: 'Password', valid: values.password && values.password.length >= 6 },
+                    { label: 'Email', valid: isFieldValid('email') },
+                    { label: 'National ID', valid: values.nid && values.nid.length >= 10 },
+                    { label: 'Complete', valid: filledFields === requiredFields.length }
                   ].map((check, idx) => (
                     <div key={idx} className="flex items-center gap-4 p-5 rounded-[20px] bg-muted/10 border border-border/40 group hover:border-amber-500/30 transition-colors">
                       <div className={`w-3 h-3 rounded-full ${check.valid ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-muted-foreground/20'}`} />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-foreground/70 italic">{check.label}</span>
+                      <span className="text-xs font-medium text-foreground/70">{check.label}</span>
                     </div>
                   ))}
                 </div>

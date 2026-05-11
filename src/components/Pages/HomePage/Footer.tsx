@@ -86,11 +86,11 @@ export default function Footer() {
               <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center shadow-2xl shadow-slate-900/20 group-hover:scale-110 transition-transform duration-500">
                 <Bus className="h-6 w-6 text-white" />
               </div>
-              <span className="text-foreground font-black text-3xl font-heading tracking-tighter leading-none">
-                Bus<span className="text-amber-500 italic">Hub</span>
+              <span className="text-foreground font-bold text-3xl tracking-tight leading-none">
+                Bus<span className="text-amber-600">Hub</span>
               </span>
             </div>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-10 max-w-sm font-medium italic">
+            <p className="text-muted-foreground text-lg leading-relaxed mb-10 max-w-sm font-normal">
               Redefining intercity travel in Bangladesh. Experience the pinnacle of safety, comfort, and reliability with every booking.
             </p>
             <div className="flex gap-4">
@@ -111,11 +111,11 @@ export default function Footer() {
           <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-12">
             {Object.entries(footerLinks).map(([group, links]) => (
               <div key={group}>
-                <h4 className="text-foreground font-black text-[10px] mb-10 tracking-[0.4em] uppercase font-heading">{group}</h4>
+                <h4 className="text-foreground font-semibold text-sm mb-6 tracking-wide uppercase">{group}</h4>
                 <ul className="flex flex-col gap-6">
                   {links.map((link) => (
                     <li key={link.label}>
-                      <a href={link.href} className="text-muted-foreground text-sm font-black uppercase tracking-widest hover:text-amber-600 transition-colors">
+                      <a href={link.href} className="text-muted-foreground text-sm font-medium hover:text-amber-600 transition-colors">
                         {link.label}
                       </a>
                     </li>
@@ -125,14 +125,14 @@ export default function Footer() {
             ))}
 
             <div>
-              <h4 className="text-foreground font-black text-[10px] mb-10 tracking-[0.4em] uppercase font-heading">Network</h4>
+              <h4 className="text-foreground font-semibold text-sm mb-6 tracking-wide uppercase">Network</h4>
               <ul className="flex flex-col gap-6">
                 {isLoading ? (
-                  <li className="text-muted-foreground text-[10px] font-black uppercase tracking-widest italic animate-pulse">Synchronizing...</li>
+                  <li className="text-muted-foreground text-xs font-medium animate-pulse">Loading...</li>
                 ) : (
                   routeLinks.map((route) => (
                     <li key={route.id}>
-                      <a href={`/routes/${route.id}`} className="text-muted-foreground text-sm font-black uppercase tracking-widest hover:text-amber-600 transition-colors truncate block">
+                      <a href={`/routes/${route.id}`} className="text-muted-foreground text-sm font-medium hover:text-amber-600 transition-colors truncate block">
                         {route.sourceCity.slice(0, 3)} <span className="text-amber-500">→</span> {route.destinationCity.slice(0, 3)}
                       </a>
                     </li>
@@ -144,7 +144,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border pt-12 flex flex-col lg:row items-center justify-between gap-10">
-          <div className="flex flex-col md:flex-row items-center gap-10 text-muted-foreground text-[10px] font-black uppercase tracking-[0.4em]">
+          <div className="flex flex-col md:flex-row items-center gap-10 text-muted-foreground text-xs font-medium">
             <span className="opacity-60">© {new Date().getFullYear()} BUSHUB ELITE NETWORK</span>
             <div className="flex gap-10">
               <a href="#" className="hover:text-amber-500 transition-all duration-300">Privacy</a>
@@ -153,7 +153,7 @@ export default function Footer() {
             </div>
           </div>
           
-          <div className="flex items-center gap-5 text-foreground font-black text-[10px] uppercase tracking-[0.3em] bg-muted/20 px-8 py-4 rounded-full border border-border shadow-inner">
+          <div className="flex items-center gap-3 text-foreground font-medium text-xs bg-muted/30 px-6 py-3 rounded-full border border-border">
              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
              Global Systems Operational
           </div>
@@ -161,4 +161,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+}

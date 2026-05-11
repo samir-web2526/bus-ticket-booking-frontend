@@ -11,12 +11,12 @@ export default function ContactSection() {
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-amber-600 text-xs font-black tracking-[0.2em] uppercase mb-4">Get in Touch</p>
-            <h2 className="text-4xl lg:text-5xl font-black text-foreground font-heading mb-6">
+            <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-3">Get in Touch</p>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
               Have Questions? <br />
-              <span className="text-amber-500">We&apos;re Here to Help</span>
+              <span className="text-amber-600">We&apos;re Here to Help</span>
             </h2>
-            <p className="text-muted-foreground text-lg mb-10 leading-relaxed font-medium">
+            <p className="text-muted-foreground text-lg mb-10 leading-relaxed font-normal">
               Our dedicated support team is available 24/7 to assist you with bookings, 
               cancellations, or any other inquiries you may have.
             </p>
@@ -38,8 +38,8 @@ export default function ContactSection() {
                     {item.icon}
                   </div>
                   <div>
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-0.5">{item.label}</p>
-                    <p className="text-foreground font-black text-lg">{item.value}</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-0.5">{item.label}</p>
+                    <p className="text-foreground font-semibold text-lg">{item.value}</p>
                   </div>
                 </motion.div>
               ))}
@@ -57,32 +57,32 @@ export default function ContactSection() {
               <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-lg">
                 <MessageSquare className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-black text-foreground font-heading">Send a Message</h3>
+              <h3 className="text-2xl font-bold text-foreground">Send a Message</h3>
             </div>
 
             <form className="space-y-6 relative z-10">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-xs font-black text-foreground/70 uppercase tracking-widest ml-1">Full Name</label>
+                  <label className="text-sm font-medium text-foreground/70 ml-1">Full Name</label>
                   <Input placeholder="John Doe" className="h-14 px-6 rounded-2xl bg-muted/30 border-border focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:bg-background transition-all" />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-xs font-black text-foreground/70 uppercase tracking-widest ml-1">Email Address</label>
+                  <label className="text-sm font-medium text-foreground/70 ml-1">Email Address</label>
                   <Input placeholder="john@example.com" className="h-14 px-6 rounded-2xl bg-muted/30 border-border focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:bg-background transition-all" />
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-black text-foreground/70 uppercase tracking-widest ml-1">Subject</label>
+                <label className="text-sm font-medium text-foreground/70 ml-1">Subject</label>
                 <Input placeholder="Booking Inquiry" className="h-14 px-6 rounded-2xl bg-muted/30 border-border focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:bg-background transition-all" />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-black text-foreground/70 uppercase tracking-widest ml-1">Message</label>
+                <label className="text-sm font-medium text-foreground/70 ml-1">Message</label>
                 <textarea 
                   placeholder="How can we help you?" 
                   className="w-full h-32 p-6 rounded-2xl bg-muted/30 border border-border focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-background text-sm transition-all resize-none"
                 />
               </div>
-              <Button className="w-full h-14 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-black text-lg flex items-center justify-center gap-2 group border-none shadow-lg shadow-amber-500/20 active:scale-95 transition-all">
+              <Button className="w-full h-14 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-semibold text-lg flex items-center justify-center gap-2 group border-none shadow-lg shadow-amber-500/20 active:scale-95 transition-all">
                 Send Message
                 <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </Button>

@@ -16,9 +16,9 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-8">Support Center</p>
-            <h1 className="text-5xl md:text-8xl font-black text-foreground mb-10 tracking-tighter font-heading leading-tight">
-              Connect with <span className="text-amber-500 italic">BusHub</span>
+            <p className="text-amber-600 text-sm font-medium mb-4">Support Center</p>
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-8 tracking-tight leading-tight">
+              Connect with <span className="text-amber-500">BusHub</span>
             </h1>
             <p className="text-muted-foreground max-w-3xl mx-auto font-medium text-xl leading-relaxed">
               Experience seamless communication with Bangladesh&apos;s most responsive travel platform. 
@@ -37,8 +37,8 @@ export default function ContactPage() {
       <section className="py-32 bg-muted/20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-             <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-6">Our Location</p>
-             <h2 className="text-4xl lg:text-6xl font-black text-foreground font-heading tracking-tight">Visit Our Office</h2>
+             <p className="text-amber-600 text-sm font-medium mb-4">Our Location</p>
+             <h2 className="text-4xl lg:text-5xl font-bold text-foreground">Visit Our Office</h2>
           </div>
           
           <motion.div 
@@ -54,10 +54,10 @@ export default function ContactPage() {
               <div className="w-24 h-24 bg-amber-500/10 rounded-[32px] flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-500 border border-amber-500/10 shadow-xl shadow-amber-500/5">
                 <MapPin className="w-12 h-12 text-amber-600" />
               </div>
-              <h3 className="text-2xl font-black text-foreground mb-3 font-heading italic">Dhaka HQ</h3>
-              <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-[10px] mb-8">123 Transport Plaza, North Tower, Dhaka</p>
-              
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-muted rounded-full border border-border text-[10px] font-black text-muted-foreground uppercase tracking-widest animate-pulse">
+              <h3 className="text-2xl font-bold text-foreground mb-3">Dhaka HQ</h3>
+              <p className="text-muted-foreground font-medium text-sm mb-8">123 Transport Plaza, North Tower, Dhaka</p>
+
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-muted rounded-full border border-border text-sm font-medium text-muted-foreground animate-pulse">
                 <Globe className="w-4 h-4" /> Interactive Map Module Loading
               </div>
             </div>
@@ -85,9 +85,9 @@ export default function ContactPage() {
                     <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mb-8 mx-auto group-hover:bg-amber-500 group-hover:text-white transition-colors duration-500">
                        {item.icon}
                     </div>
-                    <h4 className="text-xl font-black text-foreground mb-2 font-heading">{item.title}</h4>
-                    <p className="text-muted-foreground text-sm font-medium mb-8 italic">{item.desc}</p>
-                    <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest border-b-2 border-amber-500/30 pb-1 cursor-pointer hover:border-amber-500 transition-colors">{item.label}</span>
+                    <h4 className="text-xl font-bold text-foreground mb-2">{item.title}</h4>
+                    <p className="text-muted-foreground text-sm font-medium mb-8">{item.desc}</p>
+                    <span className="text-sm font-semibold text-amber-600 border-b-2 border-amber-500/30 pb-1 cursor-pointer hover:border-amber-500 transition-colors">{item.label}</span>
                  </motion.div>
                ))}
             </div>

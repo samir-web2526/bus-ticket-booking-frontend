@@ -32,9 +32,9 @@ export default function ServicesSection() {
     <section className="py-24 bg-background px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-6">Service Excellence</p>
-          <h2 className="text-4xl lg:text-7xl font-black text-foreground font-heading tracking-tighter">Choose Your <span className="text-amber-500 italic">Comfort Class</span></h2>
-          <p className="text-muted-foreground mt-8 max-w-2xl mx-auto font-medium text-xl leading-relaxed italic">Experience the ultimate in road travel with our curated fleet options.</p>
+          <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-6">Service Excellence</p>
+          <h2 className="text-4xl lg:text-6xl font-bold text-foreground tracking-tight">Choose Your <span className="text-amber-600">Comfort Class</span></h2>
+          <p className="text-muted-foreground mt-6 max-w-2xl mx-auto font-normal text-lg leading-relaxed">Experience the ultimate in road travel with our curated fleet options.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -51,12 +51,12 @@ export default function ServicesSection() {
               <div className="w-16 h-16 bg-muted/50 rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500 border border-border">
                 {service.icon}
               </div>
-              <h3 className="text-3xl font-black text-foreground mb-6 font-heading tracking-tight">{service.title}</h3>
-              <p className="text-muted-foreground text-base leading-relaxed mb-10 font-medium">{service.desc}</p>
+              <h3 className="text-2xl font-bold text-foreground mb-4 tracking-tight">{service.title}</h3>
+              <p className="text-muted-foreground text-base leading-relaxed mb-8 font-normal">{service.desc}</p>
               
               <ul className="space-y-4 pt-10 border-t border-border">
                 {service.features.map(f => (
-                  <li key={f} className="flex items-center gap-4 text-foreground text-[11px] font-black uppercase tracking-widest">
+                  <li key={f} className="flex items-center gap-4 text-foreground text-sm font-medium">
                     <div className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
                     {f}
                   </li>

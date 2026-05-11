@@ -15,8 +15,8 @@ export default function PartnersSection() {
   return (
     <section className="py-24 bg-background border-y border-border overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 text-center mb-16">
-        <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-6">Strategic Alliances</p>
-        <h2 className="text-3xl lg:text-5xl font-black text-foreground font-heading tracking-tighter">Trusted by 100+ <span className="text-amber-500 italic">Elite Operators</span></h2>
+        <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-4">Our Partners</p>
+        <h2 className="text-3xl lg:text-5xl font-bold text-foreground tracking-tight">Trusted by 100+ <span className="text-amber-600">Bus Operators</span></h2>
       </div>
       
       <div className="flex overflow-hidden relative group">
@@ -30,10 +30,10 @@ export default function PartnersSection() {
         >
           {[...partners, ...partners, ...partners].map((p, i) => (
             <div key={i} className="flex items-center gap-5 grayscale opacity-30 hover:grayscale-0 hover:opacity-100 transition-all duration-500 cursor-default group/partner">
-              <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center font-black text-muted-foreground group-hover/partner:bg-slate-900 group-hover/partner:text-white group-hover/partner:border-slate-800 transition-all duration-500 shadow-sm group-hover/partner:shadow-2xl">
+              <div className="w-16 h-16 rounded-2xl bg-card border border-border flex items-center justify-center font-bold text-muted-foreground group-hover/partner:bg-slate-900 group-hover/partner:text-white group-hover/partner:border-slate-800 transition-all duration-500 shadow-sm group-hover/partner:shadow-2xl">
                 {p.logo}
               </div>
-              <span className="text-2xl font-black text-foreground font-heading tracking-tighter">{p.name}</span>
+              <span className="text-2xl font-semibold text-foreground">{p.name}</span>
             </div>
           ))}
         </motion.div>

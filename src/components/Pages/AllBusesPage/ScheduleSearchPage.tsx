@@ -137,8 +137,8 @@ const ScheduleSearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="relative overflow-hidden bg-slate-900 border-b border-white/5 pt-32 pb-40 px-6 rounded-b-[64px]">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-amber-500/10 rounded-full blur-[120px]" />
+      <div className="relative overflow-hidden bg-white border-b border-border pt-32 pb-40 px-6 rounded-b-[64px]">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-amber-500/5 rounded-full blur-[120px]" />
         <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-amber-500/5 rounded-full blur-[100px]" />
         
         <motion.div
@@ -148,17 +148,17 @@ const ScheduleSearchPage: React.FC = () => {
           className="relative z-10 max-w-7xl mx-auto text-center lg:text-left"
         >
           <div className="mb-10 max-w-3xl">
-            <p className="text-amber-500 text-xs font-black tracking-[0.3em] uppercase mb-6">
-              Instant Booking Engine
+            <p className="text-amber-600 text-sm font-medium tracking-wide mb-4">
+              Book Your Trip
             </p>
             <h1
-              className="text-5xl lg:text-7xl font-black text-white leading-[1.1] tracking-tighter font-heading mb-8"
+              className="text-5xl lg:text-6xl font-bold text-foreground leading-tight tracking-tight mb-8"
             >
               Find Your
               <br />
-              <span className="text-amber-500 italic">Perfect Journey</span>
+              <span className="text-amber-500">Perfect Journey</span>
             </h1>
-            <p className="text-slate-400 text-xl font-medium leading-relaxed">
+            <p className="text-muted-foreground text-xl font-medium leading-relaxed">
               Search schedules by route, date, and bus type. Book instantly with real-time seat availability.
             </p>
           </div>
@@ -174,9 +174,9 @@ const ScheduleSearchPage: React.FC = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2 ml-1">
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 ml-1">
                 <MapPin className="w-4 h-4 text-amber-500" />
-                Departure
+                From
               </label>
               <Select value={filters.from} onValueChange={(value) => handleFilterChange('from', value)}>
                 <SelectTrigger className="bg-muted/30 border-border text-foreground hover:border-amber-500/50 rounded-2xl h-14 px-6 transition-all">
@@ -196,9 +196,9 @@ const ScheduleSearchPage: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2 ml-1">
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 ml-1">
                 <MapPin className="w-4 h-4 text-amber-500" />
-                Destination
+                To
               </label>
               <Select value={filters.to} onValueChange={(value) => handleFilterChange('to', value)}>
                 <SelectTrigger className="bg-muted/30 border-border text-foreground hover:border-amber-500/50 rounded-2xl h-14 px-6 transition-all">
@@ -218,9 +218,9 @@ const ScheduleSearchPage: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2 ml-1">
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 ml-1">
                 <Calendar className="w-4 h-4 text-amber-500" />
-                Travel Date
+                Date
               </label>
               <Input
                 type="date"
@@ -232,9 +232,9 @@ const ScheduleSearchPage: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2 ml-1">
+              <label className="text-sm font-medium text-muted-foreground flex items-center gap-2 ml-1">
                 <Filter className="w-4 h-4 text-amber-500" />
-                Category
+                Bus Type
               </label>
               <Select value={busType} onValueChange={(v) => setBusType(v)}>
                 <SelectTrigger className="bg-muted/30 border-border text-foreground hover:border-amber-500/50 rounded-2xl h-14 px-6 transition-all">
@@ -252,19 +252,21 @@ const ScheduleSearchPage: React.FC = () => {
 
           <div className="flex gap-4 items-center flex-wrap">
             <div className="flex-1 relative min-w-[280px] group">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-500 group-focus-within:scale-110 transition-transform" />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center pointer-events-none">
+                <Search className="w-5 h-5 text-amber-500 group-focus-within:scale-110 transition-transform" />
+              </div>
               <Input
                 placeholder="Search bus operator or route..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                className="pl-14 bg-muted/30 border-border text-foreground placeholder:text-muted-foreground/40 focus-visible:ring-amber-500/30 focus-visible:bg-background rounded-2xl h-14 px-6 transition-all"
+                className="pl-12 bg-muted/30 border-border text-foreground placeholder:text-muted-foreground/40 focus-visible:ring-amber-500/30 focus-visible:bg-background rounded-2xl h-14 pr-6 transition-all"
               />
             </div>
 
             <Button
               onClick={handleSearch}
-              className="bg-amber-500 hover:bg-amber-400 text-white font-black uppercase tracking-widest text-[11px] rounded-2xl h-14 px-10 flex items-center gap-3 transition-all duration-300 group shadow-xl shadow-amber-500/20 active:scale-95"
+              className="bg-amber-500 hover:bg-amber-400 text-white font-semibold text-base rounded-2xl h-14 px-10 flex items-center gap-3 transition-all duration-300 group shadow-xl shadow-amber-500/20 active:scale-95"
             >
               <Search className="w-5 h-5 group-hover:scale-110 transition-transform" />
               Apply Filters
@@ -273,7 +275,7 @@ const ScheduleSearchPage: React.FC = () => {
             <Button
               variant="outline"
               onClick={clearFilters}
-              className="border-border bg-background text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 rounded-2xl h-14 px-8 font-black uppercase tracking-widest text-[11px] transition-all duration-300"
+              className="border-border bg-background text-muted-foreground hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 rounded-2xl h-14 px-8 font-medium text-base transition-all duration-300"
             >
               Reset
             </Button>
@@ -289,7 +291,7 @@ const ScheduleSearchPage: React.FC = () => {
             className="flex flex-col items-center justify-center py-40"
           >
             <Loader2 className="h-16 w-16 text-amber-500 animate-spin mb-8" />
-            <p className="text-muted-foreground font-black uppercase tracking-[0.2em] text-sm animate-pulse">Scanning Live Schedules...</p>
+            <p className="text-muted-foreground font-medium text-base animate-pulse">Searching schedules...</p>
           </motion.div>
         )}
 
@@ -302,7 +304,7 @@ const ScheduleSearchPage: React.FC = () => {
             <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-6">
                <Badge variant="destructive" className="h-8 w-8 flex items-center justify-center p-0 rounded-full">!</Badge>
             </div>
-            <p className="text-foreground font-black text-2xl font-heading mb-2">Search Error</p>
+            <p className="text-foreground font-bold text-2xl mb-2">Search Error</p>
             <p className="text-muted-foreground font-medium">{error}</p>
           </motion.div>
         )}
@@ -314,9 +316,9 @@ const ScheduleSearchPage: React.FC = () => {
             className="text-center py-40"
           >
             <div className="text-8xl mb-8 grayscale opacity-20">🚌</div>
-            <h3 className="text-3xl font-black text-foreground font-heading mb-4 italic">No Schedules Found</h3>
+            <h3 className="text-3xl font-bold text-foreground mb-4">No Schedules Found</h3>
             <p className="text-muted-foreground text-lg font-medium max-w-md mx-auto">Try adjusting your filters or search for a different date to see available buses.</p>
-            <Button onClick={clearFilters} variant="link" className="mt-8 text-amber-600 font-black uppercase tracking-widest text-[11px]">Clear all filters</Button>
+            <Button onClick={clearFilters} variant="link" className="mt-8 text-amber-600 font-medium text-base">Clear all filters</Button>
           </motion.div>
         )}
 
@@ -327,7 +329,7 @@ const ScheduleSearchPage: React.FC = () => {
             className="text-center py-40"
           >
             <div className="text-8xl mb-8 grayscale opacity-20">🔍</div>
-            <h3 className="text-3xl font-black text-foreground font-heading mb-4">Start Your Search</h3>
+            <h3 className="text-3xl font-bold text-foreground mb-4">Start Your Search</h3>
             <p className="text-muted-foreground text-lg font-medium">Select your travel route and date to unlock available schedules.</p>
           </motion.div>
         )}
@@ -340,14 +342,14 @@ const ScheduleSearchPage: React.FC = () => {
               className="mb-12 flex items-center justify-between border-b border-border pb-8"
             >
               <div>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Search Results</p>
-                <h2 className="text-3xl font-black text-foreground font-heading italic">
-                  Available <span className="text-amber-500">Connections</span>
+                <p className="text-sm font-medium text-muted-foreground mb-1">Search Results</p>
+                <h2 className="text-3xl font-bold text-foreground">
+                  Available <span className="text-amber-500">Schedules</span>
                 </h2>
               </div>
               <div className="h-12 px-6 bg-amber-500/10 border border-amber-500/20 rounded-full flex items-center">
-                <span className="text-[11px] font-black text-amber-600 uppercase tracking-widest">
-                  {schedules.length} Connection{schedules.length !== 1 ? 's' : ''} Found
+                <span className="text-sm font-medium text-amber-600">
+                  {schedules.length} schedule{schedules.length !== 1 ? 's' : ''} found
                 </span>
               </div>
             </motion.div>

@@ -41,8 +41,8 @@ function InfoRow({ icon, value, label }: { icon: React.ReactNode; value: string 
         {icon}
       </div>
       <div>
-        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 italic mb-1.5 leading-none">{label}</p>
-        <p className="text-foreground font-black text-sm uppercase tracking-tight italic transition-colors group-hover:text-amber-500">{value ?? 'NOT DETECTED'}</p>
+        <p className="text-xs font-medium text-muted-foreground opacity-60 mb-1 leading-none">{label}</p>
+        <p className="text-foreground text-base font-medium transition-colors group-hover:text-amber-500">{value ?? 'Not provided'}</p>
       </div>
     </div>
   );
@@ -82,7 +82,7 @@ export default function AdminProfile() {
            <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full" />
            <Loader2 className="h-20 w-20 text-amber-500 animate-spin relative z-10" />
         </div>
-        <p className="text-muted-foreground font-black uppercase tracking-[0.4em] text-[10px] animate-pulse mt-10 italic">Initializing Profile Matrix...</p>
+        <p className="text-muted-foreground font-medium text-base animate-pulse mt-10">Loading profile...</p>
       </div>
     );
   }
@@ -92,8 +92,8 @@ export default function AdminProfile() {
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="bg-card border border-border rounded-[48px] p-16 text-center max-w-md shadow-2xl">
           <Activity className="w-16 h-16 text-destructive mx-auto mb-8 animate-pulse" />
-          <h3 className="text-2xl font-black text-foreground font-heading uppercase tracking-tighter italic mb-4">UPLINK ERROR</h3>
-          <p className="text-muted-foreground text-sm italic font-medium">{error || 'PROFILE DATA NOT DETECTED'}</p>
+          <h3 className="text-2xl font-bold text-foreground tracking-tight mb-4">Error</h3>
+          <p className="text-muted-foreground text-base font-normal">{error || 'Failed to load profile'}</p>
         </div>
       </div>
     );
@@ -112,9 +112,9 @@ export default function AdminProfile() {
           transition={{ duration: 0.6 }}
           className="mb-16"
         >
-          <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— AUTHORITY DIAGNOSTICS</p>
-          <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-            PERSONNEL <span className="text-amber-500">PROFILE</span>
+          <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">My Profile</p>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+            Admin <span className="text-amber-600">Profile</span>
           </h1>
         </motion.div>
 
@@ -139,23 +139,23 @@ export default function AdminProfile() {
                     className="w-40 h-40 rounded-[40px] object-cover border-8 border-card shadow-2xl group-hover:scale-105 transition-transform duration-700"
                   />
                 ) : (
-                  <div className="w-40 h-40 rounded-[40px] bg-slate-900 border-8 border-card flex items-center justify-center text-amber-500 font-black text-6xl shadow-2xl group-hover:scale-105 transition-transform duration-700 italic font-heading">
+                  <div className="w-40 h-40 rounded-[40px] bg-slate-900 border-8 border-card flex items-center justify-center text-amber-500 font-bold text-6xl shadow-2xl group-hover:scale-105 transition-transform duration-700">
                     {user.name?.charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div className="pb-4">
-                  <h2 className="text-foreground font-black text-4xl lg:text-6xl font-heading tracking-tighter italic uppercase leading-none mb-4">{user.name}</h2>
+                  <h2 className="text-foreground font-bold text-3xl lg:text-4xl tracking-tight leading-none mb-3">{user.name}</h2>
                   <div className="flex items-center gap-4 flex-wrap">
-                    <span className="text-muted-foreground text-sm font-black uppercase tracking-[0.3em] italic opacity-60 leading-none">{user.email}</span>
+                    <span className="text-muted-foreground text-sm font-medium opacity-70 leading-none">{user.email}</span>
                     <div className="h-1 w-1 rounded-full bg-border" />
-                    <span className="text-amber-500 text-[10px] font-black uppercase tracking-[0.4em] italic opacity-80 leading-none">{user.role}</span>
+                    <span className="text-amber-600 text-sm font-semibold opacity-90 leading-none">{user.role}</span>
                   </div>
                 </div>
               </div>
               
               <div className="pb-4">
-                <span className={`text-[10px] font-black px-6 py-2.5 rounded-full border italic tracking-widest uppercase shadow-lg ${user.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>
-                  SIGNAL: {user.status}
+                <span className={`text-sm font-medium px-5 py-2 rounded-full border shadow-lg ${user.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>
+                  Status: {user.status}
                 </span>
               </div>
             </div>
@@ -163,16 +163,16 @@ export default function AdminProfile() {
             {/* Account Info Matrix */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
               <div className="space-y-6">
-                 <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase ml-2 italic opacity-60">Identity Vectors</p>
+                 <p className="text-amber-600 text-sm font-medium uppercase tracking-wide ml-2 opacity-80">Contact Information</p>
                  <div className="space-y-4">
-                    <InfoRow icon={<Mail className="w-5 h-5" />} label="Uplink Protocol" value={user.email} />
-                    <InfoRow icon={<Phone className="w-5 h-5" />} label="Frequency Signal" value={user.phone} />
-                    <InfoRow icon={<Shield className="w-5 h-5" />} label="Authority Level" value={user.role} />
+                    <InfoRow icon={<Mail className="w-5 h-5" />} label="Email" value={user.email} />
+                    <InfoRow icon={<Phone className="w-5 h-5" />} label="Phone" value={user.phone} />
+                    <InfoRow icon={<Shield className="w-5 h-5" />} label="Role" value={user.role} />
                  </div>
               </div>
 
               <div className="space-y-6">
-                 <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase ml-2 italic opacity-60">Integrity Check</p>
+                 <p className="text-amber-600 text-sm font-medium uppercase tracking-wide ml-2 opacity-80">Account Status</p>
                  <div className="space-y-4">
                     <div className="p-8 bg-muted/10 border border-border/40 rounded-[32px] flex items-center justify-between group hover:bg-muted/20 transition-all duration-500">
                       <div className="flex items-center gap-6">
@@ -180,9 +180,9 @@ export default function AdminProfile() {
                            {user.isVerified ? <ShieldCheck className="w-6 h-6" /> : <Activity className="w-6 h-6 animate-pulse" />}
                          </div>
                          <div>
-                           <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground opacity-40 italic mb-1.5 leading-none">Verification</p>
-                           <p className={`text-sm font-black uppercase tracking-tight italic transition-colors ${user.isVerified ? 'text-emerald-500' : 'text-destructive'}`}>
-                             {user.isVerified ? 'ENCRYPTED & VERIFIED' : 'PENDING VALIDATION'}
+                           <p className="text-xs font-medium text-muted-foreground opacity-60 mb-1 leading-none">Verification</p>
+                           <p className={`text-base font-semibold transition-colors ${user.isVerified ? 'text-emerald-600' : 'text-destructive'}`}>
+                             {user.isVerified ? 'Verified' : 'Not Verified'}
                            </p>
                          </div>
                       </div>
@@ -196,8 +196,8 @@ export default function AdminProfile() {
                                 <Zap className="w-6 h-6 fill-amber-500" />
                              </div>
                              <div>
-                                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-amber-500/40 italic mb-1.5 leading-none">System ID</p>
-                                <p className="text-white font-black font-heading text-lg tracking-tighter italic uppercase leading-none">{user.id}</p>
+                                <p className="text-xs font-medium text-amber-500/60 mb-1 leading-none">User ID</p>
+                                <p className="text-white font-semibold text-base tracking-tight leading-none">{user.id}</p>
                              </div>
                           </div>
                           <Database className="w-6 h-6 text-white opacity-5" />
@@ -213,16 +213,16 @@ export default function AdminProfile() {
                <div className="flex items-center gap-8">
                   <div className="flex items-center gap-4">
                      <Calendar className="w-4 h-4 text-muted-foreground opacity-30" />
-                     <p className="text-muted-foreground text-[9px] font-black uppercase tracking-[0.3em] italic opacity-40">Enlisted: <span className="text-foreground opacity-100">{new Date(user.createdAt).toLocaleDateString('en-BD', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}</span></p>
+                     <p className="text-muted-foreground text-sm font-medium opacity-60">Member since: <span className="text-foreground opacity-100">{new Date(user.createdAt).toLocaleDateString('en-BD', { year: 'numeric', month: 'short', day: 'numeric' })}</span></p>
                   </div>
                   <div className="flex items-center gap-4">
                      <RefreshCw className="w-4 h-4 text-muted-foreground opacity-30" />
-                     <p className="text-muted-foreground text-[9px] font-black uppercase tracking-[0.3em] italic opacity-40">Sync: <span className="text-foreground opacity-100">{new Date(user.updatedAt).toLocaleDateString('en-BD', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}</span></p>
+                     <p className="text-muted-foreground text-sm font-medium opacity-60">Last updated: <span className="text-foreground opacity-100">{new Date(user.updatedAt).toLocaleDateString('en-BD', { year: 'numeric', month: 'short', day: 'numeric' })}</span></p>
                   </div>
                </div>
                
-               <div className="flex items-center gap-4 text-muted-foreground/20 text-[8px] font-black uppercase tracking-[0.5em] italic">
-                  <Shield className="w-4 h-4" /> SECURE PERSONNEL DATA ACTIVE
+               <div className="flex items-center gap-4 text-muted-foreground/40 text-sm font-medium">
+                  <Shield className="w-4 h-4" /> Secure admin profile
                </div>
             </div>
           </div>

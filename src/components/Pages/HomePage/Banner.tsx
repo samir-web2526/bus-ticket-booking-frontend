@@ -114,7 +114,7 @@ export default function HeroSection() {
       <section className="relative min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-6">
           <Loader2 className="h-16 w-16 text-amber-500 animate-spin" />
-          <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-xs">Initializing Terminal...</p>
+          <p className="text-muted-foreground font-semibold text-sm">Loading routes...</p>
         </div>
       </section>
     );
@@ -157,24 +157,24 @@ export default function HeroSection() {
             className="inline-flex w-fit items-center gap-3 bg-amber-500/10 border border-amber-500/20 rounded-full px-5 py-2"
           >
             <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
-            <span className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase">
+            <span className="text-amber-600 text-sm font-medium tracking-wide">
               Bangladesh&apos;s Premium Travel Network
             </span>
           </motion.div>
 
           <div>
             <h1
-              className="text-6xl md:text-8xl font-black text-foreground leading-[1] tracking-tighter font-heading"
+              className="text-5xl md:text-7xl font-bold text-foreground leading-[1.1] tracking-tight"
             >
               Travel
               <br />
-              <span className="text-amber-500 italic">Smarter,</span>
+              <span className="text-amber-600">Smarter,</span>
               <br />
               Arrive
               <br />
               <span className="text-foreground">Elite.</span>
             </h1>
-            <p className="mt-10 text-muted-foreground text-xl max-w-xl leading-relaxed font-medium italic">
+            <p className="mt-10 text-muted-foreground text-xl max-w-xl leading-relaxed font-medium">
               Experience the pinnacle of intercity travel. Hundreds of verified routes, real-time seat selection, and 24/7 VIP support.
             </p>
           </div>
@@ -187,7 +187,7 @@ export default function HeroSection() {
           >
             <Button
               onClick={() => router.push('/find-buses')}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-widest text-xs h-16 px-12 rounded-2xl transition-all duration-300 group shadow-2xl shadow-slate-900/20 active:scale-95 border-none"
+              className="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-base h-14 px-10 rounded-2xl transition-all duration-300 group shadow-xl shadow-slate-900/20 active:scale-95 border-none"
             >
               <Search className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
               Book Your Journey
@@ -197,7 +197,7 @@ export default function HeroSection() {
             <Button
               variant="outline"
               onClick={() => router.push('/routes')}
-              className="border-border bg-background text-foreground font-black uppercase tracking-widest text-xs h-16 px-10 rounded-2xl hover:bg-muted hover:border-amber-500/30 transition-all duration-300 shadow-xl shadow-slate-200/50"
+              className="border-border bg-background text-foreground font-medium text-base h-14 px-8 rounded-2xl hover:bg-muted hover:border-amber-500/30 transition-all duration-300 shadow-lg"
             >
               View All Routes
             </Button>
@@ -215,8 +215,8 @@ export default function HeroSection() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.1 }}
               >
-                <p className="text-3xl font-black text-foreground font-heading tracking-tighter">{stat.value}</p>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">{stat.label}</p>
+                <p className="text-3xl font-bold text-foreground tracking-tight">{stat.value}</p>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-1">{stat.label}</p>
               </motion.div>
             ))}
           </div>
@@ -241,21 +241,21 @@ export default function HeroSection() {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl" />
                 
-                <p className="text-amber-500 text-[10px] font-black tracking-[0.4em] uppercase mb-4 relative z-10">
+                <p className="text-amber-600 text-xs font-semibold tracking-wider uppercase mb-4 relative z-10">
                   {slides[current].tag}
                 </p>
-                <h3 className="text-foreground text-3xl font-black font-heading leading-tight mb-4 relative z-10">
+                <h3 className="text-foreground text-3xl font-bold leading-tight mb-4 relative z-10">
                   {slides[current].sourceCity} <br />
                   <span className="text-amber-500">→</span> <br />
                   {slides[current].destinationCity}
                 </h3>
                 <div className="flex items-center justify-end gap-6 text-muted-foreground text-sm font-bold relative z-10 pt-6 border-t border-border/50">
                   <div className="text-right">
-                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-0.5">Distance</p>
+                     <p className="text-xs font-medium text-muted-foreground/60 mb-0.5">Distance</p>
                      <p className="text-foreground">{slides[current].distanceKm} KM</p>
                   </div>
                   <div className="text-right">
-                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-0.5">Duration</p>
+                     <p className="text-xs font-medium text-muted-foreground/60 mb-0.5">Duration</p>
                      <p className="text-foreground">
                         {Math.floor(slides[current].estimatedTimeMinutes / 60)}H{' '}
                         {slides[current].estimatedTimeMinutes % 60}M

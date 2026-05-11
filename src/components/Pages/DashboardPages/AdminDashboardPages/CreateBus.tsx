@@ -71,9 +71,9 @@ export default function CreateBus({ operators = [] }: Props) {
     else { toast.success("Bus created successfully!"); form.reset(); }
   };
 
-  const inputCls = "bg-muted/30 border-border text-foreground placeholder:text-muted-foreground focus:border-amber-500 focus:ring-amber-500/20 rounded-[20px] h-16 transition-all duration-500 font-black uppercase tracking-tight italic";
-  const selectCls = "w-full bg-muted/30 border border-border text-foreground rounded-[20px] h-16 px-6 focus:border-amber-500 focus:outline-none transition-all duration-500 appearance-none font-black uppercase tracking-tight italic cursor-pointer";
-  const labelCls = "text-[10px] font-black text-amber-600 uppercase tracking-[0.4em] block mb-4 ml-2 italic";
+  const inputCls = "bg-muted/30 border-border text-foreground placeholder:text-muted-foreground focus:border-amber-500 focus:ring-amber-500/20 rounded-2xl h-14 transition-all duration-500 font-normal text-base";
+  const selectCls = "w-full bg-muted/30 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none transition-all duration-500 appearance-none font-normal text-base cursor-pointer";
+  const labelCls = "text-sm font-semibold text-amber-600 block mb-3 ml-1";
 
   return (
     <section className="min-h-screen bg-background relative overflow-hidden p-6 lg:p-12">
@@ -83,9 +83,9 @@ export default function CreateBus({ operators = [] }: Props) {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-16">
-          <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— FLEET PROVISIONING</p>
-          <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
-            INITIALIZE <span className="text-amber-500">ASSET</span>
+          <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">Bus Management</p>
+          <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+            Create <span className="text-amber-600">Bus</span>
           </h1>
         </motion.div>
 
@@ -96,20 +96,20 @@ export default function CreateBus({ operators = [] }: Props) {
                  <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-xl group-hover:rotate-6 transition-transform duration-500">
                     <Settings className="w-6 h-6" />
                  </div>
-                 <h2 className="text-3xl font-black text-foreground font-heading tracking-tighter uppercase italic">Configuration Specs</h2>
+                 <h2 className="text-2xl font-bold text-foreground tracking-tight">Bus Configuration</h2>
               </div>
 
               <div className="space-y-10 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-1">
-                    <label className={labelCls}>Bus Identity Matrix</label>
-                    <Input placeholder="SKY LINE EXPRESS" {...register("name")} className={inputCls} />
-                    {formState.errors.name && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.name.message}</p>}
+                    <label className={labelCls}>Bus Name</label>
+                    <Input placeholder="Enter bus name" {...register("name")} className={inputCls} />
+                    {formState.errors.name && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.name.message}</p>}
                   </div>
                   <div className="space-y-1">
-                    <label className={labelCls}>Node Registry Number</label>
-                    <Input placeholder="SLE-001-X" {...register("number")} className={inputCls} />
-                    {formState.errors.number && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.number.message}</p>}
+                    <label className={labelCls}>Bus Number</label>
+                    <Input placeholder="Enter bus number" {...register("number")} className={inputCls} />
+                    {formState.errors.number && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.number.message}</p>}
                   </div>
                 </div>
 
@@ -136,7 +136,7 @@ export default function CreateBus({ operators = [] }: Props) {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/[0.02] rounded-full -mr-16 -mt-16" />
                   
                   <div className="space-y-6">
-                    <label className="text-[10px] font-black text-amber-500 uppercase tracking-[0.4em] block flex items-center gap-3 italic">
+                    <label className="text-xs font-semibold text-amber-500 block flex items-center gap-2">
                        <div className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center">
                           <Zap className="w-3 h-3" />
                        </div>
@@ -149,7 +149,7 @@ export default function CreateBus({ operators = [] }: Props) {
                   </div>
                   
                   <div className="space-y-6">
-                    <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.4em] block flex items-center gap-3 italic">
+                    <label className="text-xs font-semibold text-blue-500 block flex items-center gap-2">
                        <div className="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center">
                           <Layout className="w-3 h-3" />
                        </div>
@@ -162,7 +162,7 @@ export default function CreateBus({ operators = [] }: Props) {
                   </div>
 
                   <div className="space-y-6">
-                    <label className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] block flex items-center gap-3 italic">
+                    <label className="text-xs font-semibold text-emerald-600 block flex items-center gap-2">
                        <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                           <CheckCircle2 className="w-3 h-3" />
                        </div>
@@ -185,7 +185,7 @@ export default function CreateBus({ operators = [] }: Props) {
                       <ShieldCheck className="w-4 h-4" />
                     </div>
                   </div>
-                  {formState.errors.operatorId && <p className="text-destructive text-[9px] font-black uppercase mt-2 ml-2 italic tracking-widest">{formState.errors.operatorId.message}</p>}
+                  {formState.errors.operatorId && <p className="text-destructive text-sm font-medium mt-2 ml-1">{formState.errors.operatorId.message}</p>}
                 </div>
 
                 <motion.button 
@@ -193,10 +193,10 @@ export default function CreateBus({ operators = [] }: Props) {
                   whileTap={{ scale: 0.98 }} 
                   onClick={handleSubmit(onSubmit)} 
                   disabled={formState.isSubmitting} 
-                  className="w-full h-20 bg-slate-900 border border-slate-800 disabled:opacity-50 text-white font-black rounded-[24px] transition-all duration-700 flex items-center justify-center gap-6 disabled:cursor-not-allowed uppercase tracking-[0.3em] text-xs shadow-2xl shadow-slate-900/30 italic group/btn"
+                  className="w-full h-16 bg-slate-900 border border-slate-800 disabled:opacity-50 text-white font-semibold rounded-2xl transition-all duration-700 flex items-center justify-center gap-4 disabled:cursor-not-allowed text-base shadow-2xl shadow-slate-900/30 group/btn"
                 >
                   {formState.isSubmitting ? <Activity className="w-6 h-6 animate-spin text-amber-500" /> : <Bus className="w-6 h-6 text-amber-500 group-hover/btn:text-white transition-colors" />}
-                  {formState.isSubmitting ? "FINALIZING ASSETS..." : "DEPLOY FLEET UNIT"}
+                  {formState.isSubmitting ? "Creating..." : "Create Bus"}
                 </motion.button>
               </div>
               
@@ -211,7 +211,7 @@ export default function CreateBus({ operators = [] }: Props) {
                  <div className="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600 shadow-xl">
                     <Navigation className="w-6 h-6" />
                  </div>
-                 <h2 className="text-3xl font-black text-foreground font-heading tracking-tighter uppercase italic">Spatial Layout</h2>
+                 <h2 className="text-2xl font-bold text-foreground tracking-tight">Seat Layout</h2>
               </div>
 
               <div className="mb-12 p-10 bg-muted/20 rounded-[48px] border border-border/50 relative z-10 backdrop-blur-xl">
@@ -222,7 +222,7 @@ export default function CreateBus({ operators = [] }: Props) {
                       initial={{ opacity: 0, scale: 0.8, rotate: -5 }} 
                       animate={{ opacity: 1, scale: 1, rotate: 0 }} 
                       transition={{ delay: i * 0.01, duration: 0.4 }}
-                      className={`h-14 flex items-center justify-center text-[10px] font-black rounded-2xl border-2 transition-all duration-500 relative group/seat ${
+                      className={`h-12 flex items-center justify-center text-sm font-semibold rounded-2xl border-2 transition-all duration-500 relative group/seat ${
                         seat.type === "VIP" 
                         ? "bg-amber-500 text-white border-amber-400 shadow-xl shadow-amber-500/30" 
                         : seat.type === "DELUXE" 
@@ -239,16 +239,16 @@ export default function CreateBus({ operators = [] }: Props) {
 
               <div className="space-y-8 relative z-10">
                 <div className="flex items-center justify-between mb-2">
-                   <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] opacity-40 italic">System Diagnostics</p>
+                   <p className="text-sm font-medium text-muted-foreground opacity-50">Bus Summary</p>
                    <div className="h-[1px] flex-1 bg-border/30 mx-6" />
                    <Database className="w-4 h-4 text-muted-foreground opacity-20" />
                 </div>
                 
                 <div className="space-y-4">
                   {[
-                    { label: 'VIP UNITS', count: vipCount, price: values.vipPrice, color: 'bg-amber-500', icon: Zap },
-                    { label: 'DELUXE UNITS', count: deluxeCount, price: values.deluxePrice, color: 'bg-blue-600', icon: Layout },
-                    { label: 'STANDARD UNITS', count: standardCount, price: values.pricePerSeat, color: 'bg-emerald-500', icon: CheckCircle2 }
+                    { label: 'VIP Seats', count: vipCount, price: values.vipPrice, color: 'bg-amber-500', icon: Zap },
+                    { label: 'Deluxe Seats', count: deluxeCount, price: values.deluxePrice, color: 'bg-blue-600', icon: Layout },
+                    { label: 'Standard Seats', count: standardCount, price: values.pricePerSeat, color: 'bg-emerald-500', icon: CheckCircle2 }
                   ].map((stat, idx) => (
                     <div key={idx} className="flex items-center justify-between p-6 bg-muted/10 border border-border/40 rounded-[24px] group hover:bg-muted/30 transition-all duration-500">
                       <div className="flex items-center gap-4">
@@ -256,11 +256,11 @@ export default function CreateBus({ operators = [] }: Props) {
                             <stat.icon className="w-5 h-5" />
                          </div>
                          <div>
-                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60 leading-none mb-1.5">{stat.label}</p>
-                            <p className="text-foreground font-black text-xs uppercase tracking-tight italic">৳{stat.price || 0} / NODE</p>
+                            <p className="text-xs font-medium text-muted-foreground opacity-60 leading-none mb-1.5">{stat.label}</p>
+                            <p className="text-foreground font-semibold text-sm tracking-tight">৳{stat.price || 0} / seat</p>
                          </div>
                       </div>
-                      <span className="text-3xl font-black font-heading tracking-tighter italic text-foreground group-hover:text-amber-500 transition-colors">
+                      <span className="text-2xl font-bold text-foreground group-hover:text-amber-500 transition-colors">
                          {stat.count}
                       </span>
                     </div>
@@ -269,8 +269,8 @@ export default function CreateBus({ operators = [] }: Props) {
 
                 <div className="pt-10 border-t border-border/50 flex items-center justify-between">
                    <div>
-                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] opacity-40 italic mb-2">GLOBAL CAPACITY</p>
-                      <p className="text-5xl font-black text-foreground font-heading tracking-tighter italic uppercase leading-none">{values.totalSeats} <span className="text-xl text-muted-foreground">NODES</span></p>
+                      <p className="text-sm font-medium text-muted-foreground opacity-50 mb-2">Total Capacity</p>
+                      <p className="text-4xl font-bold text-foreground tracking-tight leading-none">{values.totalSeats} <span className="text-lg text-muted-foreground">seats</span></p>
                    </div>
                    <div className="w-16 h-16 rounded-[24px] bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-2xl hover:rotate-12 transition-transform duration-500">
                       <Zap className="w-7 h-7 fill-amber-500" />
@@ -280,7 +280,7 @@ export default function CreateBus({ operators = [] }: Props) {
               
               {/* Technical Detail */}
               <div className="absolute top-0 right-0 p-8 opacity-[0.03] select-none pointer-events-none">
-                 <p className="text-[120px] font-black font-heading leading-none">FLEET</p>
+                 <p className="text-[120px] font-bold leading-none">BUS</p>
               </div>
             </div>
           </motion.div>

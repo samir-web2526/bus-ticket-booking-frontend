@@ -155,16 +155,16 @@ export default function PassengerDashboardClient({ bookings }: Props) {
           className="mb-12 flex items-end justify-between flex-wrap gap-8"
         >
           <div>
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-4">Central Intelligence</p>
-            <h1 className="text-4xl lg:text-6xl font-black text-foreground tracking-tighter font-heading">
-              Passenger <span className="text-amber-500 italic">Command</span>
+            <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">Dashboard</p>
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              My <span className="text-amber-600">Bookings</span>
             </h1>
           </div>
           <div className="flex items-center gap-4 bg-card border border-border px-6 py-3 rounded-full shadow-xl">
             <div className="w-8 h-8 bg-amber-500/10 rounded-full flex items-center justify-center border border-amber-500/20">
               <Ticket className="w-4 h-4 text-amber-600" />
             </div>
-            <span className="text-foreground text-[10px] font-black uppercase tracking-widest">{bookings.length} Registered Bookings</span>
+            <span className="text-foreground text-sm font-medium">{bookings.length} Bookings</span>
           </div>
         </motion.div>
 
@@ -188,9 +188,9 @@ export default function PassengerDashboardClient({ bookings }: Props) {
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border ${c.primary ? 'bg-white/10 border-white/10' : 'bg-muted border-border'}`}>
                 <c.icon className={`w-6 h-6 ${c.primary ? 'text-amber-500' : 'text-amber-600'}`} />
               </div>
-              <p className={`font-black text-4xl font-heading tracking-tighter ${c.primary ? 'text-white' : 'text-foreground'}`}>{c.value}</p>
-              <p className={`text-[10px] font-black uppercase tracking-widest mt-2 ${c.primary ? 'text-slate-400' : 'text-muted-foreground'}`}>{c.label}</p>
-              <p className={`text-[9px] font-black uppercase tracking-[0.2em] mt-1 italic ${c.primary ? 'text-amber-500/70' : 'text-amber-600/70'}`}>{c.sub}</p>
+              <p className={`font-bold text-3xl tracking-tight ${c.primary ? 'text-white' : 'text-foreground'}`}>{c.value}</p>
+              <p className={`text-sm font-medium mt-2 ${c.primary ? 'text-slate-400' : 'text-muted-foreground'}`}>{c.label}</p>
+              <p className={`text-xs font-medium mt-1 ${c.primary ? 'text-amber-500/70' : 'text-amber-600/70'}`}>{c.sub}</p>
             </motion.div>
           ))}
         </div>
@@ -210,8 +210,8 @@ export default function PassengerDashboardClient({ bookings }: Props) {
                   <TrendingUp className="w-5 h-5 text-amber-600" />
                 </div>
                 <div>
-                  <p className="text-foreground font-black text-xl font-heading tracking-tight">Booking Activity</p>
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">6-Month Trend Analysis</p>
+                  <p className="text-foreground font-semibold text-xl tracking-tight">Booking Activity</p>
+                  <p className="text-sm font-medium text-muted-foreground">6-Month Overview</p>
                 </div>
               </div>
             </div>
@@ -220,7 +220,7 @@ export default function PassengerDashboardClient({ bookings }: Props) {
                 ? <canvas ref={barRef} />
                 : <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-4">
                     <Clock className="w-8 h-8 opacity-20" />
-                    <p className="text-[10px] font-black uppercase tracking-widest">Awaiting system data</p>
+                    <p className="text-sm font-medium text-muted-foreground">No data available</p>
                   </div>
               }
             </div>
@@ -234,8 +234,8 @@ export default function PassengerDashboardClient({ bookings }: Props) {
              className="lg:col-span-4 bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] flex flex-col"
           >
             <div className="mb-10">
-              <p className="text-foreground font-black text-xl font-heading tracking-tight">Status Metrics</p>
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Operational Breakdown</p>
+              <p className="text-foreground font-semibold text-xl tracking-tight">Status Breakdown</p>
+              <p className="text-sm font-medium text-muted-foreground">Booking status distribution</p>
             </div>
             
             <div className="relative h-48 mb-10">
@@ -243,7 +243,7 @@ export default function PassengerDashboardClient({ bookings }: Props) {
                 ? <canvas ref={donutRef} />
                 : <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-4">
                     <Ticket className="w-8 h-8 opacity-20" />
-                    <p className="text-[10px] font-black uppercase tracking-widest">No metrics available</p>
+                    <p className="text-sm font-medium text-muted-foreground">No data available</p>
                   </div>
               }
             </div>
@@ -258,9 +258,9 @@ export default function PassengerDashboardClient({ bookings }: Props) {
                 <div key={s.label} className="bg-muted/30 border border-border/50 p-4 rounded-3xl group hover:bg-muted transition-all">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 rounded-full shrink-0 group-hover:scale-150 transition-transform" style={{ background: s.color }} />
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">{s.label}</span>
+                    <span className="text-sm font-medium text-muted-foreground">{s.label}</span>
                   </div>
-                  <p className="text-lg font-black text-foreground font-heading">{s.val}</p>
+                  <p className="text-xl font-bold text-foreground">{s.val}</p>
                 </div>
               ))}
             </div>
@@ -276,12 +276,12 @@ export default function PassengerDashboardClient({ bookings }: Props) {
         >
           <div className="flex items-center justify-between px-10 py-8 border-b border-border">
             <div>
-              <p className="text-foreground font-black text-xl font-heading tracking-tight">Recent Activity</p>
-              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Live Transaction Log</p>
+              <p className="text-foreground font-semibold text-xl tracking-tight">Recent Activity</p>
+              <p className="text-sm font-medium text-muted-foreground">Latest bookings</p>
             </div>
             <Link
               href="/passenger-dashboard/bookings"
-              className="px-6 py-2.5 bg-muted hover:bg-slate-900 hover:text-white text-muted-foreground text-[10px] font-black uppercase tracking-widest rounded-full transition-all flex items-center gap-3 border border-border group"
+              className="px-6 py-2.5 bg-muted hover:bg-slate-900 hover:text-white text-muted-foreground text-sm font-medium rounded-full transition-all flex items-center gap-3 border border-border group"
             >
               Full History <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -291,7 +291,7 @@ export default function PassengerDashboardClient({ bookings }: Props) {
             {recentBookings.length === 0
               ? <div className="text-center py-24">
                   <Ticket className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
-                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest italic">Stationary: No active bookings detected</p>
+                  <p className="text-base font-medium text-muted-foreground">No recent bookings</p>
                 </div>
               : recentBookings.map((b, i) => {
                 const cfg = STATUS_CFG[b.status] ?? STATUS_CFG.PENDING;
@@ -311,38 +311,38 @@ export default function PassengerDashboardClient({ bookings }: Props) {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1">
                         <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
-                        <p className="text-foreground font-black text-lg font-heading tracking-tight truncate uppercase italic">
+                        <p className="text-foreground font-semibold text-lg tracking-tight truncate">
                           {b.schedule.route.sourceCity} <ArrowRight className="inline w-3 h-3 mx-1 text-muted-foreground/30" /> {b.schedule.route.destinationCity}
                         </p>
                       </div>
                       <div className="flex items-center gap-4">
-                         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                         <p className="text-sm font-medium text-muted-foreground">
                            {b.schedule.bus.name}
                          </p>
                          <span className="w-1 h-1 bg-border rounded-full" />
-                         <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest italic">
+                         <p className="text-sm font-semibold text-amber-600">
                            {fmt(b.schedule.departure)}
                          </p>
                       </div>
                     </div>
 
                     <div className="text-right shrink-0 hidden sm:block">
-                      <p className="text-foreground font-black text-xl font-heading tracking-tight italic leading-none mb-2">৳{b.totalFare.toLocaleString()}</p>
+                      <p className="text-foreground font-bold text-xl tracking-tight leading-none mb-2">৳{b.totalFare.toLocaleString()}</p>
                       <div className="flex items-center gap-2 justify-end">
                         <Banknote className={`w-3.5 h-3.5 ${isPaid ? 'text-emerald-500' : 'text-red-500'}`} />
-                        <span className={`text-[9px] font-black uppercase tracking-widest ${isPaid ? 'text-emerald-600' : 'text-red-600'}`}>
-                          {isPaid ? 'SECURED' : 'UNPAID'}
+                        <span className={`text-xs font-semibold ${isPaid ? 'text-emerald-600' : 'text-red-600'}`}>
+                          {isPaid ? 'Paid' : 'Unpaid'}
                         </span>
                       </div>
                     </div>
 
-                    <div className={`hidden md:flex items-center gap-2 px-5 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest shrink-0 ${cfg.cls} shadow-sm`}>
+                    <div className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium shrink-0 ${cfg.cls} shadow-sm`}>
                       <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${cfg.dot}`} />
                       <StatusIcon className="w-3.5 h-3.5" />
                       {cfg.label}
                     </div>
 
-                    <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest shrink-0 hidden lg:block italic">{fmtDate(b.createdAt)}</p>
+                    <p className="text-muted-foreground text-sm font-medium shrink-0 hidden lg:block">{fmtDate(b.createdAt)}</p>
                   </motion.div>
                 );
               })}
@@ -357,9 +357,9 @@ export default function PassengerDashboardClient({ bookings }: Props) {
            className="grid grid-cols-1 sm:grid-cols-3 gap-6"
         >
           {[
-            { label: 'Booking Archive', href: '/passenger-dashboard/bookings', icon: Ticket, sub: 'Manage your history' },
-            { label: 'Route Discovery',  href: '/find-buses',                   icon: BusFront, sub: 'Explore new paths' },
-            { label: 'Account Matrix',  href: '/passenger-dashboard/profile',  icon: CreditCard, sub: 'Security & settings' },
+            { label: 'My Bookings', href: '/passenger-dashboard/bookings', icon: Ticket, sub: 'View and manage your bookings' },
+            { label: 'Find Buses',  href: '/find-buses',                   icon: BusFront, sub: 'Search and book tickets' },
+            { label: 'My Profile',  href: '/passenger-dashboard/profile',  icon: CreditCard, sub: 'Account settings' },
           ].map((link, i) => (
             <Link
               key={link.href}
@@ -371,34 +371,13 @@ export default function PassengerDashboardClient({ bookings }: Props) {
                 <link.icon className="w-5 h-5 text-muted-foreground group-hover:text-amber-500 transition-colors" />
               </div>
               <div>
-                <p className="text-foreground font-black text-sm uppercase tracking-widest mb-1">{link.label}</p>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] italic opacity-60">{link.sub}</p>
+                <p className="text-foreground font-semibold text-base mb-1">{link.label}</p>
+                <p className="text-sm font-medium text-muted-foreground opacity-70">{link.sub}</p>
               </div>
               <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground/30 group-hover:text-amber-500 group-hover:translate-x-2 transition-all" />
             </Link>
           ))}
         </motion.div>
-
-      </div>
-    </div>
-  );
-}: BusFront },
-          ].map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 hover:border-gray-400 hover:bg-gray-100 transition-all group"
-            >
-              <div className="flex items-center gap-2">
-                <link.icon className="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors" />
-                <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium transition-colors">
-                  {link.label}
-                </span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors" />
-            </Link>
-          ))}
-        </div>
 
       </div>
     </div>

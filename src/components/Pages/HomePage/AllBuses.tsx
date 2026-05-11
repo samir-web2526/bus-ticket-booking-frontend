@@ -122,11 +122,11 @@ export default function BusesSection() {
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16"
         >
           <div>
-            <p className="text-amber-600 text-xs font-black tracking-[0.2em] uppercase mb-4">
+            <p className="text-amber-600 text-sm font-medium uppercase tracking-wide mb-3">
               Our Fleet
             </p>
-            <h2 className="text-4xl lg:text-5xl font-black text-foreground font-heading leading-tight">
-              All <span className="text-amber-500">Buses</span>
+            <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+              All <span className="text-amber-600">Buses</span>
             </h2>
           </div>
 
@@ -139,7 +139,7 @@ export default function BusesSection() {
                   setBusType(filter.value);
                   setShowAll(false);
                 }}
-                className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-wider border transition-all duration-300 ${
+                className={`px-6 py-2 rounded-full text-sm font-medium border transition-all duration-300 ${
                   busType === filter.value
                     ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
                     : 'bg-background text-muted-foreground border-border hover:border-amber-400 hover:text-amber-600'
@@ -196,10 +196,10 @@ export default function BusesSection() {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <Badge className={`absolute top-4 left-4 border text-[10px] font-black uppercase tracking-wider ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
+                    <Badge className={`absolute top-4 left-4 border text-xs font-medium ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
                       {tag}
                     </Badge>
-                    <div className="absolute top-4 right-4 bg-background/90 backdrop-blur-md text-foreground px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider shadow-sm border border-border">
+                    <div className="absolute top-4 right-4 bg-background/90 backdrop-blur-md text-foreground px-4 py-1.5 rounded-xl text-sm font-medium shadow-sm border border-border">
                       {bus.totalSeats} seats
                     </div>
                   </div>
@@ -207,19 +207,19 @@ export default function BusesSection() {
                   <div className="p-6">
                     <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-foreground font-black text-xl leading-tight group-hover:text-amber-600 transition-colors">{bus.name}</h3>
-                        <p className="text-muted-foreground text-xs font-bold mt-1 uppercase tracking-wider">{getBusLabel(bus.type)} Service</p>
+                        <h3 className="text-foreground font-bold text-xl leading-tight group-hover:text-amber-600 transition-colors">{bus.name}</h3>
+                        <p className="text-muted-foreground text-sm font-medium mt-1">{getBusLabel(bus.type)} Service</p>
                       </div>
                       <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-100 rounded-xl px-3 py-1">
                         <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
-                        <span className="text-amber-700 text-sm font-black">4.8</span>
+                        <span className="text-amber-700 text-sm font-semibold">4.8</span>
                       </div>
                     </div>
 
                     <div className="mb-6 p-4 bg-muted/30 border border-border rounded-2xl group-hover:bg-amber-50/30 group-hover:border-amber-100 transition-all">
-                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-2">Bus Operator</p>
+                      <p className="text-muted-foreground text-xs font-medium mb-2">Bus Operator</p>
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-xs font-black text-amber-600">
+                        <div className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-sm font-semibold text-amber-600">
                           {bus.operator.name.charAt(0)}
                         </div>
                         <div>
@@ -231,16 +231,16 @@ export default function BusesSection() {
 
                     <div className="flex items-center justify-between pt-6 border-t border-border">
                       <div>
-                        <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-1">Price per seat</p>
+                        <p className="text-muted-foreground text-xs font-medium mb-1">Price per seat</p>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-foreground font-black text-2xl">৳{bus.pricePerSeat}</span>
-                          <span className="text-muted-foreground text-xs font-bold">/ seat</span>
+                          <span className="text-foreground font-bold text-2xl">৳{bus.pricePerSeat}</span>
+                          <span className="text-muted-foreground text-sm font-medium">/ seat</span>
                         </div>
                       </div>
                       <Button
                         size="sm"
                         onClick={() => router.push(`/find-buses?busType=${bus.type}&busName=${bus.name}`)}
-                        className="bg-slate-900 hover:bg-slate-800 text-white font-bold h-12 px-8 rounded-2xl shadow-lg border-none group/btn transition-all active:scale-95"
+                        className="bg-slate-900 hover:bg-slate-800 text-white font-semibold h-12 px-6 rounded-2xl shadow-lg border-none group/btn transition-all active:scale-95"
                       >
                         Book Now
                         <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />

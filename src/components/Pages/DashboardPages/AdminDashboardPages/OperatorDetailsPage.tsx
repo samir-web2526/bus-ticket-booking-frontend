@@ -49,8 +49,8 @@ function StatCard({ icon, label, value, accent = false }: {
         {icon}
       </div>
       <div>
-        <p className={`text-[9px] font-black uppercase tracking-[0.2em] mb-2 italic ${accent ? 'text-amber-500/60' : 'text-muted-foreground opacity-40'}`}>{label}</p>
-        <p className={`font-black text-xl font-heading tracking-tighter italic uppercase leading-none ${accent ? 'text-white' : 'text-foreground'}`}>{value}</p>
+        <p className={`text-xs font-medium mb-2 ${accent ? 'text-amber-500/70' : 'text-muted-foreground opacity-60'}`}>{label}</p>
+        <p className={`font-bold text-xl tracking-tight leading-none ${accent ? 'text-white' : 'text-foreground'}`}>{value}</p>
       </div>
     </div>
   );
@@ -68,7 +68,7 @@ function InfoCard({ title, icon, children }: { title: string; icon: React.ReactN
         <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-lg group-hover:rotate-6 transition-transform">
           {icon}
         </div>
-        <p className="text-foreground font-black text-sm uppercase tracking-[0.2em] font-heading italic">{title}</p>
+        <p className="text-foreground font-semibold text-base tracking-tight">{title}</p>
       </div>
       <div className="p-10 space-y-2">{children}</div>
     </motion.div>
@@ -78,8 +78,8 @@ function InfoCard({ title, icon, children }: { title: string; icon: React.ReactN
 function FieldRow({ label, value, highlight }: { label: string; value: string | null, highlight?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-6 py-4 border-b border-border/40 last:border-0 group/row">
-      <p className="text-muted-foreground text-[9px] font-black uppercase tracking-[0.3em] shrink-0 opacity-40 italic">{label}</p>
-      <p className={`text-sm font-black uppercase tracking-tight italic transition-colors ${highlight ? 'text-amber-500' : 'text-foreground group-hover/row:text-amber-500'}`}>{value ?? 'NOT PROVIDED'}</p>
+      <p className="text-xs font-medium text-muted-foreground shrink-0 opacity-60">{label}</p>
+      <p className={`text-base font-medium transition-colors ${highlight ? 'text-amber-500' : 'text-foreground group-hover/row:text-amber-500'}`}>{value ?? 'Not provided'}</p>
     </div>
   );
 }
@@ -135,7 +135,7 @@ export default function OperatorDetailPage({ id }: { id: string }) {
            <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full" />
            <Loader2 className="h-20 w-20 text-amber-500 animate-spin relative z-10" />
         </div>
-        <p className="text-muted-foreground font-black uppercase tracking-[0.4em] text-[10px] animate-pulse mt-10 italic">Initializing Personnel Network...</p>
+        <p className="text-muted-foreground font-medium text-base animate-pulse mt-10">Loading operator details...</p>
       </div>
     );
   }
@@ -144,15 +144,15 @@ export default function OperatorDetailPage({ id }: { id: string }) {
     return (
       <div className="min-h-screen bg-background py-24 px-6 lg:px-12">
         <div className="max-w-4xl mx-auto">
-          <Link href="/admin-dashboard/operators" className="inline-flex items-center gap-4 text-muted-foreground hover:text-foreground text-[10px] font-black uppercase tracking-widest mb-12 transition-all group italic">
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform text-amber-500" /> BACK TO REGISTRY
+          <Link href="/admin-dashboard/operators" className="inline-flex items-center gap-4 text-muted-foreground hover:text-foreground text-base font-medium mb-12 transition-all group">
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform text-amber-500" /> Back to Operators
           </Link>
           <div className="flex items-center justify-center h-96 bg-card border border-border rounded-[56px] shadow-2xl relative overflow-hidden group">
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity" style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
             <div className="text-center relative z-10">
               <Activity className="h-16 w-16 text-destructive mx-auto mb-8 animate-pulse" />
-              <h3 className="text-3xl font-black text-foreground mb-4 font-heading italic tracking-tighter uppercase leading-none">Diagnostic Error</h3>
-              <p className="text-muted-foreground font-medium italic">{error || 'OPERATOR NOT FOUND'}</p>
+              <h3 className="text-2xl font-bold text-foreground mb-4 tracking-tight">Error</h3>
+              <p className="text-muted-foreground font-normal text-base">{error || 'Operator not found'}</p>
             </div>
           </div>
         </div>
@@ -169,8 +169,8 @@ export default function OperatorDetailPage({ id }: { id: string }) {
       <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-slate-500/[0.03] rounded-full blur-[140px] -z-10" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <Link href="/admin-dashboard/operators" className="inline-flex items-center gap-4 text-muted-foreground hover:text-foreground text-[10px] font-black uppercase tracking-widest mb-12 transition-all group italic">
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform text-amber-500" /> BACK TO PERSONNEL REGISTRY
+        <Link href="/admin-dashboard/operators" className="inline-flex items-center gap-4 text-muted-foreground hover:text-foreground text-base font-medium mb-12 transition-all group">
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform text-amber-500" /> Back to Operators
         </Link>
 
         {/* Hero Card */}
@@ -191,25 +191,25 @@ export default function OperatorDetailPage({ id }: { id: string }) {
                   <img src={operator.profileImage} alt={operator.name}
                     className="w-40 h-40 rounded-[40px] object-cover border-8 border-card shadow-2xl group-hover:scale-105 transition-transform duration-700" />
                 ) : (
-                  <div className="w-40 h-40 rounded-[40px] bg-slate-900 border-8 border-card flex items-center justify-center text-amber-500 font-black text-6xl shadow-2xl group-hover:scale-105 transition-transform duration-700 italic font-heading">
+                  <div className="w-40 h-40 rounded-[40px] bg-slate-900 border-8 border-card flex items-center justify-center text-amber-500 font-bold text-6xl shadow-2xl group-hover:scale-105 transition-transform duration-700">
                     {operator.name?.charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div className="pb-4">
                   <div className="flex items-center gap-5 mb-4 flex-wrap">
-                    <h1 className="text-foreground font-black text-4xl lg:text-6xl font-heading tracking-tighter italic uppercase leading-none">{operator.name}</h1>
-                    <span className={`text-[10px] font-black px-5 py-2 rounded-full border italic tracking-widest uppercase shadow-lg ${operator.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>
+                    <h1 className="text-foreground font-bold text-3xl lg:text-4xl tracking-tight leading-none">{operator.name}</h1>
+                    <span className={`text-sm font-medium px-4 py-2 rounded-full border shadow-lg ${operator.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>
                       {operator.status}
                     </span>
                     {operator.isVerified && (
-                      <span className="flex items-center gap-3 text-[10px] font-black text-blue-500 bg-blue-500/10 border border-blue-500/20 px-5 py-2 rounded-full uppercase italic tracking-widest">
-                        <CheckCircle className="w-4 h-4" /> VERIFIED
+                      <span className="flex items-center gap-2 text-sm font-medium text-blue-600 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full">
+                        <CheckCircle className="w-4 h-4" /> Verified
                       </span>
                     )}
                   </div>
-                  <p className="text-muted-foreground text-sm font-black uppercase tracking-[0.3em] italic opacity-60 leading-none">{operator.email}</p>
+                  <p className="text-muted-foreground text-sm font-medium opacity-60 leading-none">{operator.email}</p>
                   {op?.companyName && (
-                    <p className="text-amber-600 text-[10px] font-black mt-4 uppercase tracking-[0.4em] italic opacity-80">{op.companyName}</p>
+                    <p className="text-amber-600 text-sm font-semibold mt-3 opacity-90">{op.companyName}</p>
                   )}
                 </div>
               </div>
@@ -219,17 +219,17 @@ export default function OperatorDetailPage({ id }: { id: string }) {
                   whileHover={{ scale: 1.05, backgroundColor: '#0f172a', color: '#fff' }} 
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setModalOpen(true)}
-                  className="flex items-center gap-4 bg-slate-900 border border-slate-800 text-white font-black px-8 py-4 rounded-[24px] text-[10px] uppercase tracking-[0.3em] shadow-2xl shadow-slate-900/20 italic group/btn"
+                  className="flex items-center gap-3 bg-slate-900 border border-slate-800 text-white font-semibold px-6 py-3 rounded-2xl text-base shadow-xl shadow-slate-900/20 group/btn"
                 >
-                  <Pencil className="w-4 h-4 text-amber-500 group-hover/btn:rotate-12 transition-transform" /> MODIFY
+                  <Pencil className="w-4 h-4 text-amber-500 group-hover/btn:rotate-12 transition-transform" /> Edit
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05, backgroundColor: 'rgba(239, 68, 68, 0.1)' }} 
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setDeleteDialog(true)}
-                  className="flex items-center gap-4 bg-destructive/5 border border-destructive/20 text-destructive font-black px-8 py-4 rounded-[24px] text-[10px] uppercase tracking-[0.3em] transition-all italic"
+                  className="flex items-center gap-3 bg-destructive/5 border border-destructive/20 text-destructive font-semibold px-6 py-3 rounded-2xl text-base transition-all"
                 >
-                  <Trash2 className="w-4 h-4" /> TERMINATE
+                  <Trash2 className="w-4 h-4" /> Delete
                 </motion.button>
               </div>
             </div>
@@ -284,12 +284,12 @@ export default function OperatorDetailPage({ id }: { id: string }) {
                  <Zap className="w-8 h-8 fill-amber-500" />
               </div>
               <div>
-                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.4em] opacity-40 italic mb-1">Personnel ID Vector</p>
-                 <p className="text-foreground font-black font-heading text-lg tracking-tighter italic uppercase">{operator.id}</p>
+                 <p className="text-xs font-medium text-muted-foreground opacity-60 mb-1">User ID</p>
+                 <p className="text-foreground font-semibold text-base tracking-tight">{operator.id}</p>
               </div>
            </div>
-           <div className="flex items-center gap-4 text-muted-foreground/30 text-[9px] font-black uppercase tracking-[0.5em] italic">
-              <Database className="w-4 h-4" /> SECURE PERSONNEL DATA ACTIVE
+           <div className="flex items-center gap-4 text-muted-foreground/40 text-sm font-medium">
+              <Database className="w-4 h-4" /> Secure operator profile
            </div>
         </div>
       </div>
@@ -318,26 +318,26 @@ export default function OperatorDetailPage({ id }: { id: string }) {
               <div className="w-20 h-20 rounded-[32px] bg-destructive/10 border border-destructive/20 flex items-center justify-center text-destructive mb-8">
                 <Trash2 className="w-10 h-10" />
               </div>
-              <p className="text-destructive text-[10px] font-black tracking-[0.4em] uppercase mb-4 italic">— DANGER ZONE</p>
-              <h2 className="text-foreground font-black text-4xl mb-4 font-heading tracking-tighter italic uppercase leading-tight">TERMINATE <br/><span className="text-destructive">ACCOUNT?</span></h2>
-              <p className="text-muted-foreground text-lg mb-10 italic font-medium">Are you sure you want to permanently terminate the account of <span className="text-foreground font-black">{operator.name}</span>? This action cannot be reversed.</p>
+              <p className="text-destructive text-sm font-medium mb-3">Delete Operator</p>
+              <h2 className="text-foreground font-bold text-3xl mb-4 tracking-tight leading-tight">Delete <span className="text-destructive">{operator.name}</span>?</h2>
+              <p className="text-muted-foreground text-base mb-10 font-normal">Are you sure you want to permanently delete this operator? This action cannot be undone.</p>
               <div className="flex gap-4">
                 <button
                   onClick={() => setDeleteDialog(false)}
                   disabled={deleteLoading}
-                  className="flex-1 bg-muted/40 text-muted-foreground hover:bg-muted/60 rounded-[24px] h-16 font-black text-[10px] uppercase tracking-[0.2em] transition-all disabled:opacity-50 italic"
+                  className="flex-1 bg-muted/40 text-muted-foreground hover:bg-muted/60 rounded-2xl h-14 font-semibold text-base transition-all disabled:opacity-50"
                 >
-                  CANCEL
+                  Cancel
                 </button>
                 <motion.button
                   whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                   onClick={handleDelete}
                   disabled={deleteLoading}
-                  className="flex-[1.5] bg-destructive hover:bg-destructive/90 disabled:opacity-50 text-white font-black h-16 rounded-[24px] transition-all flex items-center justify-center gap-4 uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-destructive/20 italic"
+                  className="flex-[1.5] bg-destructive hover:bg-destructive/90 disabled:opacity-50 text-white font-semibold h-14 rounded-2xl transition-all flex items-center justify-center gap-3 text-base shadow-xl shadow-destructive/20"
                 >
                   {deleteLoading
-                    ? <><Activity className="w-5 h-5 animate-spin" /> EXECUTING...</>
-                    : <><Trash2 className="w-5 h-5" /> CONFIRM EXIT</>
+                    ? <><Activity className="w-5 h-5 animate-spin" /> Deleting...</>
+                    : <><Trash2 className="w-5 h-5" /> Delete Operator</>
                   }
                 </motion.button>
               </div>

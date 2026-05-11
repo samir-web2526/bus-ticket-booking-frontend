@@ -20,6 +20,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getOperatorBuses } from "@/src/services/buses.service";
 
 interface BusItem {
@@ -89,10 +90,10 @@ function StatCard({
         <Icon className="w-6 h-6" />
       </div>
       <div>
-        <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${
-          accent ? "text-slate-400" : "text-muted-foreground"
+        <p className={`text-sm font-medium mb-1 ${
+          accent ? "text-slate-400" : "text-muted-foreground opacity-60"
         }`}>{label}</p>
-        <p className="font-black text-3xl font-heading tracking-tight italic">{value}</p>
+        <p className="font-bold text-3xl tracking-tight">{value}</p>
       </div>
     </div>
   );
@@ -154,17 +155,17 @@ export default function MyBuses() {
           className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
         >
           <div>
-            <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-4">
+            <p className="text-amber-600 text-sm font-medium tracking-wide mb-3">
               Fleet Management
             </p>
-            <h1 className="text-4xl lg:text-6xl font-black text-foreground tracking-tighter font-heading">
-              Asset <span className="text-amber-500 italic">Inventory</span>
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              My <span className="text-amber-600">Buses</span>
             </h1>
           </div>
           <Link href="/operator-dashboard/create-bus">
             <Button className="h-14 px-8 bg-slate-900 hover:bg-slate-800 text-white rounded-full flex items-center gap-3 shadow-2xl shadow-slate-900/20 group">
               <Plus className="w-5 h-5 text-amber-500 group-hover:rotate-90 transition-transform duration-500" />
-              <span className="text-[11px] font-black uppercase tracking-widest">Add New Asset</span>
+              <span className="text-base font-semibold">Add New Bus</span>
             </Button>
           </Link>
         </motion.div>
@@ -193,7 +194,7 @@ export default function MyBuses() {
               <button
                 key={f.value}
                 onClick={() => { setBusType(f.value); setShowAll(false); }}
-                className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
+                className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
                   busType === f.value
                     ? "bg-slate-900 text-white shadow-xl"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -208,23 +209,23 @@ export default function MyBuses() {
         {loading && (
           <div className="flex flex-col items-center justify-center py-40 bg-card border border-border border-dashed rounded-[48px]">
             <Loader2 className="h-12 w-12 text-amber-500 animate-spin mb-6" />
-            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">Synchronizing Fleet Telemetry...</p>
+            <p className="text-muted-foreground text-base font-medium">Loading buses...</p>
           </div>
         )}
 
         {error && !loading && (
           <div className="flex flex-col items-center justify-center py-40 bg-card border border-border border-dashed rounded-[48px]">
             <AlertCircle className="h-12 w-12 text-destructive mb-6" />
-            <p className="text-foreground font-black text-xl font-heading tracking-tight mb-2">Telemetry Interrupted</p>
-            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">{error}</p>
+            <p className="text-foreground font-bold text-xl tracking-tight mb-2">Error</p>
+            <p className="text-muted-foreground text-base font-normal">{error}</p>
           </div>
         )}
 
         {!loading && !error && filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-40 bg-card border border-border border-dashed rounded-[48px]">
             <Bus className="h-20 w-20 text-muted-foreground/20 mb-6" />
-            <p className="text-foreground font-black text-xl font-heading tracking-tight mb-2">No assets detected</p>
-            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest">
+            <p className="text-foreground font-bold text-xl tracking-tight mb-2">No buses found</p>
+            <p className="text-muted-foreground text-base font-normal">
               {buses.length === 0
                 ? "Initialize your first fleet unit to begin"
                 : "No matching assets found in current category"}
@@ -254,37 +255,37 @@ export default function MyBuses() {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
 
                     <div className="absolute top-6 left-6 flex items-center gap-2">
-                       <Badge className={`border px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest backdrop-blur-md ${tagColors[tag] ?? ""}`}>
+                       <Badge className={`border px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-md ${tagColors[tag] ?? ""}`}>
                         {tag}
                       </Badge>
                     </div>
 
-                    <div className={`absolute top-6 right-6 px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-xl border backdrop-blur-md ${
+                    <div className={`absolute top-6 right-6 px-4 py-2 rounded-full text-sm font-medium shadow-xl border backdrop-blur-md ${
                       bus.isActive
                         ? "bg-emerald-500/80 text-white border-emerald-400"
                         : "bg-destructive/80 text-white border-destructive/40"
                     }`}>
-                      {bus.isActive ? "Ready" : "Standby"}
+                      {bus.isActive ? "Active" : "Inactive"}
                     </div>
 
-                    <div className="absolute bottom-6 right-6 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shadow-2xl">
+                    <div className="absolute bottom-6 right-6 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded-2xl text-sm font-medium flex items-center gap-2 shadow-2xl">
                       <Users className="w-3 h-3 text-amber-500" />
-                      {bus.totalSeats} Nodes
+                      {bus.totalSeats} Seats
                     </div>
                   </div>
 
                   <div className="p-8">
                     <div className="flex items-start justify-between mb-8">
                       <div>
-                        <h3 className="text-foreground font-black text-2xl font-heading tracking-tight italic uppercase mb-1">{bus.name}</h3>
-                        <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest opacity-60 italic">
+                        <h3 className="text-foreground font-bold text-xl tracking-tight mb-1">{bus.name}</h3>
+                        <p className="text-muted-foreground text-sm font-medium opacity-60">
                           {getBusLabel(bus.type)} &nbsp;·&nbsp; 
                           <span className="text-amber-600 ml-1">#{bus.number}</span>
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-foreground font-black text-2xl font-heading tracking-tighter">৳{bus.pricePerSeat}</p>
-                        <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest opacity-40 italic">/ Slot</p>
+                        <p className="text-foreground font-bold text-2xl tracking-tight">৳{bus.pricePerSeat}</p>
+                        <p className="text-muted-foreground text-sm font-medium opacity-40">/ Seat</p>
                       </div>
                     </div>
 
@@ -328,20 +329,20 @@ export default function MyBuses() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-center mt-20 flex flex-col items-center gap-6"
           >
-            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest opacity-40 italic">
+            <p className="text-muted-foreground text-sm font-medium opacity-50">
               Showing{" "}
-              <span className="text-foreground font-black">{displayed.length}</span>{" "}
+              <span className="text-foreground font-semibold">{displayed.length}</span>{" "}
               of{" "}
-              <span className="text-foreground font-black">{filtered.length}</span>{" "}
-              Active Assets
+              <span className="text-foreground font-semibold">{filtered.length}</span>{" "}
+              Buses
             </p>
             {filtered.length > 6 && (
               <Button
                 onClick={() => setShowAll(!showAll)}
                 variant="outline"
-                className="h-14 px-10 border-border text-foreground hover:bg-slate-900 hover:text-white hover:border-slate-800 transition-all duration-500 rounded-full text-[10px] font-black uppercase tracking-widest italic"
+                className="h-14 px-10 border-border text-foreground hover:bg-slate-900 hover:text-white hover:border-slate-800 transition-all duration-500 rounded-full text-base font-medium"
               >
-                {showAll ? "Compress Log" : `Access Full Directory (${filtered.length} Units)`}
+                {showAll ? "Show Less" : `View All (${filtered.length} Buses)`}
               </Button>
             )}
           </motion.div>
