@@ -2,18 +2,18 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Bus, Users, CheckCircle2, ArrowRight, Armchair, Activity } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Bus, Users, CheckCircle2, ArrowRight, Armchair, Activity, ArrowUpRight, PlusCircle, Globe, ShieldCheck, Zap, Database, Navigation } from 'lucide-react';
 import Link from 'next/link';
 
 const TYPE_LABEL: Record<string, string> = {
-  AC: 'AC',
-  NON_AC: 'Non-AC',
+  AC: 'Premium AC',
+  NON_AC: 'Standard',
   SLEEPER: 'Sleeper',
   DOUBLE_DECKER: 'Double Decker',
 };
 
-const COLORS = ['#1f2937', '#6b7280', '#9ca3af', '#d1d5db'];
+const COLORS = ['#f59e0b', '#0f172a', '#10b981', '#3b82f6'];
 
 interface Props {
   stats: {
@@ -78,16 +78,16 @@ export default function OperatorDashboardClient({
                 {
                   data: keys.map((k) => busTypeCount[k]),
                   backgroundColor: COLORS,
-                  borderWidth: 2,
+                  borderWidth: 8,
                   borderColor: '#ffffff',
-                  hoverOffset: 6,
+                  hoverOffset: 15,
                 },
               ],
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              cutout: '72%',
+              cutout: '80%',
               plugins: { legend: { display: false } },
             },
           })
@@ -102,16 +102,17 @@ export default function OperatorDashboardClient({
               datasets: [
                 {
                   data: [stats.activeBuses, stats.inactiveBuses],
-                  backgroundColor: ['#1f2937', '#e5e7eb'],
-                  borderWidth: 2,
+                  backgroundColor: ['#10b981', '#f59e0b'],
+                  borderWidth: 8,
                   borderColor: '#ffffff',
+                  hoverOffset: 15,
                 },
               ],
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
-              cutout: '72%',
+              cutout: '80%',
               plugins: { legend: { display: false } },
             },
           })
@@ -126,11 +127,9 @@ export default function OperatorDashboardClient({
               datasets: [
                 {
                   data: passengerGrowth.counts,
-                  backgroundColor: 'rgba(31,41,55,0.12)',
-                  borderColor: '#1f2937',
-                  borderWidth: 2,
-                  borderRadius: 6,
-                  borderSkipped: false,
+                  backgroundColor: '#0f172a',
+                  borderRadius: 12,
+                  barThickness: 16,
                 },
               ],
             },
@@ -140,13 +139,13 @@ export default function OperatorDashboardClient({
               plugins: { legend: { display: false } },
               scales: {
                 x: {
-                  ticks: { color: '#9ca3af', font: { size: 11 } },
                   grid: { display: false },
+                  ticks: { color: 'rgba(0,0,0,0.4)', font: { family: 'Inter', weight: '900', size: 10 } },
                 },
                 y: {
                   beginAtZero: true,
-                  ticks: { color: '#9ca3af', font: { size: 11 } },
-                  grid: { color: 'rgba(0,0,0,0.05)' },
+                  grid: { color: 'rgba(0,0,0,0.03)' },
+                  ticks: { color: 'rgba(0,0,0,0.4)', font: { family: 'Inter', weight: '900', size: 10 } },
                 },
               },
             },
@@ -154,14 +153,16 @@ export default function OperatorDashboardClient({
         );
     };
 
-    if ((window as any).Chart) {
+    const existing = document.getElementById('chartjs-cdn');
+    if (existing) {
       init();
-      return;
+    } else {
+      const s = document.createElement('script');
+      s.id = 'chartjs-cdn';
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+      s.onload = init;
+      document.head.appendChild(s);
     }
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
-    s.onload = init;
-    document.head.appendChild(s);
     return () => {
       charts.current.forEach((c) => c.destroy());
     };
@@ -170,263 +171,306 @@ export default function OperatorDashboardClient({
   const typeKeys = Object.keys(busTypeCount);
 
   return (
-    <div className="min-h-screen bg-white p-6 lg:p-10 relative overflow-hidden">
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gray-100 rounded-full blur-3xl pointer-events-none" />
+    <section className="min-h-screen bg-background relative overflow-hidden p-6 lg:p-12">
+      {/* Dynamic Background */}
+      <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-amber-500/[0.03] rounded-full blur-[140px] -z-10" />
+      <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-slate-500/[0.03] rounded-full blur-[140px] -z-10" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="mb-8 flex items-end justify-between flex-wrap gap-4">
+        <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-2">
-              Operator Panel
-            </p>
-            <h1 className="text-3xl lg:text-4xl font-black text-gray-900">
-              My <span className="text-gray-500">Dashboard</span>
+            <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— OPERATIONAL UPLINK</p>
+            <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
+              MISSION <span className="text-amber-500">CONTROL</span>
             </h1>
           </div>
-          <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl">
-            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-emerald-700 text-sm font-semibold">Live</span>
+          <div className="flex items-center gap-6 bg-card border border-border px-8 py-4 rounded-[32px] shadow-2xl shadow-slate-900/[0.03] backdrop-blur-xl">
+             <div className="flex items-center gap-3">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                <span className="text-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">LIVE CHANNEL ALPHA</span>
+             </div>
+             <div className="w-[1px] h-4 bg-border/50" />
+             <div className="flex items-center gap-3">
+                <Zap className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] italic leading-none">SECURE LINK</span>
+             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {/* METRICS HUD */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {[
             {
               icon: Bus,
-              label: 'Total Buses',
+              label: 'FLEET MANAGEMENT',
               value: stats.totalBuses,
-              sub: `${stats.activeBuses} active · ${stats.inactiveBuses} inactive`,
+              sub: `${stats.activeBuses} ACTIVE ASSETS`,
               accent: true,
             },
             {
               icon: Armchair,
-              label: 'Total Seats',
+              label: 'CAPACITY LOG',
               value: stats.totalSeats.toLocaleString(),
-              sub: `Avg ৳${stats.avgPrice} / seat`,
+              sub: `YIELD ৳${stats.avgPrice}/SEAT`,
               accent: false,
             },
             {
               icon: Users,
-              label: 'Passengers',
+              label: 'TOTAL PASSENGERS',
               value: stats.totalPassengers.toLocaleString(),
-              sub: `${stats.activePassengers} active`,
+              sub: `${stats.activePassengers} ACTIVE NODES`,
               accent: false,
             },
             {
-              icon: CheckCircle2,
-              label: 'Verified',
+              icon: ShieldCheck,
+              label: 'SECURITY CLEARANCE',
               value: stats.verifiedPassengers,
-              sub: `of ${stats.totalPassengers} total`,
+              sub: `FULL SYNC REQUIRED`,
               accent: false,
             },
           ].map((c, i) => (
             <motion.div
               key={c.label}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-              className={`rounded-2xl p-5 border transition-colors ${
+              transition={{ delay: i * 0.05 }}
+              className={`rounded-[40px] p-8 border transition-all duration-500 group hover:-translate-y-2 relative overflow-hidden ${
                 c.accent
-                  ? 'bg-gray-900 border-gray-900'
-                  : 'bg-gray-50 border-gray-100 hover:border-gray-200'
+                  ? 'bg-slate-900 border-slate-800 text-white shadow-2xl shadow-slate-900/40'
+                  : 'bg-card border-border shadow-sm hover:shadow-2xl hover:border-amber-500/30'
               }`}
             >
-              <c.icon className={`w-5 h-5 mb-3 ${c.accent ? 'text-gray-300' : 'text-gray-400'}`} />
-              <p className={`font-black text-2xl ${c.accent ? 'text-white' : 'text-gray-900'}`}>
-                {c.value}
-              </p>
-              <p className={`text-xs mt-1 ${c.accent ? 'text-gray-400' : 'text-gray-400'}`}>
+              <div className={`w-12 h-12 rounded-[20px] flex items-center justify-center mb-6 shadow-xl transition-all duration-500 ${
+                c.accent 
+                ? 'bg-white/10 group-hover:bg-amber-500/20' 
+                : 'bg-muted border border-border group-hover:bg-amber-500/10 group-hover:border-amber-500/20 group-hover:rotate-12'
+              }`}>
+                <c.icon className={`w-6 h-6 ${c.accent ? 'text-amber-500' : 'text-amber-600'}`} />
+              </div>
+              <p className={`text-[8px] font-black uppercase tracking-[0.2em] mb-2 italic opacity-60 ${c.accent ? 'text-slate-400' : 'text-muted-foreground'}`}>
                 {c.label}
               </p>
-              <p className={`text-xs mt-0.5 font-medium ${c.accent ? 'text-gray-300' : 'text-gray-500'}`}>
-                {c.sub}
+              <p className="font-black text-4xl font-heading tracking-tighter mb-2 italic">
+                {c.value}
               </p>
+              <div className="flex items-center gap-2">
+                 <div className={`w-1.5 h-1.5 rounded-full ${c.accent ? 'bg-emerald-400' : 'bg-emerald-500'}`} />
+                 <p className={`text-[10px] font-black italic uppercase tracking-tight ${c.accent ? 'text-emerald-400/80' : 'text-emerald-600'}`}>
+                   {c.sub}
+                 </p>
+              </div>
+              
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-amber-500/5 to-transparent rounded-full -mr-12 -mt-12 group-hover:scale-150 transition-transform duration-700" />
             </motion.div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p className="text-gray-900 font-semibold text-sm mb-1">Bus Types</p>
-            <p className="text-gray-400 text-xs mb-4">How many of each type</p>
-            <div className="relative h-44">
+        {/* ANALYTICS SECTION */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-10">
+          <div className="lg:col-span-4 bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] flex flex-col relative overflow-hidden">
+             <div className="flex items-center justify-between mb-12 relative z-10">
+                <div>
+                   <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Fleet Composition</p>
+                   <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Distribution</h3>
+                </div>
+                <div className="w-12 h-12 rounded-2xl bg-muted border border-border flex items-center justify-center">
+                   <Database className="w-5 h-5 text-muted-foreground/30" />
+                </div>
+             </div>
+             <div className="relative h-64 mb-10">
               {typeKeys.length > 0 ? (
                 <canvas ref={donutRef} />
               ) : (
-                <div className="flex items-center justify-center h-full text-gray-300 text-sm">
-                  No buses yet
+                <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] opacity-20 italic">
+                  DATA OFFLINE
                 </div>
               )}
             </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-4">
-              {typeKeys.map((k, i) => (
-                <div key={k} className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full" style={{ background: COLORS[i] }} />
-                  <span className="text-gray-400 text-xs">
-                    {TYPE_LABEL[k] ?? k} ({busTypeCount[k]})
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p className="text-gray-900 font-semibold text-sm mb-1">Bus Status</p>
-            <p className="text-gray-400 text-xs mb-4">Active vs inactive</p>
-            <div className="relative h-44">
-              <canvas ref={fleetRef} />
-            </div>
-            <div className="flex gap-6 mt-4">
-              {[
-                { label: 'Active', val: stats.activeBuses, color: '#1f2937' },
-                { label: 'Inactive', val: stats.inactiveBuses, color: '#e5e7eb' },
-              ].map((s) => (
-                <div key={s.label} className="flex items-center gap-2">
-                  <span
-                    className="w-2 h-2 rounded-full border border-gray-200"
-                    style={{ background: s.color }}
-                  />
-                  <span className="text-gray-400 text-xs">
-                    {s.label} ({s.val})
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-            <p className="text-gray-900 font-semibold text-sm mb-1">New Passengers</p>
-            <p className="text-gray-400 text-xs mb-4">Sign-ups per month</p>
-            <div className="relative h-44">
-              {passengerGrowth.months.length > 0 ? (
-                <canvas ref={barRef} />
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-300 text-sm">
-                  No data yet
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-              <p className="text-gray-900 font-semibold text-sm">Recent Buses</p>
-              <Link
-                href="/operator-dashboard/buses"
-                className="text-gray-400 text-xs hover:text-gray-900 flex items-center gap-1 transition-colors"
-              >
-                View all <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-            {recentBuses.length === 0 ? (
-              <p className="text-gray-300 text-sm text-center py-12">No buses yet</p>
-            ) : (
-              recentBuses.map((bus) => (
-                <div
-                  key={bus.id}
-                  className="flex items-center gap-4 px-6 py-3.5 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                    <Bus className="w-4 h-4 text-gray-500" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-gray-900 text-sm font-medium truncate">{bus.name}</p>
-                    <p className="text-gray-400 text-xs">#{bus.number} · {bus.totalSeats} seats</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-gray-900 text-sm font-bold">৳{bus.pricePerSeat}</p>
-                    <p className={`text-xs ${bus.isActive ? 'text-emerald-600' : 'text-red-400'}`}>
-                      {bus.isActive ? 'Active' : 'Inactive'}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-
-          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-              <p className="text-gray-900 font-semibold text-sm">Recent Passengers</p>
-              <Link
-                href="/operator-dashboard/my-passengers"
-                className="text-gray-400 text-xs hover:text-gray-900 flex items-center gap-1 transition-colors"
-              >
-                View all <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-            {recentPassengers.length === 0 ? (
-              <p className="text-gray-300 text-sm text-center py-12">No passengers yet</p>
-            ) : (
-              recentPassengers.map((p) => (
-                <div
-                  key={p.id}
-                  className="flex items-center gap-4 px-6 py-3.5 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 text-gray-600 font-bold text-sm">
-                    {p.name?.charAt(0)?.toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-gray-900 text-sm font-medium truncate">{p.name}</p>
-                      {p.isVerified && (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      )}
+             <div className="grid grid-cols-1 gap-4 mt-auto">
+               {typeKeys.map((k, i) => (
+                 <div key={k} className="flex items-center justify-between p-4 bg-muted/20 border border-border/50 rounded-2xl hover:bg-muted/40 transition-colors group">
+                    <div className="flex items-center gap-4">
+                       <span className="w-2.5 h-2.5 rounded-full shadow-lg" style={{ background: COLORS[i] }} />
+                       <span className="text-foreground text-[10px] font-black uppercase tracking-widest">{TYPE_LABEL[k] ?? k}</span>
                     </div>
-                    <p className="text-gray-400 text-xs truncate">{p.email}</p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <span
-                      className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${
-                        p.status === 'ACTIVE'
-                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                          : 'bg-gray-100 text-gray-500 border-gray-200'
-                      }`}
-                    >
-                      {p.status === 'ACTIVE'
-                        ? 'Active'
-                        : p.status === 'SUSPENDED'
-                        ? 'Suspended'
-                        : 'Inactive'}
+                    <span className="text-muted-foreground font-black text-[10px] uppercase opacity-40 italic group-hover:opacity-100 transition-opacity">
+                      {busTypeCount[k]} ASSETS
                     </span>
-                    <p className="text-gray-300 text-xs mt-1">
-                      {new Date(p.joinedAt).toLocaleDateString('en-BD', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </p>
-                  </div>
+                 </div>
+               ))}
+             </div>
+          </div>
+
+          <div className="lg:col-span-8 space-y-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] relative overflow-hidden flex flex-col">
+                <div className="flex items-center justify-between mb-10 shrink-0">
+                   <div>
+                      <p className="text-emerald-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Readiness Level</p>
+                      <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Fleet Status</h3>
+                   </div>
+                   <Globe className="w-5 h-5 text-muted-foreground/30" />
                 </div>
-              ))
-            )}
+                <div className="relative h-56 mb-8 flex-1">
+                  <canvas ref={fleetRef} />
+                </div>
+                <div className="flex items-center justify-center gap-10 shrink-0">
+                   {[{ label: 'ACTIVE', val: stats.activeBuses, color: '#10b981' }, { label: 'STANDBY', val: stats.inactiveBuses, color: '#f59e0b' }].map((s) => (
+                     <div key={s.label} className="flex flex-col items-center gap-2">
+                        <div className="flex items-center gap-2">
+                           <span className="w-2.5 h-2.5 rounded-full" style={{ background: s.color }} />
+                           <span className="text-foreground text-[11px] font-black uppercase tracking-widest">{s.label}</span>
+                        </div>
+                        <span className="text-2xl font-black font-heading tracking-tighter italic text-muted-foreground">{s.val}</span>
+                     </div>
+                   ))}
+                </div>
+              </div>
+
+              <div className="bg-card border border-border rounded-[48px] p-10 shadow-2xl shadow-slate-900/[0.02] relative overflow-hidden flex flex-col">
+                <div className="flex items-center justify-between mb-2">
+                   <div>
+                      <p className="text-blue-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Growth Analytics</p>
+                      <h3 className="text-2xl font-black font-heading uppercase italic tracking-tighter">Passenger Scaling</h3>
+                   </div>
+                   <Activity className="w-5 h-5 text-muted-foreground/30" />
+                </div>
+                <div className="relative h-64 flex-1">
+                  {passengerGrowth.months.length > 0 ? (
+                    <canvas ref={barRef} />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em] opacity-20 italic">
+                      TELEMETRY INTERRUPTED
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+               {/* RECENT ASSETS */}
+               <div className="bg-card border border-border rounded-[48px] overflow-hidden shadow-2xl shadow-slate-900/[0.03] flex flex-col">
+                  <div className="flex items-center justify-between p-10 border-b border-border/50 shrink-0">
+                    <div>
+                       <p className="text-slate-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Fleet Registry</p>
+                       <h3 className="text-xl font-black font-heading uppercase italic tracking-tighter">Recent Assets</h3>
+                    </div>
+                    <Link href="/operator-dashboard/buses" className="w-10 h-10 rounded-xl bg-muted border border-border flex items-center justify-center hover:bg-slate-900 hover:text-amber-500 transition-all duration-500 shadow-xl group">
+                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                  <div className="divide-y divide-border/20 flex-1">
+                    {recentBuses.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-20 grayscale opacity-20"><Bus className="w-12 h-12 mb-4" /><p className="text-[10px] font-black uppercase tracking-widest italic leading-none">NO ASSETS DETECTED</p></div>
+                    ) : (
+                      recentBuses.map((bus) => (
+                        <div key={bus.id} className="flex items-center gap-6 p-8 hover:bg-muted/30 transition-all duration-500 group">
+                          <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 group-hover:bg-slate-900 group-hover:border-slate-800 transition-all duration-700 shadow-lg">
+                            <Bus className="w-6 h-6 text-muted-foreground group-hover:text-amber-500 transition-colors" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-foreground font-black text-base font-heading uppercase italic tracking-tighter mb-1 group-hover:text-amber-500 transition-colors">{bus.name}</p>
+                            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] opacity-40 italic">S/N #{bus.number} · {bus.totalSeats} NODES</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="text-foreground font-black text-sm font-heading italic leading-none mb-2 group-hover:text-emerald-500 transition-colors">৳{bus.pricePerSeat}</p>
+                            <span className={`text-[8px] font-black uppercase tracking-[0.3em] italic px-3 py-1 rounded-full border ${bus.isActive ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]' : 'bg-destructive/10 text-destructive border-destructive/20'}`}>
+                              {bus.isActive ? 'READY' : 'STANDBY'}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+               </div>
+
+               {/* RECENT PASSENGERS */}
+               <div className="bg-card border border-border rounded-[48px] overflow-hidden shadow-2xl shadow-slate-900/[0.03] flex flex-col">
+                  <div className="flex items-center justify-between p-10 border-b border-border/50 shrink-0">
+                    <div>
+                       <p className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase mb-1 italic">Passenger Manifest</p>
+                       <h3 className="text-xl font-black font-heading uppercase italic tracking-tighter">Biological Data</h3>
+                    </div>
+                    <Link href="/operator-dashboard/my-passengers" className="w-10 h-10 rounded-xl bg-muted border border-border flex items-center justify-center hover:bg-slate-900 hover:text-amber-500 transition-all duration-500 shadow-xl group">
+                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
+                  <div className="divide-y divide-border/20 flex-1">
+                    {recentPassengers.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-20 grayscale opacity-20"><Users className="w-12 h-12 mb-4" /><p className="text-[10px] font-black uppercase tracking-widest italic leading-none">AWAITING SIGNAL</p></div>
+                    ) : (
+                      recentPassengers.map((p) => (
+                        <div key={p.id} className="flex items-center gap-6 p-8 hover:bg-muted/30 transition-all duration-500 group">
+                          <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shrink-0 text-muted-foreground font-black text-xl font-heading uppercase italic group-hover:bg-slate-900 group-hover:text-amber-500 transition-all duration-700 shadow-lg">
+                            {p.name?.charAt(0)?.toUpperCase()}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-3 mb-1">
+                              <p className="text-foreground font-black text-base font-heading uppercase italic tracking-tighter group-hover:text-amber-500 transition-colors">{p.name}</p>
+                              {p.isVerified && (
+                                <div className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                                   <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest opacity-40 italic truncate">{p.email}</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <span className={`text-[8px] font-black uppercase tracking-[0.3em] italic px-3 py-1.5 rounded-full border transition-all duration-500 ${
+                              p.status === 'ACTIVE'
+                                ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-white'
+                                : 'bg-destructive/10 text-destructive border-destructive/20 group-hover:bg-destructive group-hover:text-white'
+                            }`}>
+                              {p.status}
+                            </span>
+                            <p className="text-muted-foreground text-[8px] font-black uppercase tracking-widest italic opacity-30 group-hover:opacity-100 transition-opacity mt-2">
+                              {new Date(p.joinedAt).toLocaleDateString('en-BD', {
+                                month: 'short',
+                                day: 'numeric',
+                              }).toUpperCase()}
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+               </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
+        {/* FAST ACTIONS HUB */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12">
           {[
-            { label: 'My Buses', href: '/operator-dashboard/buses', icon: Bus },
-            { label: 'My Passengers', href: '/operator-dashboard/my-passengers', icon: Users },
-            { label: 'Bookings', href: '/operator-dashboard/bookings', icon: Activity },
-          ].map((link) => (
+            { label: 'ASSET MANAGEMENT', href: '/operator-dashboard/buses', icon: Bus, desc: 'MODIFY FLEET VECTORS' },
+            { label: 'PERSONNEL REGISTRY', href: '/operator-dashboard/my-passengers', icon: Users, desc: 'ACCESS GUEST MANIFEST' },
+            { label: 'TRAFFIC ANALYTICS', href: '/operator-dashboard/bookings', icon: Activity, desc: 'MONITOR THRUPUT CYCLE' },
+          ].map((link, idx) => (
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 hover:border-gray-400 hover:bg-gray-100 transition-all group"
+              className="flex items-center justify-between bg-card border border-border rounded-[32px] p-8 hover:border-amber-500/30 hover:shadow-2xl hover:shadow-slate-900/[0.08] hover:-translate-y-1 transition-all duration-500 group relative overflow-hidden"
             >
-              <div className="flex items-center gap-2">
-                <link.icon className="w-4 h-4 text-gray-400 group-hover:text-gray-700 transition-colors" />
-                <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium transition-colors">
-                  {link.label}
-                </span>
+              <div className="flex items-center gap-6 relative z-10">
+                <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center shadow-xl group-hover:bg-slate-900 group-hover:border-slate-800 transition-all duration-500 group-hover:rotate-6">
+                   <link.icon className="w-6 h-6 text-muted-foreground group-hover:text-amber-500 transition-colors" />
+                </div>
+                <div>
+                   <span className="text-foreground font-black text-lg font-heading uppercase italic tracking-tighter block group-hover:text-amber-500 transition-colors leading-none mb-1">
+                     {link.label}
+                   </span>
+                   <span className="text-[8px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40 group-hover:opacity-100 transition-opacity">
+                     {link.desc}
+                   </span>
+                </div>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors" />
+              <ArrowRight className="w-5 h-5 text-muted-foreground/30 group-hover:text-amber-600 group-hover:translate-x-2 transition-all duration-500 relative z-10" />
+              
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/[0.02] rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
             </Link>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

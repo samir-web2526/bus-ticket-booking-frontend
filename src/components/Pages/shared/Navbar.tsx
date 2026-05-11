@@ -29,6 +29,33 @@ import {
 import { cn } from "@/lib/utils";
 import { logout } from "@/src/services/auth/action";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  LogOut, 
+  User as UserIcon, 
+  LayoutDashboard, 
+  Ticket, 
+  HelpCircle, 
+  Sparkles, 
+  Wind, 
+  ShieldCheck, 
+  ChevronDown,
+  Bell,
+  Map,
+  Calendar,
+  Info,
+  Smartphone as PhoneIcon,
+  BookOpen
+} from "lucide-react";
+
 interface MenuItem {
   title: string;
   url: string;
@@ -41,7 +68,9 @@ interface NavbarProps {
   className?: string;
   user?: {
     name: string;
+    email?: string;
     role: "ADMIN" | "OPERATOR" | "PASSENGER";
+    profileImage?: string;
   } | null;
   logo?: {
     url: string;
@@ -49,11 +78,6 @@ interface NavbarProps {
     alt: string;
     title: string;
     className?: string;
-  };
-  menu?: MenuItem[];
-  auth?: {
-    login: { title: string; url: string };
-    register: { title: string; url: string };
   };
 }
 
@@ -65,24 +89,50 @@ const Navbar = ({
     alt: "logo",
     title: "BusHub",
   },
-  menu = [
-    { title: "Home", url: "/" },
-    { title: "About", url: "/about" },
-    { title: "Find Buses", url: "/find-buses" },
-    { title: "Routes", url: "/routes" },
-  ],
-  auth = {
-    login: { title: "Login", url: "/login" },
-    register: { title: "Register", url: "/register" },
-  },
   className,
 }: NavbarProps) => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setIsHydrated(true);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const menu: MenuItem[] = [
+    { title: "Home", url: "/" },
+    { title: "Find Buses", url: "/find-buses" },
+    { 
+      title: "Services", 
+      url: "#",
+      items: [
+        { title: "VIP Sleeper", url: "/services/vip", description: "Premium sleeper buses with extra comfort.", icon: <Sparkles className="w-4 h-4" /> },
+        { title: "Executive AC", url: "/services/ac", description: "Standard luxury AC travel.", icon: <Wind className="w-4 h-4" /> },
+        { title: "Economy", url: "/services/economy", description: "Affordable inter-city travel.", icon: <ShieldCheck className="w-4 h-4" /> },
+      ]
+    },
+    {
+      title: "Explore",
+      url: "#",
+      items: [
+        { title: "Travel Guides", url: "/blog", description: "Tips and guides for your next trip.", icon: <Map className="w-4 h-4" /> },
+        { title: "Schedules", url: "/schedules", description: "Check all bus timings and stops.", icon: <Calendar className="w-4 h-4" /> },
+        { title: "Help Center", url: "/help", description: "Need help? We are here 24/7.", icon: <HelpCircle className="w-4 h-4" /> },
+        { title: "Mobile App", url: "/app", description: "Download for better experience.", icon: <PhoneIcon className="w-4 h-4" /> },
+      ]
+    },
+    { title: "Routes", url: "/routes" },
+    { title: "About", url: "/about" },
+    { title: "Contact", url: "/contact" },
+  ];
+
+  if (user) {
+    menu.push({ title: "My Bookings", url: "/my-bookings" });
+    menu.push({ title: "Support", url: "/support" });
+  }
 
   const dashboardUrl =
     user?.role === "ADMIN"
@@ -92,49 +142,41 @@ const Navbar = ({
       : "/passenger-dashboard";
 
   return (
-    <section className={cn("relative", className)}>
-      <nav className="relative z-10 py-4 md:py-6">
-        <div className="container">
-          {/* Desktop Menu */}
-          <div className="hidden items-center justify-between lg:flex">
-            <div className="flex items-center gap-12">
-              <motion.a
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.95 }}
-                href={logo.url}
-                className="flex items-center gap-3 group relative"
-              >
-                <div className="relative">
-                  <motion.div
-                    animate={{
-                      boxShadow: [
-                        "0 0 20px rgba(251, 191, 36, 0)",
-                        "0 0 40px rgba(251, 191, 36, 0.3)",
-                        "0 0 20px rgba(251, 191, 36, 0)",
-                      ],
-                    }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-400 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"
-                  />
-                  <img src={logo.src} className="max-h-10 relative" alt={logo.alt} />
-                </div>
-                <motion.span
-                  animate={{ backgroundPosition: ["0% 50%", "100% 50%"] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="text-2xl font-black bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 bg-clip-text text-transparent bg-200 tracking-tighter"
-                >
-                  {logo.title}
-                </motion.span>
-              </motion.a>
+    <header
+      className={cn(
+        "sticky top-0 z-[100] w-full border-b border-border bg-background/80 backdrop-blur-md transition-all duration-300",
+        scrolled ? "py-2 shadow-xl" : "py-4",
+        className
+      )}
+    >
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between">
+          {/* Logo Section */}
+          <div className="flex items-center gap-12">
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href={logo.url}
+              className="flex items-center gap-2 group"
+            >
+              <div className="relative w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-200">
+                <img src={logo.src} className="w-6 h-6 brightness-0 invert" alt={logo.alt} />
+              </div>
+              <span className="text-2xl font-black bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent tracking-tighter">
+                {logo.title}
+              </span>
+            </motion.a>
 
+            {/* Desktop Navigation */}
+            <div className="hidden lg:block">
               <NavigationMenu>
-                <NavigationMenuList>
+                <NavigationMenuList className="gap-1">
                   {menu.map((item, idx) => (
                     <motion.div
                       key={item.title}
-                      initial={{ opacity: 0, y: -15 }}
+                      initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.08 }}
+                      transition={{ delay: idx * 0.05 }}
                     >
                       {renderMenuItem(item)}
                     </motion.div>
@@ -142,62 +184,104 @@ const Navbar = ({
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
+          </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="flex gap-3 items-center"
-            >
-              {user ? (
-                <>
-                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="border-amber-400/60 text-amber-600 hover:border-amber-500 hover:bg-amber-50 rounded-xl font-bold text-base"
+          {/* Action Section */}
+          <div className="hidden lg:flex items-center gap-4">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  className="p-2 text-slate-400 hover:text-amber-500 transition-colors relative"
+                >
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full border-2 border-white" />
+                </motion.button>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full border border-slate-200 hover:border-amber-300 hover:bg-amber-50 transition-all outline-none"
                     >
-                      <a href={dashboardUrl}>Dashboard</a>
-                    </Button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
-                    <form action={logout}>
-                      <Button
-                        type="submit"
-                        className="px-6 py-2.5 rounded-xl font-bold text-white text-base bg-amber-500 hover:bg-amber-400 transition-all duration-300 shadow-md shadow-amber-200"
-                      >
-                        Sign Out
-                      </Button>
-                    </form>
-                  </motion.div>
-                </>
-              ) : (
-                <>
-                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="border-amber-400/60 text-amber-600 hover:border-amber-500 hover:bg-amber-50 rounded-xl font-bold text-base"
-                    >
-                      <a href={auth.login.url}>{auth.login.title}</a>
-                    </Button>
-                  </motion.div>
-                  <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
-                    <Button
-                      asChild
-                      className="px-6 py-2.5 rounded-xl font-bold text-white text-base bg-amber-500 hover:bg-amber-400 transition-all duration-300 shadow-md shadow-amber-200"
-                    >
-                      <a href={auth.register.url} className="flex items-center gap-2">
-                        <Zap className="w-4 h-4" />
-                        {auth.register.title}
+                      <div className="text-right hidden sm:block">
+                        <p className="text-xs font-bold text-slate-900">{user.name}</p>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-wider">{user.role}</p>
+                      </div>
+                      <Avatar className="w-8 h-8 border border-slate-100">
+                        <AvatarImage src={user.profileImage} />
+                        <AvatarFallback className="bg-amber-100 text-amber-700 font-bold text-xs">
+                          {user.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <ChevronDown className="w-4 h-4 text-slate-400" />
+                    </motion.button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-64 p-2 rounded-2xl shadow-2xl border-slate-100 mt-2">
+                    <DropdownMenuLabel className="p-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-10 h-10">
+                          <AvatarImage src={user.profileImage} />
+                          <AvatarFallback className="bg-amber-500 text-white font-bold">
+                            {user.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-bold text-slate-900">{user.name}</p>
+                          <p className="text-xs text-slate-500 truncate w-32">{user.email || 'passenger@hub.com'}</p>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <a href={dashboardUrl} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-amber-50 focus:bg-amber-50 group">
+                        <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white">
+                          <LayoutDashboard className="w-4 h-4 text-slate-600 group-hover:text-amber-600" />
+                        </div>
+                        <span className="font-semibold text-slate-700 group-hover:text-amber-700">Dashboard</span>
                       </a>
-                    </Button>
-                  </motion.div>
-                </>
-              )}
-            </motion.div>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <a href="/profile" className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-amber-50 focus:bg-amber-50 group">
+                        <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white">
+                          <UserIcon className="w-4 h-4 text-slate-600 group-hover:text-amber-600" />
+                        </div>
+                        <span className="font-semibold text-slate-700 group-hover:text-amber-700">My Profile</span>
+                      </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <a href="/my-bookings" className="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-amber-50 focus:bg-amber-50 group">
+                        <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-white">
+                          <Ticket className="w-4 h-4 text-slate-600 group-hover:text-amber-600" />
+                        </div>
+                        <span className="font-semibold text-slate-700 group-hover:text-amber-700">Bookings</span>
+                      </a>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <form action={logout}>
+                        <button type="submit" className="w-full flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-rose-50 focus:bg-rose-50 group">
+                          <div className="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center group-hover:bg-white">
+                            <LogOut className="w-4 h-4 text-rose-600" />
+                          </div>
+                          <span className="font-semibold text-rose-700">Sign Out</span>
+                        </button>
+                      </form>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Button asChild variant="ghost" className="text-slate-600 font-bold hover:text-amber-600 hover:bg-amber-50 rounded-xl">
+                  <a href="/login">Login</a>
+                </Button>
+                <Button asChild className="bg-amber-500 hover:bg-amber-400 text-white font-bold rounded-xl px-6 shadow-lg shadow-amber-200 border-none transition-all hover:scale-105 active:scale-95">
+                  <a href="/register">Sign Up</a>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu */}
@@ -284,7 +368,7 @@ const Navbar = ({
                             className="w-full border-amber-400/60 text-amber-600 hover:border-amber-500 hover:bg-amber-50 rounded-xl font-bold"
                             onClick={() => setIsOpen(false)}
                           >
-                            <a href={auth.login.url}>{auth.login.title}</a>
+                            <a href="/login">Login</a>
                           </Button>
                           <motion.button
                             whileHover={{ scale: 1.02 }}
@@ -292,10 +376,10 @@ const Navbar = ({
                             className="w-full py-2.5 rounded-xl font-bold text-white bg-amber-500 hover:bg-amber-400 shadow-md shadow-amber-200"
                             onClick={() => {
                               setIsOpen(false);
-                              window.location.href = auth.register.url;
+                              window.location.href = "/register";
                             }}
                           >
-                            {auth.register.title}
+                            Sign Up
                           </motion.button>
                         </>
                       )}
@@ -313,7 +397,7 @@ const Navbar = ({
           </div>
         </div>
       </nav>
-    </section>
+    </header>
   );
 };
 
@@ -321,28 +405,37 @@ const renderMenuItem = (item: MenuItem) => {
   if (item.items) {
     return (
       <NavigationMenuItem key={item.title}>
-        <NavigationMenuTrigger className="text-gray-700 hover:text-amber-600 data-[state=open]:text-amber-600 data-[state=open]:bg-amber-50 hover:bg-amber-50 rounded-lg transition-all duration-200 font-semibold bg-transparent">
+        <NavigationMenuTrigger className="text-foreground hover:text-amber-600 data-[state=open]:text-amber-600 data-[state=open]:bg-amber-50/50 hover:bg-amber-50/50 rounded-xl transition-all duration-300 font-black uppercase tracking-widest text-[10px] bg-transparent border-none outline-none">
           {item.title}
         </NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-white border border-gray-200 rounded-2xl shadow-xl">
+        <NavigationMenuContent className="bg-card border border-border rounded-[32px] shadow-2xl overflow-hidden">
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="p-4 space-y-2"
+            className={cn(
+              "p-6 grid gap-4",
+              item.title === "Explore" ? "w-[600px] grid-cols-2" : "w-[400px] grid-cols-1"
+            )}
           >
-            {item.items.map((subItem, idx) => (
-              <motion.div
-                key={subItem.title}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.05 }}
-              >
-                <NavigationMenuLink asChild className="w-full">
+            {item.title === "Explore" && (
+              <div className="col-span-1 bg-slate-900 rounded-3xl p-8 text-white flex flex-col justify-between shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                <div className="relative z-10">
+                  <h4 className="font-black text-2xl mb-3 font-heading leading-tight italic">Summer <span className="text-amber-500">Sale!</span></h4>
+                  <p className="text-slate-300 text-[10px] font-black uppercase tracking-widest leading-relaxed mb-8">Get up to 30% off on all AC routes this weekend. Book now and save big.</p>
+                </div>
+                <Button size="sm" className="bg-amber-500 text-white hover:bg-amber-400 font-black uppercase tracking-widest text-[10px] h-10 px-6 rounded-xl border-none w-fit shadow-lg shadow-amber-500/20">
+                  Explore Deals
+                </Button>
+              </div>
+            )}
+            <div className={cn("grid gap-2", item.title === "Explore" ? "col-span-1" : "col-span-1")}>
+              {item.items.map((subItem) => (
+                <NavigationMenuLink key={subItem.title} asChild>
                   <SubMenuLink item={subItem} />
                 </NavigationMenuLink>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </motion.div>
         </NavigationMenuContent>
       </NavigationMenuItem>
@@ -353,9 +446,9 @@ const renderMenuItem = (item: MenuItem) => {
     <NavigationMenuItem key={item.title}>
       <NavigationMenuLink
         href={item.url}
-        className="group inline-flex h-11 w-max items-center justify-center rounded-lg bg-transparent px-5 py-2 text-sm font-bold text-gray-700 transition-all duration-200 hover:text-amber-600 hover:bg-amber-50 relative"
+        className="group inline-flex h-10 w-max items-center justify-center rounded-xl bg-transparent px-4 text-[10px] font-black uppercase tracking-widest text-foreground transition-all duration-300 hover:text-amber-600 hover:bg-amber-50/50"
       >
-        <span className="relative z-10">{item.title}</span>
+        {item.title}
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
@@ -394,25 +487,21 @@ const renderMobileMenuItem = (item: MenuItem, onClose: () => void) => {
 const SubMenuLink = ({ item, onClose }: { item: MenuItem; onClose?: () => void }) => {
   return (
     <motion.a
-      className="flex flex-row gap-3 rounded-xl p-4 leading-none no-underline transition-all outline-none select-none hover:bg-amber-50 text-gray-700 hover:text-gray-900 group"
+      className="flex flex-row items-center gap-4 rounded-2xl p-3 leading-none no-underline transition-all outline-none select-none hover:bg-amber-50 text-slate-600 hover:text-amber-700 group"
       href={item.url}
       onClick={onClose}
-      whileHover={{ x: 8 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ x: 4 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <motion.div
-        className="text-amber-600 group-hover:scale-125 transition-transform"
-        animate={{ y: [0, -2, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
+      <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-white group-hover:text-amber-600 transition-colors shadow-sm">
         {item.icon}
-      </motion.div>
-      <div>
-        <div className="text-base font-bold text-gray-900 group-hover:text-amber-600 transition-colors">
+      </div>
+      <div className="flex-1">
+        <div className="text-sm font-bold text-slate-900 group-hover:text-amber-600 transition-colors">
           {item.title}
         </div>
         {item.description && (
-          <p className="text-sm leading-snug text-gray-500 group-hover:text-gray-600 transition-colors">
+          <p className="text-xs leading-snug text-slate-400 group-hover:text-slate-500 transition-colors mt-0.5 line-clamp-1">
             {item.description}
           </p>
         )}

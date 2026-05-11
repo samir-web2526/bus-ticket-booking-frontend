@@ -1,4 +1,4 @@
-import { Geist_Mono, Nunito_Sans, Outfit } from "next/font/google"
+import { Inter, Sora, Geist_Mono } from "next/font/google"
 
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
@@ -6,8 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner"; // ✅ add
 
-const outfitHeading = Outfit({subsets:['latin'],variable:'--font-heading'});
-const nunitoSans = Nunito_Sans({subsets:['latin'],variable:'--font-sans'})
+const sora = Sora({ subsets: ['latin'], variable: '--font-heading' });
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
@@ -22,8 +22,9 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", nunitoSans.variable, outfitHeading.variable)}
+      className={cn("antialiased", fontMono.variable, inter.variable, sora.variable)}
     >
+
       <body suppressHydrationWarning>
         <TooltipProvider>
           <ThemeProvider>

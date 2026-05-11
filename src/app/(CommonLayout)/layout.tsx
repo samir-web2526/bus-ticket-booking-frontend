@@ -1,6 +1,6 @@
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/src/components/Pages/shared/Navbar";
+import Footer from "@/src/components/Pages/HomePage/Footer";
 import { getUser } from "@/src/services/auth/action";
 
 import React from "react";
@@ -13,9 +13,15 @@ export default async function CommonLayout({
    const user = await getUser();
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen flex flex-col">
      <Navbar user={user} />
-      <TooltipProvider>{children}</TooltipProvider>
+      <main className="flex-grow">
+        <TooltipProvider>
+          {children}
+        </TooltipProvider>
+      </main>
+      <Footer />
     </div>
   );
 }
+

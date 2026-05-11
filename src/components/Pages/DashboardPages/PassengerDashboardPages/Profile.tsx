@@ -11,6 +11,9 @@ import {
   HeartPulse,
   Cake,
   Venus,
+  User as UserIcon,
+  Fingerprint,
+  CalendarDays
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -40,11 +43,16 @@ interface User {
 
 // ─── Info Row Component ────────────────────────────────────────────────────
 
-function InfoRow({ icon, value }: { icon: React.ReactNode; value: string | null }) {
+function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | null }) {
   return (
-    <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-center gap-3">
-      <div className="shrink-0 text-gray-400">{icon}</div>
-      <p className="text-gray-900 text-sm font-semibold">{value ?? 'Not provided'}</p>
+    <div className="p-6 bg-muted/30 border border-border/50 rounded-[24px] flex items-center gap-5 group hover:bg-muted transition-all duration-300">
+      <div className="w-12 h-12 bg-card border border-border rounded-2xl flex items-center justify-center shrink-0 text-muted-foreground group-hover:text-amber-600 transition-colors">
+        {icon}
+      </div>
+      <div>
+        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1 opacity-60">{label}</p>
+        <p className="text-foreground text-sm font-black uppercase tracking-tight italic">{value ?? 'Not provided'}</p>
+      </div>
     </div>
   );
 }
@@ -78,16 +86,21 @@ export default function PassengerProfile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden">
+         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/[0.02] rounded-full blur-[120px] -z-10" />
+         <div className="w-12 h-12 border-4 border-muted border-t-amber-500 rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error || !user) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <p className="text-red-500">{error || 'Failed to load profile'}</p>
+      <div className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden">
+         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/[0.02] rounded-full blur-[120px] -z-10" />
+         <div className="bg-card border border-destructive/20 p-8 rounded-[32px] text-center max-w-md w-full shadow-2xl">
+            <XCircle className="w-12 h-12 text-destructive mx-auto mb-4 opacity-50" />
+            <p className="text-destructive font-black text-sm uppercase tracking-widest">{error || 'Failed to sync identity profile'}</p>
+         </div>
       </div>
     );
   }
@@ -95,136 +108,162 @@ export default function PassengerProfile() {
   const passenger = user.passengerProfile;
 
   return (
-    <section className="bg-white min-h-screen py-24 px-6 lg:px-12 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gray-100 rounded-full blur-3xl pointer-events-none" />
+    <section className="bg-background min-h-screen py-24 px-6 lg:px-12 relative overflow-hidden">
+      {/* Decorative bg blobs */}
+      <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-amber-500/[0.02] rounded-full blur-[120px] -z-10" />
+      <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-slate-500/[0.02] rounded-full blur-[120px] -z-10" />
 
-      <div className="max-w-2xl mx-auto relative z-10">
+      <div className="max-w-3xl mx-auto relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-10"
+          transition={{ duration: 0.6 }}
+          className="mb-12"
         >
-          <p className="text-gray-400 text-sm font-semibold tracking-widest uppercase mb-3">— Account</p>
-          <h1 className="text-4xl lg:text-5xl font-black text-gray-900">
-            My <span className="text-gray-500">Profile</span>
+          <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-4">Security Cleared</p>
+          <h1 className="text-4xl lg:text-6xl font-black text-foreground tracking-tighter font-heading">
+            Identity <span className="text-amber-500 italic">Profile</span>
           </h1>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="bg-card border border-border rounded-[48px] overflow-hidden shadow-2xl shadow-slate-900/[0.03]"
         >
-          <div className="h-24 bg-gradient-to-r from-gray-100 to-gray-50 border-b border-gray-100 relative">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(0,0,0,0.04),transparent_60%)]" />
+          {/* Cover Area */}
+          <div className="h-40 bg-slate-900 relative">
+             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-transparent" />
+             <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-slate-900 to-transparent" />
+             <div className="absolute top-8 right-8 flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 px-5 py-2 rounded-full shadow-2xl">
+                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                <span className="text-[10px] font-black text-white uppercase tracking-widest">Active session</span>
+             </div>
           </div>
 
-          <div className="px-8 pb-8">
+          <div className="px-10 pb-12 relative">
             {/* Avatar + Status */}
-            <div className="-mt-10 mb-6 flex items-end justify-between">
-              {user.profileImage ? (
-                <img
-                  src={user.profileImage}
-                  alt={user.name}
-                  className="w-20 h-20 rounded-2xl object-cover border-4 border-white shadow-md"
-                />
-              ) : (
-                <div className="w-20 h-20 rounded-2xl bg-gray-100 border-4 border-white shadow-md flex items-center justify-center text-gray-500 font-black text-3xl">
-                  {user.name?.charAt(0).toUpperCase()}
+            <div className="-mt-12 mb-10 flex items-end justify-between relative z-20">
+              <div className="relative group">
+                {user.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt={user.name}
+                    className="w-24 h-24 rounded-[32px] object-cover border-[6px] border-card shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-[32px] bg-muted border-[6px] border-card shadow-2xl flex items-center justify-center text-muted-foreground font-black text-4xl font-heading group-hover:bg-slate-900 group-hover:text-amber-500 transition-all duration-500">
+                    {user.name?.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-amber-500 rounded-2xl flex items-center justify-center border-4 border-card shadow-xl">
+                   <Shield className="w-3.5 h-3.5 text-white" />
                 </div>
-              )}
-              <span
-                className={`text-xs font-bold px-3 py-1 rounded-full border ${
+              </div>
+
+              <span className={`text-[10px] font-black uppercase tracking-widest px-5 py-2 rounded-full border shadow-sm ${
                   user.status === 'ACTIVE'
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                    : 'bg-red-50 text-red-600 border-red-200'
+                    ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                    : 'bg-destructive/10 text-destructive border-destructive/20'
                 }`}
               >
-                {user.status}
+                {user.status} Operator
               </span>
             </div>
 
             {/* Name + email */}
-            <h2 className="text-gray-900 font-black text-2xl mb-1">{user.name}</h2>
-            <p className="text-gray-400 text-sm mb-8">{user.email}</p>
+            <div className="mb-12">
+               <h2 className="text-foreground font-black text-4xl font-heading tracking-tight italic uppercase mb-1 leading-none">{user.name}</h2>
+               <p className="text-muted-foreground text-[11px] font-black uppercase tracking-[0.2em] italic opacity-60">Authentication Node ID: {user.id.slice(0, 16)}</p>
+            </div>
 
-            {/* Account Info */}
-            <div className="mb-8">
-              <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4">
-                Account Information
-              </p>
-              <div className="space-y-3">
-                <InfoRow icon={<Mail className="w-4 h-4" />} value={user.email} />
-                <InfoRow icon={<Phone className="w-4 h-4" />} value={user.phone} />
-                <InfoRow icon={<Shield className="w-4 h-4" />} value={user.role} />
+            {/* Grid Sections */}
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* Account Info */}
+              <div className="space-y-6">
+                <p className="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-border pb-4">
+                  Account Core
+                </p>
+                <div className="space-y-4">
+                  <InfoRow icon={<Mail className="w-5 h-5" />} label="Email Node" value={user.email} />
+                  <InfoRow icon={<Phone className="w-5 h-5" />} label="Contact Uplink" value={user.phone} />
+                  <InfoRow icon={<Fingerprint className="w-5 h-5" />} label="Privilege Level" value={user.role} />
 
-                <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl flex items-center gap-3">
-                  {user.isVerified ? (
-                    <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0" />
-                  ) : (
-                    <XCircle className="w-4 h-4 text-red-400 shrink-0" />
-                  )}
-                  <div>
-                    <p className="text-gray-400 text-xs mb-0.5">Verification</p>
-                    <p className={`text-sm font-semibold ${user.isVerified ? 'text-emerald-600' : 'text-red-500'}`}>
-                      {user.isVerified ? 'Verified' : 'Not Verified'}
-                    </p>
+                  <div className="p-6 bg-muted/30 border border-border/50 rounded-[24px] flex items-center gap-5">
+                    <div className={`w-12 h-12 bg-card border border-border rounded-2xl flex items-center justify-center shrink-0 ${user.isVerified ? 'text-emerald-500' : 'text-destructive'}`}>
+                       {user.isVerified ? (
+                        <CheckCircle className="w-5 h-5" />
+                      ) : (
+                        <XCircle className="w-5 h-5" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-1 opacity-60">Verification State</p>
+                      <p className={`text-sm font-black uppercase tracking-tight italic ${user.isVerified ? 'text-emerald-600' : 'text-destructive'}`}>
+                        {user.isVerified ? 'Synchronized' : 'Unconfirmed'}
+                      </p>
+                    </div>
                   </div>
+                </div>
+              </div>
+
+              {/* Passenger Info */}
+              <div className="space-y-6">
+                <p className="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-border pb-4">
+                  Biological Markers
+                </p>
+                <div className="space-y-4">
+                   {passenger ? (
+                     <>
+                      <InfoRow
+                        icon={<Venus className="w-5 h-5" />}
+                        label="Gender Assignment"
+                        value={passenger.gender ? passenger.gender.charAt(0).toUpperCase() + passenger.gender.slice(1) : null}
+                      />
+                      <InfoRow
+                        icon={<Cake className="w-5 h-5" />}
+                        label="Creation Date"
+                        value={
+                          passenger.dateOfBirth
+                            ? new Date(passenger.dateOfBirth).toLocaleDateString('en-BD', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              })
+                            : null
+                        }
+                      />
+                      <InfoRow
+                        icon={<HeartPulse className="w-5 h-5" />}
+                        label="Emergency Bypass"
+                        value={passenger.emergencyContact}
+                      />
+                     </>
+                   ) : (
+                      <div className="h-full flex flex-col items-center justify-center bg-muted/20 border border-border border-dashed rounded-[24px] p-8 text-center">
+                         <UserIcon className="w-10 h-10 text-muted-foreground/20 mb-4" />
+                         <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Supplemental data not synchronized</p>
+                      </div>
+                   )}
                 </div>
               </div>
             </div>
 
-            {/* Passenger Info */}
-            {passenger && (
-              <div className="mb-8">
-                <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4">
-                  Passenger Information
-                </p>
-                <div className="space-y-3">
-                  <InfoRow
-                    icon={<Venus className="w-4 h-4" />}
-                    value={passenger.gender ? passenger.gender.charAt(0).toUpperCase() + passenger.gender.slice(1) : null}
-                  />
-                  <InfoRow
-                    icon={<Cake className="w-4 h-4" />}
-                    value={
-                      passenger.dateOfBirth
-                        ? new Date(passenger.dateOfBirth).toLocaleDateString('en-BD', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })
-                        : null
-                    }
-                  />
-                  <InfoRow
-                    icon={<HeartPulse className="w-4 h-4" />}
-                    value={passenger.emergencyContact}
-                  />
-                </div>
+            {/* Footer Metadata */}
+            <div className="pt-10 border-t border-border flex flex-col sm:flex-row justify-between gap-4 opacity-50">
+              <div className="flex items-center gap-2">
+                 <CalendarDays className="w-3.5 h-3.5 text-muted-foreground" />
+                 <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                    Origin Timestamp: {new Date(user.createdAt).toLocaleDateString('en-BD', { year: 'numeric', month: 'long', day: 'numeric' })}
+                 </span>
               </div>
-            )}
-
-            {/* Footer */}
-            <div className="pt-6 border-t border-gray-100 text-xs text-gray-400 flex justify-between">
-              <span>
-                Joined{' '}
-                {new Date(user.createdAt).toLocaleDateString('en-BD', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </span>
-              <span>
-                Updated{' '}
-                {new Date(user.updatedAt).toLocaleDateString('en-BD', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </span>
+              <div className="flex items-center gap-2">
+                 <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                 <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                    Last Sync: {new Date(user.updatedAt).toLocaleDateString('en-BD', { year: 'numeric', month: 'long', day: 'numeric' })}
+                 </span>
+              </div>
             </div>
           </div>
         </motion.div>

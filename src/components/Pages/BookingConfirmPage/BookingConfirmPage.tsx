@@ -91,75 +91,87 @@ export default function BookingConfirmPage({ locks, schedule }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#050d1a] flex justify-center items-center p-4 relative overflow-hidden">
-      {/* Background grid */}
+    <div className="min-h-screen bg-background flex justify-center items-center p-6 relative overflow-hidden">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/[0.03] rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-slate-500/[0.03] rounded-full blur-[120px] -z-10" />
+      
       <div
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage:
-            'linear-gradient(rgba(255,180,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,180,0,0.1) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+            'radial-gradient(circle at 2px 2px, var(--border) 1px, transparent 0)',
+          backgroundSize: '40px 40px',
         }}
       />
-
-      {/* Gradient accent */}
-      <div className="absolute top-20 right-0 w-96 h-96 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full blur-3xl -z-10" />
 
       <AnimatePresence mode="wait">
         {/* SUMMARY */}
         {step === 'summary' && (
           <motion.div
             key="summary"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-            className="w-full max-w-md relative z-10"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.05, y: -20 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-xl relative z-10"
           >
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="bg-card border border-border rounded-[48px] shadow-2xl overflow-hidden p-10 lg:p-16">
               {/* Header */}
-              <div className="bg-gradient-to-r from-white/10 to-white/5 px-8 py-6 border-b border-white/10">
-                <h2 className="text-2xl font-black text-white mb-1">Booking Summary</h2>
-                <p className="text-slate-400 text-sm flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-amber-400" />
-                  {schedule.route?.sourceCity} → {schedule.route?.destinationCity}
-                </p>
+              <div className="text-center mb-12">
+                <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-4">Final Review</p>
+                <h2 className="text-4xl lg:text-5xl font-black text-foreground mb-6 font-heading tracking-tighter">Booking Summary</h2>
+                <div className="flex items-center justify-center gap-3 bg-muted/50 px-6 py-2.5 rounded-full border border-border inline-flex">
+                  <MapPin className="w-4 h-4 text-amber-500" />
+                  <span className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                    {schedule.route?.sourceCity}
+                  </span>
+                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                  <span className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                    {schedule.route?.destinationCity}
+                  </span>
+                </div>
               </div>
 
               {/* Content */}
-              <div className="px-8 py-6 space-y-4">
-                {locks.map((lock, idx) => (
-                  <motion.div
-                    key={lock.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    className="flex justify-between items-center p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors"
-                  >
-                    <div>
-                      <p className="font-semibold text-white">Seat {lock.seat.number}</p>
-                      <p className="text-xs text-slate-500">{lock.seat.type}</p>
-                    </div>
-                    <span className="font-bold text-amber-400">৳{lock.seat.price.toLocaleString()}</span>
-                  </motion.div>
-                ))}
+              <div className="space-y-6">
+                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                  {locks.map((lock, idx) => (
+                    <motion.div
+                      key={lock.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="flex justify-between items-center p-6 bg-muted/30 border border-border/50 rounded-3xl hover:bg-muted/50 transition-all duration-300 group"
+                    >
+                      <div>
+                        <p className="font-black text-foreground uppercase text-sm tracking-tight group-hover:text-amber-600 transition-colors">Seat {lock.seat.number}</p>
+                        <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-1">{lock.seat.type} Class</p>
+                      </div>
+                      <span className="font-black text-foreground font-heading text-xl tracking-tight">৳{lock.seat.price.toLocaleString()}</span>
+                    </motion.div>
+                  ))}
+                </div>
 
-                <div className="border-t border-white/10 pt-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-white font-semibold">Total</span>
-                    <span className="text-3xl font-black text-amber-400">৳{totalPrice.toLocaleString()}</span>
+                <div className="pt-8 border-t border-border mt-8">
+                  <div className="flex justify-between items-end px-2">
+                    <div>
+                       <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Investment</p>
+                       <p className="text-muted-foreground text-[10px] font-medium italic">Incl. all convenience fees</p>
+                    </div>
+                    <span className="text-5xl font-black text-foreground font-heading tracking-tighter leading-none">৳{totalPrice.toLocaleString()}</span>
                   </div>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setStep('confirm')}
-                  className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm"
-                >
-                  Proceed to Confirm
-                  <ChevronRight className="w-4 h-4" />
-                </motion.button>
+                <div className="pt-10">
+                  <Button
+                    onClick={() => setStep('confirm')}
+                    className="w-full h-16 rounded-3xl bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20 active:scale-95 transition-all border-none flex items-center justify-center gap-3"
+                  >
+                    Confirm Details
+                    <ChevronRight className="w-5 h-5" />
+                  </Button>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -169,78 +181,68 @@ export default function BookingConfirmPage({ locks, schedule }: Props) {
         {step === 'confirm' && (
           <motion.div
             key="confirm"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-            className="w-full max-w-md relative z-10"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.05, y: -20 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-xl relative z-10"
           >
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="bg-card border border-border rounded-[48px] shadow-2xl overflow-hidden p-10 lg:p-16">
               {/* Header */}
-              <div className="bg-gradient-to-r from-white/10 to-white/5 px-8 py-6 border-b border-white/10">
-                <h2 className="text-2xl font-black text-white">Confirm Booking</h2>
+              <div className="text-center mb-12">
+                <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-4">Security Check</p>
+                <h2 className="text-4xl lg:text-5xl font-black text-foreground mb-6 font-heading tracking-tighter">Final Confirmation</h2>
+                <p className="text-muted-foreground font-medium text-lg italic max-w-xs mx-auto">Please verify your seat selections before proceeding to payment.</p>
               </div>
 
               {/* Content */}
-              <div className="px-8 py-6 space-y-4">
-                {/* Seats List */}
-                <ScrollArea className="h-48 rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="space-y-2">
-                    {locks.map((lock) => (
-                      <motion.div
-                        key={lock.id}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/10"
-                      >
-                  <div className="flex gap-2 items-center">
-                          <Check size={16} className="text-amber-400" />
-                          <span className="text-white font-medium">Seat {lock.seat.number}</span>
+              <div className="space-y-6">
+                <div className="bg-muted/30 rounded-[32px] border border-border/50 p-8 space-y-4">
+                  {locks.map((lock) => (
+                    <motion.div
+                      key={lock.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex justify-between items-center"
+                    >
+                      <div className="flex gap-4 items-center">
+                        <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/20">
+                          <Check size={12} className="text-emerald-600" />
                         </div>
-                        <span className="text-amber-400 font-semibold">৳{lock.seat.price.toLocaleString()}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </ScrollArea>
-
-                <div className="border-t border-white/10 pt-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-white font-semibold">Total</span>
-                    <span className="text-3xl font-black text-amber-400">৳{totalPrice.toLocaleString()}</span>
+                        <span className="text-foreground font-black text-sm uppercase tracking-tight">Seat {lock.seat.number}</span>
+                      </div>
+                      <span className="text-foreground/60 font-black text-sm tracking-tight">৳{lock.seat.price.toLocaleString()}</span>
+                    </motion.div>
+                  ))}
+                  
+                  <div className="pt-6 border-t border-border/50 mt-4 flex justify-between items-center">
+                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Aggregate Total</span>
+                    <span className="text-2xl font-black text-foreground font-heading tracking-tighter">৳{totalPrice.toLocaleString()}</span>
                   </div>
                 </div>
 
                 {/* Buttons */}
-                <div className="flex flex-col gap-3 pt-2">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setStep('summary')}
-                    disabled={isProcessing}
-                    className="w-full border-2 border-white/20 hover:border-white/40 text-white font-semibold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Back
-                  </motion.button>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                <div className="flex flex-col gap-4 pt-6">
+                  <Button
                     onClick={handleConfirm}
                     disabled={isProcessing}
-                    className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 disabled:from-amber-400/50 disabled:to-amber-500/50 text-black font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
+                    className="w-full h-16 rounded-3xl bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20 active:scale-95 transition-all border-none flex items-center justify-center gap-3 disabled:opacity-50"
                   >
                     {isProcessing ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Creating Booking...
-                      </>
+                      <><Loader2 className="w-5 h-5 animate-spin" /> Finalizing Booking...</>
                     ) : (
-                      <>
-                        <Zap className="w-4 h-4" />
-                        Confirm Booking
-                      </>
+                      <><Zap className="w-5 h-5 text-amber-500" /> Confirm & Proceed</>
                     )}
-                  </motion.button>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    onClick={() => setStep('summary')}
+                    disabled={isProcessing}
+                    className="w-full h-12 rounded-2xl text-muted-foreground hover:bg-muted font-black uppercase tracking-widest text-[10px] transition-all"
+                  >
+                    Return to Summary
+                  </Button>
                 </div>
               </div>
             </div>
@@ -251,73 +253,64 @@ export default function BookingConfirmPage({ locks, schedule }: Props) {
         {step === 'payment' && (
           <motion.div
             key="payment"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-            className="w-full max-w-md relative z-10"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.05, y: -20 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-xl relative z-10"
           >
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden">
+            <div className="bg-card border border-border rounded-[48px] shadow-2xl overflow-hidden p-10 lg:p-16">
               {/* Header */}
-              <div className="bg-gradient-to-r from-white/10 to-white/5 px-8 py-6 border-b border-white/10">
-                <h2 className="text-2xl font-black text-white mb-1">Payment</h2>
-                <p className="text-slate-400 text-sm">
-                  You'll be redirected to Stripe to complete payment securely.
-                </p>
+              <div className="text-center mb-12">
+                <p className="text-emerald-600 text-[10px] font-black tracking-[0.4em] uppercase mb-4">Secure Gateway</p>
+                <h2 className="text-4xl lg:text-5xl font-black text-foreground mb-6 font-heading tracking-tighter">Secure Payment</h2>
+                <p className="text-muted-foreground font-medium text-lg italic max-w-xs mx-auto">Complete your transaction securely via our global payment partner.</p>
               </div>
 
               {/* Content */}
-              <div className="px-8 py-6 space-y-4">
+              <div className="space-y-8">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="p-4 rounded-xl bg-gradient-to-r from-amber-500/20 to-amber-400/10 border border-amber-500/30"
+                  className="p-10 rounded-[40px] bg-slate-900 border border-slate-800 text-center relative overflow-hidden group shadow-2xl"
                 >
-                  <p className="text-slate-400 text-sm mb-2">Amount to Pay</p>
-                  <p className="text-4xl font-black text-amber-400">৳{totalPrice.toLocaleString()}</p>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/[0.05] rounded-full blur-3xl -z-0" />
+                  <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4 relative z-10">Amount Payable</p>
+                  <p className="text-6xl font-black text-white font-heading tracking-tighter relative z-10 leading-none">৳{totalPrice.toLocaleString()}</p>
                 </motion.div>
 
-                <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-                  <p className="text-slate-400 text-xs uppercase tracking-widest font-bold">Booking Details</p>
+                <div className="bg-muted/30 border border-border/50 rounded-[32px] p-8 space-y-4">
+                  <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-4 border-b border-border pb-4">Transaction Details</p>
                   {locks.map((lock) => (
-                    <div key={lock.id} className="flex justify-between text-sm">
-                      <span className="text-slate-400">Seat {lock.seat.number}</span>
-                      <span className="text-white font-semibold">৳{lock.seat.price.toLocaleString()}</span>
+                    <div key={lock.id} className="flex justify-between items-center text-sm font-black uppercase tracking-tight">
+                      <span className="text-muted-foreground">Seat {lock.seat.number}</span>
+                      <span className="text-foreground">৳{lock.seat.price.toLocaleString()}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Buttons */}
-                <div className="flex flex-col gap-3 pt-2">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => setStep('confirm')}
-                    disabled={isProcessing}
-                    className="w-full border-2 border-white/20 hover:border-white/40 text-white font-semibold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Back
-                  </motion.button>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                <div className="flex flex-col gap-4 pt-6">
+                  <Button
                     onClick={handlePayment}
                     disabled={isProcessing}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 disabled:from-green-500/50 disabled:to-emerald-600/50 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 disabled:cursor-not-allowed uppercase tracking-wider text-sm"
+                    className="w-full h-16 rounded-3xl bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-emerald-600/20 active:scale-95 transition-all border-none flex items-center justify-center gap-3 disabled:opacity-50"
                   >
                     {isProcessing ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Redirecting to Stripe...
-                      </>
+                      <><Loader2 className="w-5 h-5 animate-spin" /> Initializing Stripe...</>
                     ) : (
-                      <>
-                        <Zap className="w-4 h-4" />
-                        Pay ৳{totalPrice.toLocaleString()}
-                      </>
+                      <><Zap className="w-5 h-5 text-white" /> Secure Checkout</>
                     )}
-                  </motion.button>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    onClick={() => setStep('confirm')}
+                    disabled={isProcessing}
+                    className="w-full h-12 rounded-2xl text-muted-foreground hover:bg-muted font-black uppercase tracking-widest text-[10px] transition-all"
+                  >
+                    Back to Details
+                  </Button>
                 </div>
               </div>
             </div>

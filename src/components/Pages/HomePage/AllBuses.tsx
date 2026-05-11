@@ -113,28 +113,25 @@ export default function BusesSection() {
   const displayed = showAll ? filtered : filtered.slice(0, 3);
 
   return (
-    <section ref={ref} className="bg-white py-24 px-6 lg:px-12">
+    <section ref={ref} className="bg-background py-24 px-6 lg:px-12 border-b border-border">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12"
+          className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16"
         >
           <div>
-            <p className="text-amber-500 text-sm font-semibold tracking-widest uppercase mb-3">
-              — Our Fleet
+            <p className="text-amber-600 text-xs font-black tracking-[0.2em] uppercase mb-4">
+              Our Fleet
             </p>
-            <h2
-              className="text-4xl lg:text-5xl font-black text-gray-900"
-              style={{ fontFamily: "'Sora', sans-serif" }}
-            >
+            <h2 className="text-4xl lg:text-5xl font-black text-foreground font-heading leading-tight">
               All <span className="text-amber-500">Buses</span>
             </h2>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            <SlidersHorizontal className="h-4 w-4 text-gray-400" />
+            <SlidersHorizontal className="h-4 w-4 text-muted-foreground mr-2" />
             {filters.map((filter) => (
               <button
                 key={filter.value}
@@ -142,10 +139,10 @@ export default function BusesSection() {
                   setBusType(filter.value);
                   setShowAll(false);
                 }}
-                className={`px-4 py-1.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
+                className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-wider border transition-all duration-300 ${
                   busType === filter.value
-                    ? 'bg-amber-500 text-white border-amber-500'
-                    : 'text-gray-600 border-gray-200 hover:border-amber-400 hover:text-amber-600'
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
+                    : 'bg-background text-muted-foreground border-border hover:border-amber-400 hover:text-amber-600'
                 }`}
               >
                 {filter.label}
@@ -190,58 +187,63 @@ export default function BusesSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-gray-200 hover:shadow-lg transition-all duration-300"
+                  className="group bg-card border border-border rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500"
                 >
-                  <div className="relative h-44 overflow-hidden">
+                  <div className="relative h-56 overflow-hidden">
                     <img
                       src={getBusImage(bus.type)}
                       alt={bus.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white/50 via-transparent to-transparent" />
-                    <Badge className={`absolute top-3 left-3 border text-xs font-semibold ${tagColors[tag] ?? ''}`}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <Badge className={`absolute top-4 left-4 border text-[10px] font-black uppercase tracking-wider ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
                       {tag}
                     </Badge>
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur text-gray-700 px-3 py-1 rounded-lg text-xs font-medium shadow-sm">
+                    <div className="absolute top-4 right-4 bg-background/90 backdrop-blur-md text-foreground px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider shadow-sm border border-border">
                       {bus.totalSeats} seats
                     </div>
                   </div>
 
-                  <div className="p-5">
-                    <div className="flex items-start justify-between mb-3">
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
                       <div>
-                        <h3 className="text-gray-900 font-bold text-lg leading-tight">{bus.name}</h3>
-                        <p className="text-gray-400 text-sm mt-0.5">{getBusLabel(bus.type)}</p>
+                        <h3 className="text-foreground font-black text-xl leading-tight group-hover:text-amber-600 transition-colors">{bus.name}</h3>
+                        <p className="text-muted-foreground text-xs font-bold mt-1 uppercase tracking-wider">{getBusLabel(bus.type)} Service</p>
                       </div>
-                      <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1">
+                      <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-100 rounded-xl px-3 py-1">
                         <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
-                        <span className="text-gray-700 text-sm font-bold">4.5</span>
+                        <span className="text-amber-700 text-sm font-black">4.8</span>
                       </div>
                     </div>
 
-                    <div className="mb-4 p-3 bg-gray-50 border border-gray-100 rounded-lg">
-                      <p className="text-gray-400 text-xs mb-1">Operator</p>
-                      <p className="text-gray-800 font-semibold text-sm">{bus.operator.name}</p>
-                      <p className="text-gray-400 text-xs mt-1 flex items-center gap-1">
-                        <span>📱</span> {bus.operator.phone}
-                      </p>
+                    <div className="mb-6 p-4 bg-muted/30 border border-border rounded-2xl group-hover:bg-amber-50/30 group-hover:border-amber-100 transition-all">
+                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mb-2">Bus Operator</p>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-xs font-black text-amber-600">
+                          {bus.operator.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="text-foreground font-bold text-sm">{bus.operator.name}</p>
+                          <p className="text-muted-foreground text-xs font-medium mt-0.5">{bus.operator.phone}</p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between pt-6 border-t border-border">
                       <div>
-                        <p className="text-gray-400 text-xs">Bus No. {bus.number}</p>
-                        <div className="flex items-baseline gap-1 mt-0.5">
-                          <span className="text-amber-500 font-black text-xl">৳{bus.pricePerSeat}</span>
-                          <span className="text-gray-400 text-xs">/ seat</span>
+                        <p className="text-muted-foreground text-[10px] font-black uppercase tracking-widest mb-1">Price per seat</p>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-foreground font-black text-2xl">৳{bus.pricePerSeat}</span>
+                          <span className="text-muted-foreground text-xs font-bold">/ seat</span>
                         </div>
                       </div>
                       <Button
                         size="sm"
                         onClick={() => router.push(`/find-buses?busType=${bus.type}&busName=${bus.name}`)}
-                        className="bg-amber-500 hover:bg-amber-400 text-white font-bold shadow-sm group/btn"
+                        className="bg-slate-900 hover:bg-slate-800 text-white font-bold h-12 px-8 rounded-2xl shadow-lg border-none group/btn transition-all active:scale-95"
                       >
-                        Book
-                        <ArrowRight className="ml-1 h-3.5 w-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+                        Book Now
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
                     </div>
                   </div>

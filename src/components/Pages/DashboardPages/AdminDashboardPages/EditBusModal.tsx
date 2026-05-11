@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Loader2, Zap } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, Zap, X, Bus, Settings2, ShieldCheck, CreditCard, LayoutGrid } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { updateBus } from "@/src/services/buses.service";
-
-const inputCls = "w-full bg-white border border-gray-200 text-gray-900 rounded-xl h-11 px-3 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-200 transition-colors placeholder:text-gray-300";
 
 interface BusDetail {
   id: string;
@@ -81,111 +79,145 @@ export default function EditBusModal({ bus, open, onClose, onUpdated }: EditModa
       });
 
       if (res.error) { toast.error(res.error); return; }
-      toast.success("Bus updated successfully!");
+      toast.success("Bus parameters synchronized successfully!");
       onClose();
       onUpdated();
-    } catch { toast.error("Something went wrong"); }
+    } catch { toast.error("System synchronization failed"); }
     finally { setLoading(false); }
   };
 
+  const inputCls = "w-full bg-muted/50 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-muted-foreground/30 text-sm font-black uppercase tracking-tight";
+  const labelCls = "text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] block mb-3 ml-1";
+  const sectionCls = "p-8 bg-muted/20 border border-border/50 rounded-[32px] space-y-6";
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
-      <DialogContent className="bg-white border border-gray-200 text-gray-900 max-w-lg rounded-3xl p-0 overflow-hidden shadow-xl">
-        <DialogHeader className="px-8 pt-8 pb-5 border-b border-gray-100 relative">
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-1">— Edit Bus</p>
-            <DialogTitle className="text-gray-900 font-black text-2xl">Update <span className="text-gray-500">Bus</span></DialogTitle>
-            <p className="text-gray-400 text-sm mt-2">Edit bus information below</p>
-          </motion.div>
+      <DialogContent className="bg-card border-none max-w-2xl rounded-[48px] p-0 overflow-hidden shadow-2xl shadow-slate-900/20 flex flex-col h-[90vh]">
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-amber-500/[0.03] rounded-full blur-[100px] -z-10" />
+        
+        <DialogHeader className="px-10 pt-10 pb-8 border-b border-border/50 relative shrink-0">
+          <div className="flex items-center justify-between">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+              <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-3 italic">— Operational Tuning</p>
+              <DialogTitle className="text-foreground font-black text-4xl font-heading uppercase italic tracking-tighter leading-none">
+                Adjust <span className="text-amber-500">Asset</span>
+              </DialogTitle>
+            </motion.div>
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-2xl hover:bg-muted text-muted-foreground transition-all duration-500">
+               <X className="w-5 h-5" />
+            </Button>
+          </div>
         </DialogHeader>
 
-        <div className="px-8 py-6 space-y-6 relative max-h-96 overflow-y-auto">
-          <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">Basic Information</p>
-            <div className="space-y-4">
+        <div className="px-10 py-8 space-y-10 overflow-y-auto custom-scrollbar flex-1">
+          <section className={sectionCls}>
+            <div className="flex items-center gap-3 mb-2">
+               <Bus className="w-4 h-4 text-amber-500" />
+               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Identity Matrix</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">Bus Name</label>
-                <input type="text" value={form.name} onChange={(e) => handleChange("name", e.target.value)} placeholder="e.g., Hanif Express" className={inputCls} />
+                <label className={labelCls}>Registry Name</label>
+                <input type="text" value={form.name} onChange={(e) => handleChange("name", e.target.value)} placeholder="HANIF EXPRESS" className={inputCls} />
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">Bus Number</label>
-                <input type="text" value={form.number} onChange={(e) => handleChange("number", e.target.value)} placeholder="e.g., h-1007" className={inputCls} />
-              </div>
-              <div>
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">Bus Type</label>
-                <select value={form.type} onChange={(e) => handleChange("type", e.target.value)} className={inputCls}>
-                  <option value="AC">AC</option>
-                  <option value="NON_AC">Non-AC</option>
-                  <option value="SLEEPER">Sleeper</option>
-                  <option value="DOUBLE_DECKER">Double Decker</option>
-                </select>
+                <label className={labelCls}>Hull Number</label>
+                <input type="text" value={form.number} onChange={(e) => handleChange("number", e.target.value)} placeholder="H-1007" className={inputCls} />
               </div>
             </div>
-          </div>
+            <div>
+              <label className={labelCls}>Transit Classification</label>
+              <select value={form.type} onChange={(e) => handleChange("type", e.target.value)} className={inputCls}>
+                <option value="AC">AC PREMIUM</option>
+                <option value="NON_AC">NON-AC STANDARD</option>
+                <option value="SLEEPER">SLEEPER CABIN</option>
+                <option value="DOUBLE_DECKER">DOUBLE DECKER</option>
+              </select>
+            </div>
+          </section>
 
-          <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">Seating & Pricing</p>
-            <div className="space-y-4">
+          <section className={sectionCls}>
+            <div className="flex items-center gap-3 mb-2">
+               <LayoutGrid className="w-4 h-4 text-emerald-500" />
+               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Spatial Configuration</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">Total Seats</label>
+                <label className={labelCls}>Total Capacity</label>
                 <input type="number" value={form.totalSeats} onChange={(e) => handleChange("totalSeats", parseInt(e.target.value))} min="1" className={inputCls} />
               </div>
               <div>
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">Price Per Seat (৳)</label>
+                <label className={labelCls}>Standard Vector (৳)</label>
                 <input type="number" value={form.pricePerSeat} onChange={(e) => handleChange("pricePerSeat", parseInt(e.target.value))} min="1" className={inputCls} />
               </div>
             </div>
-          </div>
+          </section>
 
-          <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">VIP Seats (Optional)</p>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">VIP Seats</label>
-                <input type="number" value={form.vipSeats || ""} onChange={(e) => handleChange("vipSeats", parseInt(e.target.value) || 0)} min="0" placeholder="Number of VIP seats" className={inputCls} />
-              </div>
-              {form.vipSeats > 0 && (
+          <section className={sectionCls}>
+             <div className="flex items-center gap-3 mb-2">
+               <Zap className="w-4 h-4 text-amber-500" />
+               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Tier Overrides</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <p className="text-[8px] font-black text-amber-600 uppercase tracking-widest pb-2 border-b border-border/50">VIP Core</p>
                 <div>
-                  <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">VIP Price (৳)</label>
-                  <input type="number" value={form.vipPrice || ""} onChange={(e) => handleChange("vipPrice", parseInt(e.target.value) || 0)} min="1" placeholder="VIP seat price" className={inputCls} />
+                  <label className={labelCls}>VIP Node Count</label>
+                  <input type="number" value={form.vipSeats || ""} onChange={(e) => handleChange("vipSeats", parseInt(e.target.value) || 0)} min="0" placeholder="0" className={inputCls} />
                 </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">Deluxe Seats (Optional)</p>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">Deluxe Seats</label>
-                <input type="number" value={form.deluxeSeats || ""} onChange={(e) => handleChange("deluxeSeats", parseInt(e.target.value) || 0)} min="0" placeholder="Number of deluxe seats" className={inputCls} />
+                <AnimatePresence>
+                  {form.vipSeats > 0 && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                      <label className={labelCls}>VIP Premium (৳)</label>
+                      <input type="number" value={form.vipPrice || ""} onChange={(e) => handleChange("vipPrice", parseInt(e.target.value) || 0)} min="1" placeholder="0" className={inputCls} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-              {form.deluxeSeats > 0 && (
-                <div>
-                  <label className="text-sm font-bold text-gray-500 uppercase tracking-widest block mb-2">Deluxe Price (৳)</label>
-                  <input type="number" value={form.deluxePrice || ""} onChange={(e) => handleChange("deluxePrice", parseInt(e.target.value) || 0)} min="1" placeholder="Deluxe seat price" className={inputCls} />
-                </div>
-              )}
-            </div>
-          </div>
 
-          <div>
-            <p className="text-gray-400 text-xs font-semibold tracking-widest uppercase mb-4 pb-3 border-b border-gray-100">Status</p>
-            <div className="flex items-center gap-3">
-              <input type="checkbox" id="isActive" checked={form.isActive} onChange={(e) => handleChange("isActive", e.target.checked)} className="w-5 h-5 rounded border-gray-200 accent-gray-900" />
-              <label htmlFor="isActive" className="text-gray-700 font-semibold text-sm">Bus is Active</label>
+              <div className="space-y-6">
+                 <p className="text-[8px] font-black text-blue-600 uppercase tracking-widest pb-2 border-b border-border/50">Deluxe Core</p>
+                <div>
+                  <label className={labelCls}>Deluxe Node Count</label>
+                  <input type="number" value={form.deluxeSeats || ""} onChange={(e) => handleChange("deluxeSeats", parseInt(e.target.value) || 0)} min="0" placeholder="0" className={inputCls} />
+                </div>
+                <AnimatePresence>
+                  {form.deluxeSeats > 0 && (
+                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                      <label className={labelCls}>Deluxe Premium (৳)</label>
+                      <input type="number" value={form.deluxePrice || ""} onChange={(e) => handleChange("deluxePrice", parseInt(e.target.value) || 0)} min="1" placeholder="0" className={inputCls} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
-          </div>
+          </section>
+
+          <section className="flex items-center justify-between p-8 bg-muted/30 rounded-[32px] border border-border/50">
+            <div className="flex items-center gap-4">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-500 shadow-xl ${form.isActive ? 'bg-slate-900 text-emerald-500 shadow-emerald-500/10' : 'bg-muted text-muted-foreground'}`}>
+                 <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-foreground uppercase tracking-widest leading-none mb-1">Operational Authority</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-tight italic opacity-40 leading-none">Status: {form.isActive ? 'ACTIVE' : 'OFFLINE'}</p>
+              </div>
+            </div>
+            <button onClick={() => handleChange("isActive", !form.isActive)} className={`w-14 h-8 rounded-full transition-all duration-500 relative ${form.isActive ? 'bg-emerald-500' : 'bg-muted-foreground/20'}`}>
+               <motion.div animate={{ x: form.isActive ? 28 : 4 }} className="absolute top-1 w-6 h-6 rounded-full bg-white shadow-xl" />
+            </button>
+          </section>
         </div>
 
-        <DialogFooter className="px-8 py-5 border-t border-gray-100 gap-3">
-          <Button variant="outline" onClick={onClose} disabled={loading} className="flex-1 border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300 hover:text-gray-900 rounded-xl h-11">
-            Cancel
+        <div className="px-10 py-8 border-t border-border/50 flex gap-6 shrink-0 bg-card">
+          <Button variant="outline" onClick={onClose} disabled={loading} className="flex-1 border-border text-muted-foreground hover:bg-muted hover:text-foreground h-16 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all">
+            Abort Tuning
           </Button>
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={loading} className="flex-1 bg-gray-900 hover:bg-gray-700 disabled:opacity-50 text-white font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wider text-sm">
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</> : <><Zap className="w-4 h-4" /> Save Changes</>}
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={loading} className="flex-[1.5] bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black h-16 rounded-2xl transition-all duration-500 flex items-center justify-center gap-4 uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20">
+            {loading ? <Loader2 className="w-5 h-5 animate-spin text-amber-500" /> : <Zap className="w-5 h-5 text-amber-500 fill-amber-500" />}
+            {loading ? "Synchronizing..." : "Commit Vector Adjustments"}
           </motion.button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

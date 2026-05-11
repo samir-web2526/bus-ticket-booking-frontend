@@ -111,171 +111,192 @@ export default function HeroSection() {
 
   if (loading) {
     return (
-      <section className="relative min-h-screen flex items-center justify-center bg-white">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-12 w-12 text-amber-500 animate-spin" />
-          <p className="text-gray-400">Loading routes...</p>
+      <section className="relative min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-6">
+          <Loader2 className="h-16 w-16 text-amber-500 animate-spin" />
+          <p className="text-muted-foreground font-black uppercase tracking-[0.3em] text-xs">Initializing Terminal...</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
+    <section className="relative min-h-screen flex items-center pt-32 pb-40 overflow-hidden bg-background">
       <AnimatePresence mode="wait">
         {slides.length > 0 && (
           <motion.div
             key={slides[current].id}
-            initial={{ opacity: 0, scale: 1.05 }}
+            initial={{ opacity: 0, scale: 1.1 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1, ease: 'easeInOut' }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 z-0"
           >
             <img
               src={slides[current].image}
               alt={`${slides[current].sourceCity} to ${slides[current].destinationCity}`}
-              className="w-full h-full object-cover opacity-10"
+              className="w-full h-full object-cover opacity-10 grayscale hover:grayscale-0 transition-all duration-1000"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-white/20" />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-16 items-center py-24">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 grid lg:grid-cols-12 gap-16 items-center">
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
+          initial={{ opacity: 0, x: -60 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex flex-col gap-8"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="lg:col-span-7 flex flex-col gap-10"
         >
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="inline-flex w-fit items-center gap-2 bg-amber-50 border border-amber-200 rounded-full px-4 py-1.5"
+            className="inline-flex w-fit items-center gap-3 bg-amber-500/10 border border-amber-500/20 rounded-full px-5 py-2"
           >
-            <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-            <span className="text-amber-700 text-sm font-medium tracking-wide">
-              Bangladesh&apos;s #1 Bus Booking
+            <span className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
+            <span className="text-amber-600 text-[10px] font-black tracking-[0.3em] uppercase">
+              Bangladesh&apos;s Premium Travel Network
             </span>
           </motion.div>
 
           <div>
             <h1
-              className="text-5xl lg:text-7xl font-black text-gray-900 leading-[1.05] tracking-tight"
-              style={{ fontFamily: "'Sora', sans-serif" }}
+              className="text-6xl md:text-8xl font-black text-foreground leading-[1] tracking-tighter font-heading"
             >
               Travel
               <br />
-              <span className="text-amber-500">Smarter,</span>
+              <span className="text-amber-500 italic">Smarter,</span>
               <br />
               Arrive
               <br />
-              <span className="text-amber-500">Better.</span>
+              <span className="text-foreground">Elite.</span>
             </h1>
-            <p className="mt-5 text-gray-500 text-lg max-w-sm leading-relaxed">
-              Book intercity buses instantly. Hundreds of routes, real-time seat selection, and secure payments.
+            <p className="mt-10 text-muted-foreground text-xl max-w-xl leading-relaxed font-medium italic">
+              Experience the pinnacle of intercity travel. Hundreds of verified routes, real-time seat selection, and 24/7 VIP support.
             </p>
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
+            className="flex flex-wrap gap-6"
           >
             <Button
               onClick={() => router.push('/find-buses')}
-              className="bg-amber-500 hover:bg-amber-400 text-white font-bold text-base h-12 px-8 rounded-xl transition-all duration-200 group shadow-lg shadow-amber-100"
+              className="bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-widest text-xs h-16 px-12 rounded-2xl transition-all duration-300 group shadow-2xl shadow-slate-900/20 active:scale-95 border-none"
             >
-              <Search className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-              Find Buses
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <Search className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
+              Book Your Journey
+              <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={() => router.push('/routes')}
+              className="border-border bg-background text-foreground font-black uppercase tracking-widest text-xs h-16 px-10 rounded-2xl hover:bg-muted hover:border-amber-500/30 transition-all duration-300 shadow-xl shadow-slate-200/50"
+            >
+              View All Routes
             </Button>
           </motion.div>
 
-          <div className="flex gap-8">
+          <div className="flex gap-12 mt-6 border-t border-border pt-10">
             {[
-              { value: stats.routes, label: 'Routes' },
-              { value: '50K+', label: 'Happy Riders' },
-              { value: stats.buses, label: 'Buses' },
+              { value: stats.routes, label: 'Active Routes' },
+              { value: '50K+', label: 'Happy Travelers' },
+              { value: stats.buses, label: 'Luxury Fleet' },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 + i * 0.1 }}
               >
-                <p className="text-2xl font-black text-amber-500">{stat.value}</p>
-                <p className="text-sm text-gray-400">{stat.label}</p>
+                <p className="text-3xl font-black text-foreground font-heading tracking-tighter">{stat.value}</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mt-1">{stat.label}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
+
         <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="hidden lg:flex flex-col items-end gap-4"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="hidden lg:flex lg:col-span-5 flex-col items-end gap-8"
         >
           <AnimatePresence mode="wait">
             {slides.length > 0 && (
               <motion.div
                 key={slides[current].id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4 }}
-                className="bg-white border border-gray-200 shadow-xl rounded-2xl px-6 py-4 text-right max-w-xs"
+                initial={{ opacity: 0, y: 40, rotate: 2 }}
+                animate={{ opacity: 1, y: 0, rotate: 0 }}
+                exit={{ opacity: 0, y: -40, rotate: -2 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-card border border-border shadow-2xl rounded-[40px] p-10 text-right max-w-md relative overflow-hidden group hover:border-amber-500/20 transition-all duration-500"
               >
-                <p className="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-1">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl" />
+                
+                <p className="text-amber-500 text-[10px] font-black tracking-[0.4em] uppercase mb-4 relative z-10">
                   {slides[current].tag}
                 </p>
-                <p className="text-gray-900 text-xl font-bold">
-                  {slides[current].sourceCity} → {slides[current].destinationCity}
-                </p>
-                <p className="text-gray-400 text-sm mt-2">
-                  {slides[current].distanceKm} km •{' '}
-                  {Math.floor(slides[current].estimatedTimeMinutes / 60)}h{' '}
-                  {slides[current].estimatedTimeMinutes % 60}m
-                </p>
+                <h3 className="text-foreground text-3xl font-black font-heading leading-tight mb-4 relative z-10">
+                  {slides[current].sourceCity} <br />
+                  <span className="text-amber-500">→</span> <br />
+                  {slides[current].destinationCity}
+                </h3>
+                <div className="flex items-center justify-end gap-6 text-muted-foreground text-sm font-bold relative z-10 pt-6 border-t border-border/50">
+                  <div className="text-right">
+                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-0.5">Distance</p>
+                     <p className="text-foreground">{slides[current].distanceKm} KM</p>
+                  </div>
+                  <div className="text-right">
+                     <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mb-0.5">Duration</p>
+                     <p className="text-foreground">
+                        {Math.floor(slides[current].estimatedTimeMinutes / 60)}H{' '}
+                        {slides[current].estimatedTimeMinutes % 60}M
+                     </p>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
 
           {slides.length > 0 && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-6">
               <button
                 onClick={prev}
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-amber-400 hover:text-amber-500 transition-colors bg-white shadow-sm"
+                className="w-14 h-14 rounded-2xl border border-border flex items-center justify-center text-muted-foreground hover:bg-card hover:border-amber-500 hover:text-amber-500 transition-all duration-300 bg-background shadow-xl shadow-slate-200/50 active:scale-95"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-6 w-6" />
               </button>
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 {slides.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrent(i)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i === current ? 'w-8 bg-amber-500' : 'w-2 bg-gray-300'
+                    className={`h-2 rounded-full transition-all duration-500 ${
+                      i === current ? 'w-12 bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.3)]' : 'w-2 bg-border hover:bg-muted-foreground/30'
                     }`}
                   />
                 ))}
               </div>
               <button
                 onClick={next}
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:border-amber-400 hover:text-amber-500 transition-colors bg-white shadow-sm"
+                className="w-14 h-14 rounded-2xl border border-border flex items-center justify-center text-muted-foreground hover:bg-card hover:border-amber-500 hover:text-amber-500 transition-all duration-300 bg-background shadow-xl shadow-slate-200/50 active:scale-95"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-6 w-6" />
               </button>
             </div>
           )}
         </motion.div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-10" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
     </section>
   );
 }

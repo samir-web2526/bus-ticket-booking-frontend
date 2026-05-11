@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { ArrowRight, Clock, TrendingUp, Loader2, Search, Plus, Pencil } from 'lucide-react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Clock, TrendingUp, Loader2, Search, Plus, Pencil, Navigation, Map, ShieldCheck, Zap, Globe, Route as RouteIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,30 +17,6 @@ const getRouteTag = (distance: number, schedules: Schedule[]): string => {
   if (distance < 100) return 'Short Trip';
   if (distance > 500) return 'Long Distance';
   return 'Popular';
-};
-
-const getRouteColor = (tag: string): { color: string; border: string } => {
-  const colors: Record<string, { color: string; border: string }> = {
-    'Short Trip':     { color: 'from-blue-50 to-cyan-50',    border: 'border-blue-200' },
-    'Long Distance':  { color: 'from-orange-50 to-amber-50', border: 'border-orange-200' },
-    Popular:          { color: 'from-emerald-50 to-green-50', border: 'border-emerald-200' },
-    Available:        { color: 'from-purple-50 to-violet-50', border: 'border-purple-200' },
-  };
-  return colors[tag] || colors.Available;
-};
-
-const tagColors: Record<string, string> = {
-  'Short Trip':    'bg-blue-100 text-blue-700 border-blue-200',
-  'Long Distance': 'bg-orange-100 text-orange-700 border-orange-200',
-  Popular:         'bg-emerald-100 text-emerald-700 border-emerald-200',
-  Available:       'bg-purple-100 text-purple-700 border-purple-200',
-};
-
-const tagIconColors: Record<string, string> = {
-  'Short Trip':    'text-blue-500',
-  'Long Distance': 'text-orange-500',
-  Popular:         'text-emerald-500',
-  Available:       'text-purple-500',
 };
 
 const formatTime = (minutes: number): string => {
@@ -89,55 +65,80 @@ export default function AllRoutesPage() {
   }, [routes, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-gray-100 rounded-full blur-3xl pointer-events-none opacity-60" />
-
-      <div className="relative bg-white border-b border-gray-100">
+    <div className="min-h-screen bg-background">
+      {/* HERO SECTION */}
+      <section className="relative pt-32 pb-48 overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-amber-500/[0.03] rounded-full blur-[120px] -z-10" />
+        <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-slate-500/[0.03] rounded-full blur-[120px] -z-10" />
+        
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 lg:px-12 py-16 flex flex-col gap-8"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 max-w-7xl mx-auto px-6"
         >
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-gray-400 text-sm font-semibold tracking-widest uppercase mb-3">
-                — Explore All Routes
-              </p>
-              <h1
-                className="text-5xl lg:text-6xl font-black text-gray-900 leading-tight"
-                style={{ fontFamily: "'Sora', sans-serif" }}
-              >
-                All Available
-                <br />
-                <span className="text-gray-500">Routes</span>
+          <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-16">
+            <div className="max-w-4xl text-center lg:text-left">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-4 mb-8 justify-center lg:justify-start">
+                <div className="w-12 h-[1px] bg-amber-500" />
+                <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase italic">
+                  Network Intelligence Matrix
+                </p>
+              </motion.div>
+              
+              <h1 className="text-6xl lg:text-[120px] font-black text-foreground leading-[0.85] tracking-tighter font-heading mb-12 uppercase italic">
+                Global Route<br />
+                <span className="text-amber-500">Inventory</span>
               </h1>
-              <p className="text-gray-500 text-lg mt-4 max-w-2xl">
-                Browse through our extensive network of routes across Bangladesh. Find the perfect journey for your next trip.
-              </p>
+              
+              <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+                <p className="text-muted-foreground text-lg font-medium leading-relaxed max-w-xl italic">
+                  Exploring the sophisticated vector network of inter-city routes. 
+                  Engineered for maximum operational efficiency and seamless connectivity.
+                </p>
+                <div className="hidden lg:block w-[1px] h-20 bg-border/50" />
+                <div className="flex items-center gap-6">
+                  <div className="text-center lg:text-left">
+                     <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1 italic">Status</p>
+                     <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <p className="text-sm font-black text-foreground uppercase italic tracking-tighter">Live Sync Active</p>
+                     </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="pt-2 shrink-0">
+            
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }} className="shrink-0">
               <Link href="/admin-dashboard/create-route">
-                <Button className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-sm">
-                  <Plus className="w-4 h-4" /> Create Route
+                <Button className="h-20 px-12 rounded-[32px] bg-slate-900 hover:bg-slate-800 text-white font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20 transition-all duration-500 hover:scale-105 active:scale-95 group border-none">
+                  <Plus className="w-5 h-5 mr-4 group-hover:rotate-180 transition-transform duration-700 text-amber-500" /> Inject Connection
                 </Button>
               </Link>
-            </div>
+            </motion.div>
           </div>
+        </motion.div>
+      </section>
 
+      {/* SEARCH & ANALYTICS BAR */}
+      <div className="relative max-w-7xl mx-auto px-6 -mt-20 mb-24">
+        <div className="grid lg:grid-cols-12 gap-10 items-center bg-card border border-border rounded-[56px] p-10 shadow-2xl shadow-slate-900/[0.03] backdrop-blur-xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-2xl px-5 py-3 max-w-2xl shadow-sm"
+            className="lg:col-span-8 relative group"
           >
-            <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
+            <div className="absolute inset-y-0 left-8 flex items-center pointer-events-none">
+              <Search className="h-6 w-6 text-amber-500 group-focus-within:scale-110 transition-transform" />
+            </div>
             <Input
-              placeholder="Search by city name (e.g., Dhaka, Sylhet, Chittagong)"
+              placeholder="SEARCH VECTOR COORDINATES (CITY NAME...)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent border-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 text-base"
+              className="w-full bg-muted/40 border border-border/50 rounded-[32px] pl-20 pr-8 h-20 text-foreground placeholder:text-muted-foreground/30 focus-visible:ring-amber-500/20 focus-visible:border-amber-500/50 text-lg font-black uppercase tracking-tight transition-all"
             />
           </motion.div>
 
@@ -145,77 +146,74 @@ export default function AllRoutesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="flex flex-col sm:flex-row gap-5"
+            className="lg:col-span-4 flex items-center justify-end gap-12 pr-4"
           >
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center">
-                <span className="text-gray-800 font-bold text-lg">{routes.length}</span>
+            <div className="flex items-center gap-5">
+              <div className="h-16 w-16 rounded-[24px] bg-slate-900 border border-slate-800 flex items-center justify-center shadow-2xl shadow-slate-900/20">
+                <span className="text-amber-500 font-black text-2xl font-heading leading-none italic">{routes.length}</span>
               </div>
               <div>
-                <p className="text-gray-400 text-sm">Total Routes</p>
-                <p className="text-gray-900 font-semibold">Available Now</p>
+                <p className="text-muted-foreground text-[8px] font-black uppercase tracking-[0.3em] mb-1 opacity-40">Active</p>
+                <p className="text-foreground font-black text-xs uppercase tracking-widest font-heading italic">Vectors</p>
               </div>
             </div>
-            {routes.length > 0 && (
-              <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                  <span className="text-emerald-700 font-bold text-lg">
-                    {routes.filter((r) => r.schedules.length > 0).length}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm">With Schedules</p>
-                  <p className="text-gray-900 font-semibold">Ready to Book</p>
-                </div>
+            
+            <div className="flex items-center gap-5">
+              <div className="h-16 w-16 rounded-[24px] bg-amber-500 border border-amber-400 flex items-center justify-center shadow-2xl shadow-amber-500/20">
+                <span className="text-white font-black text-2xl font-heading leading-none italic">
+                  {routes.filter((r) => r.schedules.length > 0).length}
+                </span>
               </div>
-            )}
+              <div>
+                <p className="text-muted-foreground text-[8px] font-black uppercase tracking-[0.3em] mb-1 opacity-40">Live</p>
+                <p className="text-foreground font-black text-xs uppercase tracking-widest font-heading italic">Traffic</p>
+              </div>
+            </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
 
-      <section className="py-24 px-6 lg:px-12 relative">
+      {/* ROUTES GRID */}
+      <section className="pb-48 px-6">
         <div className="max-w-7xl mx-auto">
-
-          {loading && (
-            <div className="flex items-center justify-center h-96">
-              <div className="text-center">
-                <Loader2 className="h-10 w-10 text-gray-400 animate-spin mx-auto mb-4" />
-                <p className="text-gray-400">Loading all routes...</p>
-              </div>
-            </div>
-          )}
-
-          {error && !loading && (
-            <div className="flex items-center justify-center h-96">
-              <div className="text-center">
-                <p className="text-red-500 text-lg mb-2">Failed to load routes</p>
-                <p className="text-gray-400 text-sm">{error}</p>
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && filteredRoutes.length === 0 && (
-            <div className="flex items-center justify-center h-96">
-              <div className="text-center">
-                <p className="text-gray-500 text-lg mb-2">No routes found</p>
-                <p className="text-gray-400 text-sm">
-                  {searchQuery ? `No routes matching "${searchQuery}"` : 'Check back soon for more routes'}
+          <AnimatePresence mode="wait">
+            {loading ? (
+              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center justify-center py-48">
+                <div className="relative">
+                   <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full" />
+                   <Loader2 className="h-20 w-20 text-amber-500 animate-spin relative z-10" />
+                </div>
+                <p className="text-muted-foreground font-black uppercase tracking-[0.4em] text-[10px] animate-pulse mt-10 italic">Initializing Neural Network...</p>
+              </motion.div>
+            ) : error ? (
+              <motion.div key="error" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-destructive/5 border border-destructive/20 rounded-[56px] p-24 text-center max-w-3xl mx-auto shadow-2xl backdrop-blur-sm">
+                <div className="w-24 h-24 bg-destructive/10 rounded-[32px] flex items-center justify-center mx-auto mb-10">
+                  <ShieldCheck className="h-10 w-10 text-destructive" />
+                </div>
+                <h3 className="text-4xl font-black text-foreground mb-6 font-heading italic tracking-tighter uppercase">Sync Failure Detected</h3>
+                <p className="text-muted-foreground font-medium text-xl italic mb-12 max-w-lg mx-auto">{error}</p>
+                <Button onClick={() => window.location.reload()} className="bg-slate-900 hover:bg-slate-800 text-white rounded-[24px] px-12 h-16 font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-slate-900/10 transition-all">Re-Synchronize System</Button>
+              </motion.div>
+            ) : filteredRoutes.length === 0 ? (
+              <motion.div key="empty" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-48">
+                <div className="w-40 h-40 bg-muted/40 rounded-[56px] flex items-center justify-center mx-auto mb-12 grayscale border border-border/50">
+                  <Globe className="w-16 h-16 text-muted-foreground/30" />
+                </div>
+                <h3 className="text-5xl font-black text-foreground mb-6 font-heading italic tracking-tighter uppercase">No Signal Found</h3>
+                <p className="text-muted-foreground font-medium text-xl max-w-md mx-auto mb-12 italic">
+                  We couldn&apos;t establish any active connections matching your vector parameters.
                 </p>
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && filteredRoutes.length > 0 && (
-            <>
+                <Button onClick={() => setSearchQuery('')} className="bg-amber-500 hover:bg-amber-400 text-white rounded-[24px] px-14 h-18 font-black uppercase tracking-[0.3em] text-[10px] shadow-2xl shadow-amber-500/20 active:scale-95 transition-all">Flush Discovery Cache</Button>
+              </motion.div>
+            ) : (
               <motion.div
+                key="grid"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-24"
               >
                 {filteredRoutes.map((route, i) => {
                   const tag = getRouteTag(route.distanceKm, route.schedules);
-                  const { color, border } = getRouteColor(tag);
                   const price = getAveragePrice(route.schedules);
                   const stops = route.stops ?? [];
 
@@ -223,60 +221,75 @@ export default function AllRoutesPage() {
                     <motion.div
                       key={route.id}
                       initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      onClick={() => router.push(`/routes/${route.id}`)}
-                      transition={{ duration: 0.5, delay: i * 0.05 }}
-                      whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                      className={`group relative bg-gradient-to-br ${color} border ${border} rounded-2xl p-6 cursor-pointer shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex flex-col`}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: i * 0.05 }}
+                      whileHover={{ y: -16 }}
+                      className="group bg-card border border-border rounded-[56px] p-10 cursor-pointer shadow-sm hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] hover:border-amber-500/40 transition-all duration-700 flex flex-col relative overflow-hidden"
                     >
-                      <Badge className={`w-fit mb-4 border text-xs font-semibold ${tagColors[tag] ?? 'bg-gray-100 text-gray-600 border-gray-200'}`}>
-                        <TrendingUp className={`mr-1 h-3 w-3 ${tagIconColors[tag]}`} />
-                        {tag}
-                      </Badge>
+                      {/* Technical Grid Overlay */}
+                      <div className="absolute inset-0 opacity-[0.02] pointer-events-none group-hover:opacity-[0.05] transition-opacity" style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                      
+                      <div className="flex items-center justify-between mb-12 relative z-10">
+                        <Badge className="bg-amber-500/10 text-amber-600 border border-amber-500/20 px-6 py-2.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] italic">
+                          <TrendingUp className="mr-2 h-3.5 w-3.5" />
+                          {tag}
+                        </Badge>
+                        <p className="text-muted-foreground text-[9px] font-black uppercase tracking-[0.4em] opacity-30 italic leading-none">V-{route.id.slice(-6).toUpperCase()}</p>
+                      </div>
 
-                      <div className="flex items-center gap-2 mb-5 flex-1">
-                        <div>
-                          <p className="text-gray-900 font-bold text-lg leading-tight">{route.sourceCity}</p>
-                          <p className="text-gray-400 text-xs">Origin</p>
+                      <div className="flex items-center gap-6 mb-12 flex-1 relative z-10">
+                        <div className="flex-1">
+                          <p className="text-[8px] font-black text-amber-600 uppercase tracking-[0.4em] mb-4 italic opacity-60">Origin Entry</p>
+                          <p className="text-3xl font-black text-foreground leading-none font-heading group-hover:text-amber-500 transition-all duration-500 tracking-tighter uppercase italic truncate">{route.sourceCity}</p>
                         </div>
-                        <ArrowRight className="text-gray-400 h-4 w-4 flex-shrink-0 mx-1" />
-                        <div>
-                          <p className="text-gray-900 font-bold text-lg leading-tight">{route.destinationCity}</p>
-                          <p className="text-gray-400 text-xs">Destination</p>
+                        <div className="relative flex items-center justify-center shrink-0">
+                          <div className="w-16 h-16 bg-slate-900 rounded-3xl flex items-center justify-center border border-slate-800 group-hover:bg-amber-500 group-hover:border-amber-400 group-hover:rotate-90 transition-all duration-700 shadow-xl shadow-slate-900/10">
+                            <Navigation className="text-amber-500 h-7 w-7 group-hover:text-white transition-colors" />
+                          </div>
+                        </div>
+                        <div className="flex-1 text-right">
+                          <p className="text-[8px] font-black text-blue-600 uppercase tracking-[0.4em] mb-4 italic opacity-60">Terminal Exit</p>
+                          <p className="text-3xl font-black text-foreground leading-none font-heading group-hover:text-amber-500 transition-all duration-500 tracking-tighter uppercase italic truncate">{route.destinationCity}</p>
                         </div>
                       </div>
 
-                      <div className="border-t border-gray-200 pt-4 mb-4 space-y-3">
+                      <div className="bg-muted/30 rounded-[40px] p-8 mb-10 space-y-8 border border-border/50 relative z-10 backdrop-blur-sm group-hover:bg-muted/50 transition-colors">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 text-gray-500 text-sm">
-                            <Clock className="h-3.5 w-3.5" />
-                            {formatTime(route.estimatedTimeMinutes)}
+                          <div className="flex flex-col gap-3">
+                             <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] opacity-40">Transit Interval</p>
+                             <div className="flex items-center gap-3 text-foreground font-black text-sm uppercase italic">
+                               <div className="w-8 h-8 rounded-xl bg-slate-900 text-amber-500 flex items-center justify-center shadow-lg">
+                                  <Clock className="h-4 w-4" />
+                               </div>
+                               {formatTime(route.estimatedTimeMinutes)}
+                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-gray-900 font-black text-lg">৳{price || '---'}</p>
-                            <p className="text-gray-400 text-xs">from</p>
+                            <p className="text-amber-600 font-black text-4xl font-heading tracking-tighter italic leading-none">৳{price || '---'}</p>
+                            <p className="text-muted-foreground text-[8px] font-black uppercase tracking-[0.2em] mt-3 opacity-40">Base Fare Vector</p>
                           </div>
                         </div>
 
-                        <div className="text-xs text-gray-500">
-                          <p>📍 {route.distanceKm} km</p>
-                          {stops.length > 0 && (
-                            <p className="mt-1 text-gray-400">
-                              {stops.length} stops • {stops.slice(0, 2).join(', ')}
-                              {stops.length > 2 ? '...' : ''}
-                            </p>
-                          )}
-                        </div>
-
-                        {route.schedules.length > 0 && (
-                          <div className="text-xs text-emerald-600 flex items-center gap-1">
-                            <span className="h-2 w-2 bg-emerald-500 rounded-full" />
-                            {route.schedules.length} schedule{route.schedules.length !== 1 ? 's' : ''} available
+                        <div className="grid grid-cols-2 gap-8 border-t border-border/50 pt-8">
+                          <div>
+                            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-2 opacity-40">Path Magnitude</p>
+                            <div className="flex items-center gap-2">
+                               <Map className="w-3.5 h-3.5 text-amber-500 opacity-60" />
+                               <p className="text-foreground font-black text-xs italic uppercase tracking-tighter">{route.distanceKm} KM SPAN</p>
+                            </div>
                           </div>
-                        )}
+                          <div className="text-right">
+                            <p className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.4em] mb-2 opacity-40">Hub Density</p>
+                            <div className="flex items-center gap-2 justify-end">
+                               <p className="text-foreground font-black text-xs italic uppercase tracking-tighter">{stops.length} STATIONS</p>
+                               <RouteIcon className="w-3.5 h-3.5 text-amber-500 opacity-60" />
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="flex gap-2 mt-auto">
+                      <div className="flex gap-4 mt-auto relative z-10">
                         <Link
                           href={`/admin-dashboard/edit-route/${route.id}`}
                           onClick={(e) => e.stopPropagation()}
@@ -284,33 +297,37 @@ export default function AllRoutesPage() {
                         >
                           <Button
                             variant="outline"
-                            className="w-full border-gray-200 text-gray-600 hover:border-gray-400 hover:text-gray-900 bg-white text-sm h-11 rounded-xl"
+                            className="w-full border-border text-muted-foreground hover:bg-slate-900 hover:text-white h-16 rounded-[24px] font-black uppercase tracking-[0.2em] text-[9px] transition-all duration-500"
                           >
-                            <Pencil className="mr-2 h-3.5 w-3.5" /> Edit
+                            <Pencil className="mr-3 h-4 w-4" /> Edit Vector
                           </Button>
                         </Link>
-                        <Button className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-bold text-sm h-11 rounded-xl transition-all duration-200 group/btn">
-                          View
-                          <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                        <Button 
+                          onClick={() => router.push(`/routes/${route.id}`)}
+                          className="flex-[1.6] bg-slate-900 hover:bg-amber-500 text-white font-black uppercase tracking-[0.3em] text-[9px] h-16 rounded-[24px] transition-all duration-700 group/btn shadow-2xl shadow-slate-900/10 border-none"
+                        >
+                          Discovery
+                          <Zap className="ml-4 h-4 w-4 group-hover/btn:scale-125 transition-transform text-amber-500 group-hover:text-white" />
                         </Button>
                       </div>
                     </motion.div>
                   );
                 })}
               </motion.div>
+            )}
+          </AnimatePresence>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="text-center"
-              >
-                <p className="text-gray-400 text-sm">
-                  Showing <span className="text-gray-900 font-semibold">{filteredRoutes.length}</span> of{' '}
-                  <span className="text-gray-900 font-semibold">{routes.length}</span> routes
-                </p>
-              </motion.div>
-            </>
+          {!loading && !error && filteredRoutes.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+              className="flex items-center justify-center py-12 border-t border-border/50"
+            >
+              <div className="px-10 py-4 bg-muted/30 border border-border/50 rounded-full flex items-center text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground shadow-2xl shadow-slate-900/[0.02] italic">
+                Synchronized <span className="text-amber-600 font-black mx-4 text-sm">{filteredRoutes.length}</span> Active Connections
+              </div>
+            </motion.div>
           )}
         </div>
       </section>

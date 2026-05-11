@@ -77,28 +77,26 @@ export default function RoutesSection() {
   }, []);
 
   return (
-    <section ref={ref} className="bg-white py-24 px-6 lg:px-12">
+    <section ref={ref} className="bg-background py-24 px-6 lg:px-12 border-b border-border">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-14"
+          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16"
         >
           <div>
-            <p className="text-amber-600 text-sm font-semibold tracking-widest uppercase mb-3">
-              — Explore Routes
+            <p className="text-amber-600 text-xs font-black tracking-[0.2em] uppercase mb-4">
+              Explore Routes
             </p>
-            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight" style={{ fontFamily: "'Sora', sans-serif" }}>
-              Popular
-              <br />
-              <span className="text-amber-500">Destinations</span>
+            <h2 className="text-4xl lg:text-5xl font-black text-foreground leading-tight font-heading">
+              Popular <span className="text-amber-500">Destinations</span>
             </h2>
           </div>
           <Button
             onClick={() => router.push('/routes')}
             variant="outline"
-            className="border-gray-300 text-gray-700 hover:text-amber-600 bg-white hover:bg-amber-50 hover:border-amber-400 group shrink-0 transition-all duration-300 shadow-sm"
+            className="border-border text-foreground hover:text-amber-600 bg-background hover:bg-amber-50/50 hover:border-amber-400 group shrink-0 transition-all duration-300 shadow-sm rounded-2xl"
           >
             View all routes
             <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" />
@@ -144,63 +142,65 @@ export default function RoutesSection() {
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
                   whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                  className={`group relative bg-gradient-to-br ${color} border ${border} rounded-2xl p-5 cursor-pointer overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300`}
+                  className={`group relative bg-card border border-border rounded-3xl p-6 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300`}
                 >
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/30 rounded-2xl pointer-events-none" />
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${color} opacity-20 blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:opacity-40 transition-opacity`} />
 
-                  <Badge className={`mb-4 border text-xs font-semibold ${tagColors[tag] ?? 'bg-gray-100 text-gray-600 border-gray-200'}`}>
+                  <Badge className={`mb-4 border text-[10px] font-black uppercase tracking-wider ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
                     <TrendingUp className="mr-1 h-3 w-3" />
                     {tag}
                   </Badge>
 
-                  <div className="flex items-center gap-2 mb-4">
-                    <div>
-                      <p className="text-gray-900 font-bold text-lg leading-tight">{route.sourceCity}</p>
-                      <p className="text-gray-400 text-xs">Origin</p>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="flex-1">
+                      <p className="text-foreground font-black text-xl leading-tight">{route.sourceCity}</p>
+                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mt-1">Origin</p>
                     </div>
-                    <ArrowRight className="text-amber-500 h-4 w-4 flex-shrink-0 mx-1" />
-                    <div>
-                      <p className="text-gray-900 font-bold text-lg leading-tight">{route.destinationCity}</p>
-                      <p className="text-gray-400 text-xs">Destination</p>
+                    <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center shrink-0">
+                      <ArrowRight className="text-amber-500 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                    <div className="flex-1 text-right">
+                      <p className="text-foreground font-black text-xl leading-tight">{route.destinationCity}</p>
+                      <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest mt-1">Destination</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-1.5 text-gray-500 text-sm">
-                      <Clock className="h-3.5 w-3.5" />
+                  <div className="flex items-center justify-between mb-6 bg-muted/30 p-4 rounded-2xl">
+                    <div className="flex items-center gap-2 text-foreground font-bold text-sm">
+                      <Clock className="h-4 w-4 text-amber-500" />
                       {formatTime(route.estimatedTimeMinutes)}
                     </div>
                     <div className="text-right">
-                      <p className="text-amber-500 font-black text-lg">৳{price || '---'}</p>
-                      <p className="text-gray-400 text-xs">from</p>
+                      <p className="text-amber-600 font-black text-xl leading-none">৳{price || '---'}</p>
                     </div>
                   </div>
 
-                  <div className="text-xs text-gray-500 mb-3 border-t border-gray-200 pt-3">
-                    <p>📍 {route.distanceKm} km • {stops.length} stops</p>
+                  <div className="text-sm text-muted-foreground mb-6 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-amber-500 font-bold">📍</span>
+                      <span className="font-medium">{route.distanceKm} km • {stops.length} stops</span>
+                    </div>
                     {stops.length > 0 && (
-                      <p className="mt-1 text-gray-400">
-                        {stops.slice(0, 2).join(', ')}{stops.length > 2 ? '...' : ''}
+                      <p className="text-xs text-muted-foreground/70 pl-6 leading-relaxed italic">
+                        via {stops.slice(0, 2).join(', ')}{stops.length > 2 ? '...' : ''}
                       </p>
                     )}
                   </div>
 
                   {route.schedules.length > 0 && (
-                    <div className="text-xs text-green-600 mb-3 flex items-center gap-1">
-                      <span className="h-2 w-2 bg-green-500 rounded-full" />
-                      {route.schedules.length} schedule{route.schedules.length !== 1 ? 's' : ''} available
+                    <div className="text-xs text-emerald-600 font-bold mb-6 flex items-center gap-2 bg-emerald-50 w-fit px-3 py-1 rounded-full">
+                      <span className="h-2 w-2 bg-emerald-500 rounded-full animate-pulse" />
+                      {route.schedules.length} schedules available
                     </div>
                   )}
 
-                  <div className="overflow-hidden h-0 group-hover:h-9 transition-all duration-300">
-                    <Button
-                      size="sm"
-                      onClick={() => router.push(`/routes/${route.id}`)}
-                      className="w-full bg-amber-500 hover:bg-amber-400 text-white font-bold text-xs h-9 shadow-md shadow-amber-100"
-                    >
-                      View Schedules
-                    </Button>
-                  </div>
+                  <Button
+                    size="sm"
+                    onClick={() => router.push(`/routes/${route.id}`)}
+                    className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm h-12 rounded-2xl shadow-lg border-none"
+                  >
+                    View Schedules
+                  </Button>
                 </motion.div>
               );
             })}

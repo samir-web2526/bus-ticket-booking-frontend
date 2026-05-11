@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Zap, Lock } from "lucide-react";
+import { Loader2, Zap, Lock, X, Mail, Phone, ShieldCheck, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { updateUser, User } from "@/src/services/user.service";
-
-const inputCls = "w-full bg-white border border-gray-200 text-gray-900 rounded-xl h-11 px-3 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-200 transition-colors placeholder:text-gray-300";
-const disabledInputCls = "w-full bg-gray-50 border border-gray-100 text-gray-400 rounded-xl h-11 px-3 cursor-not-allowed opacity-60";
 
 interface EditPassengerModalProps {
   passenger: User;
@@ -42,58 +39,107 @@ export default function EditPassengerModal({ passenger, open, onClose, onUpdated
       });
 
       if (res.error || !res.data) { toast.error(res.error ?? 'Failed to update'); return; }
-      toast.success('Passenger updated successfully!');
+      toast.success('Passenger profile synchronized successfully!');
       onUpdated(res.data);
       onClose();
-    } catch { toast.error('Something went wrong'); }
+    } catch { toast.error('System synchronization failed'); }
     finally { setLoading(false); }
   };
 
+  const inputCls = "w-full bg-muted/50 border border-border text-foreground rounded-2xl h-14 px-4 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all duration-300 placeholder:text-muted-foreground/30 text-sm font-black uppercase tracking-tight";
+  const disabledInputCls = "w-full bg-muted/20 border border-border/30 text-muted-foreground rounded-2xl h-14 px-4 cursor-not-allowed opacity-60 text-sm font-black uppercase tracking-tight";
+  const labelCls = "text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] block mb-3 ml-1";
+  const sectionCls = "p-8 bg-muted/20 border border-border/50 rounded-[32px] space-y-6";
+
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="bg-white border border-gray-200 text-gray-900 max-w-lg rounded-3xl p-0 overflow-hidden shadow-xl">
-        <DialogHeader className="px-8 pt-8 pb-5 border-b border-gray-100">
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-gray-400 text-xs font-semibold uppercase mb-1">— Edit Passenger</p>
-            <DialogTitle className="text-gray-900 font-black text-2xl">Update <span className="text-gray-500">Passenger</span></DialogTitle>
-          </motion.div>
+      <DialogContent className="bg-card border-none max-w-xl rounded-[48px] p-0 overflow-hidden shadow-2xl shadow-slate-900/20 flex flex-col">
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-amber-500/[0.03] rounded-full blur-[100px] -z-10" />
+        
+        <DialogHeader className="px-10 pt-10 pb-8 border-b border-border/50 relative shrink-0">
+          <div className="flex items-center justify-between">
+            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+              <p className="text-amber-600 text-[10px] font-black tracking-[0.4em] uppercase mb-3 italic">— Guest Calibration</p>
+              <DialogTitle className="text-foreground font-black text-4xl font-heading uppercase italic tracking-tighter leading-none">
+                Adjust <span className="text-amber-500">Passenger</span>
+              </DialogTitle>
+            </motion.div>
+            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-2xl hover:bg-muted text-muted-foreground transition-all duration-500">
+               <X className="w-5 h-5" />
+            </Button>
+          </div>
         </DialogHeader>
 
-        <div className="px-8 py-6 space-y-4">
-          <div>
-            <label className="text-gray-400 text-sm flex items-center gap-2"><Lock className="w-3 h-3" /> Full Name</label>
-            <input disabled value={form.name} className={disabledInputCls} />
-          </div>
-          <div>
-            <label className="text-gray-600 text-sm font-semibold block mb-1">Email</label>
-            <input value={form.email} onChange={(e) => handleChange("email", e.target.value)} className={inputCls} />
-          </div>
-          <div>
-            <label className="text-gray-600 text-sm font-semibold block mb-1">Phone</label>
-            <input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} />
-          </div>
-          <div>
-            <label className="text-gray-600 text-sm font-semibold block mb-1">Status</label>
-            <select value={form.status} onChange={(e) => handleChange("status", e.target.value)} className={inputCls}>
-              <option value="ACTIVE">Active</option>
-              <option value="BLOCKED">Blocked</option>
-              <option value="DELETED">Deleted</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-3">
-            <input type="checkbox" checked={form.isVerified} onChange={(e) => handleChange("isVerified", e.target.checked)} className="w-4 h-4 accent-gray-900" />
-            <span className="text-sm text-gray-600">{form.isVerified ? "Verified" : "Not Verified"}</span>
-          </div>
+        <div className="px-10 py-8 space-y-8 overflow-y-auto custom-scrollbar flex-1">
+          <section className={sectionCls}>
+             <div className="flex items-center gap-3 mb-2">
+               <UserCheck className="w-4 h-4 text-amber-500" />
+               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40">Identity Node</p>
+            </div>
+            <div>
+              <label className={labelCls}>Authorized Name</label>
+              <div className="relative">
+                <input disabled value={form.name} className={disabledInputCls} />
+                <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className={labelCls}>Email Matrix</label>
+                <div className="relative">
+                   <input value={form.email} onChange={(e) => handleChange("email", e.target.value)} className={inputCls} placeholder="EMAIL@DOMAIN.COM" />
+                   <Mail className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30" />
+                </div>
+              </div>
+              <div>
+                <label className={labelCls}>Phone Link</label>
+                <div className="relative">
+                   <input value={form.phone} onChange={(e) => handleChange("phone", e.target.value)} className={inputCls} placeholder="01XXXXXXXXX" />
+                   <Phone className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className={sectionCls}>
+               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40 mb-2">Registry Status</p>
+               <div>
+                  <label className={labelCls}>Access Level</label>
+                  <select value={form.status} onChange={(e) => handleChange("status", e.target.value)} className={inputCls}>
+                    <option value="ACTIVE">ACTIVE CLEARANCE</option>
+                    <option value="BLOCKED">REVOKED / BLOCKED</option>
+                    <option value="DELETED">DECOMMISSIONED</option>
+                  </select>
+               </div>
+            </div>
+
+            <div className={`${sectionCls} flex flex-col justify-center`}>
+               <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em] italic opacity-40 mb-4">Identity Verification</p>
+               <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-500 shadow-xl ${form.isVerified ? 'bg-slate-900 text-emerald-500 shadow-emerald-500/10' : 'bg-muted text-muted-foreground'}`}>
+                        <ShieldCheck className="w-5 h-5" />
+                     </div>
+                     <p className="text-xs font-black text-foreground font-heading tracking-tight italic uppercase">{form.isVerified ? "VERIFIED" : "UNVERIFIED"}</p>
+                  </div>
+                  <button onClick={() => handleChange("isVerified", !form.isVerified)} className={`w-14 h-8 rounded-full transition-all duration-500 relative ${form.isVerified ? 'bg-emerald-500' : 'bg-muted-foreground/20'}`}>
+                    <motion.div animate={{ x: form.isVerified ? 28 : 4 }} className="absolute top-1 w-6 h-6 rounded-full bg-white shadow-xl" />
+                  </button>
+               </div>
+            </div>
+          </section>
         </div>
 
-        <DialogFooter className="px-8 py-5 border-t border-gray-100 gap-3">
-          <Button onClick={onClose} disabled={loading} variant="outline" className="flex-1 border-gray-200 text-gray-600 rounded-xl h-11">
-            Cancel
+        <div className="px-10 py-8 border-t border-border/50 flex gap-6 shrink-0 bg-card">
+          <Button variant="outline" onClick={onClose} disabled={loading} className="flex-1 border-border text-muted-foreground hover:bg-muted hover:text-foreground h-16 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all">
+            Cancel Tuning
           </Button>
-          <motion.button onClick={handleSubmit} disabled={loading} className="flex-1 bg-gray-900 hover:bg-gray-700 text-white rounded-xl py-2 flex items-center justify-center gap-2 font-bold uppercase tracking-wider text-sm">
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : <><Zap className="w-4 h-4" /> Save Changes</>}
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} disabled={loading} className="flex-[1.5] bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black h-16 rounded-2xl transition-all duration-500 flex items-center justify-center gap-4 uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-slate-900/20">
+            {loading ? <Loader2 className="w-5 h-5 animate-spin text-amber-500" /> : <Zap className="w-5 h-5 text-amber-500 fill-amber-500" />}
+            {loading ? "Synchronizing..." : "Commit Guest Adjustments"}
           </motion.button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, deleteUser } from '@/src/services/user.service'
+import { User as UserType, deleteUser } from '@/src/services/user.service'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,21 +10,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { UserCircle2, Trash2, Loader2, AlertTriangle } from 'lucide-react'
+import { UserCircle2, Trash2, Loader2, AlertTriangle, Activity, Zap, ShieldCheck, Mail, Phone, Calendar, User, Hash } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 function StatusBadge({ status }: { status?: string }) {
-  const map: Record<string, string> = {
-    ACTIVE:    'bg-emerald-50 text-emerald-700 border-emerald-200',
-    INACTIVE:  'bg-gray-100 text-gray-500 border-gray-200',
-    SUSPENDED: 'bg-red-50 text-red-600 border-red-200',
+  const map: Record<string, { cls: string; dot: string }> = {
+    ACTIVE:    { cls: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20', dot: 'bg-emerald-500' },
+    INACTIVE:  { cls: 'bg-slate-500/10 text-slate-500 border-slate-500/20', dot: 'bg-slate-500' },
+    SUSPENDED: { cls: 'bg-destructive/10 text-destructive border-destructive/20', dot: 'bg-destructive' },
   }
   const s = status ?? 'ACTIVE'
+  const cfg = map[s] ?? map.ACTIVE
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
-        map[s] ?? 'bg-gray-100 text-gray-500 border-gray-200'
-      }`}
+      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black italic tracking-widest border ${cfg.cls}`}
     >
+      <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${cfg.dot}`} />
       {s}
     </span>
   )
@@ -36,7 +37,7 @@ function DeleteConfirmModal({
   onClose,
   onDeleted,
 }: {
-  passenger: User
+  passenger: UserType
   open: boolean
   onClose: () => void
   onDeleted: (id: string) => void
@@ -53,7 +54,7 @@ function DeleteConfirmModal({
       onDeleted(passenger.id)
       onClose()
     } catch {
-      setError('Failed to delete. Please try again.')
+      setError('CRITICAL: TERMINATION SEQUENCE FAILED')
     } finally {
       setLoading(false)
     }
@@ -61,48 +62,59 @@ function DeleteConfirmModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-white border border-gray-200 text-gray-900 max-w-sm rounded-2xl p-0 overflow-hidden shadow-xl">
-        <DialogHeader className="px-6 pt-6 pb-2">
-          <div className="flex flex-col items-center text-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-red-50 border border-red-200 flex items-center justify-center">
-              <AlertTriangle className="w-7 h-7 text-red-500" />
+      <DialogContent className="bg-card border border-border text-foreground max-w-lg rounded-[48px] p-0 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-destructive/[0.05] rounded-full blur-3xl -mr-16 -mt-16" />
+        
+        <DialogHeader className="px-12 pt-12 pb-6">
+          <div className="flex flex-col items-center text-center gap-8 relative z-10">
+            <div className="w-20 h-20 rounded-[24px] bg-destructive/10 border border-destructive/20 flex items-center justify-center shadow-2xl shadow-destructive/10">
+              <AlertTriangle className="w-10 h-10 text-destructive animate-pulse" />
             </div>
             <div>
-              <DialogTitle className="text-gray-900 font-bold text-lg">
-                Delete Passenger?
+              <p className="text-destructive text-[10px] font-black tracking-[0.4em] uppercase mb-4 italic">— TERMINATION PROTOCOL</p>
+              <DialogTitle className="text-foreground font-black text-3xl font-heading uppercase italic tracking-tighter leading-none mb-4">
+                SCRUB <span className="text-destructive">PERSONNEL</span> NODE?
               </DialogTitle>
-              <p className="text-gray-400 text-sm mt-2 leading-relaxed">
-                This will permanently delete{' '}
-                <span className="text-gray-900 font-semibold">{passenger.name}</span>.
-                This action cannot be undone.
+              <p className="text-muted-foreground text-[11px] font-black uppercase tracking-[0.1em] italic leading-relaxed">
+                Confirming permanent deletion of <span className="text-foreground">{passenger.name}</span>. This operational node will be removed from the registry.
               </p>
             </div>
           </div>
         </DialogHeader>
 
-        <div className="px-6 pb-6 pt-4 space-y-3">
+        <div className="px-12 pb-12 pt-6 space-y-4 relative z-10">
           {error && (
-            <p className="text-red-500 text-sm bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-center">
+            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl flex items-center gap-3 text-destructive text-[10px] font-black uppercase tracking-widest italic mb-4">
+              <Activity className="w-4 h-4" />
               {error}
-            </p>
+            </div>
           )}
-          <Button
-            onClick={handleDelete}
-            disabled={loading}
-            className="w-full bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl h-11"
-          >
-            {loading
-              ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Deleting…</>
-              : 'Yes, Delete'}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={loading}
-            className="w-full border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300 hover:text-gray-900 rounded-xl h-11"
-          >
-            Cancel
-          </Button>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              disabled={loading}
+              className="h-16 border-border bg-muted/30 text-muted-foreground hover:bg-muted hover:text-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest italic transition-all duration-500"
+            >
+              ABORT
+            </Button>
+            <Button
+              onClick={handleDelete}
+              disabled={loading}
+              className="h-16 bg-destructive hover:bg-destructive/90 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest italic shadow-2xl shadow-destructive/20 transition-all duration-500 group"
+            >
+              {loading
+                ? <Loader2 className="w-4 h-4 animate-spin" />
+                : 'TERMINATE NODE'}
+            </Button>
+          </div>
+          
+          <div className="flex items-center justify-center gap-3 opacity-20 select-none pt-4">
+             <div className="h-[1px] w-8 bg-border" />
+             <p className="text-[8px] font-black uppercase tracking-[0.5em]">SECURE LINK: {passenger.id.slice(0, 8)}</p>
+             <div className="h-[1px] w-8 bg-border" />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -113,59 +125,89 @@ export function PassengerCard({
   passenger,
   onDeleted,
 }: {
-  passenger: User
+  passenger: UserType
   onDeleted?: (id: string) => void
 }) {
   const [deleteOpen, setDeleteOpen] = useState(false)
 
   return (
     <>
-      <TableRow className="border-gray-100 hover:bg-gray-50 transition-colors duration-150">
-        <TableCell className="py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
-              <UserCircle2 className="w-5 h-5 text-gray-400" />
+      <TableRow className="border-border/40 hover:bg-muted/30 transition-all duration-500 group/row relative overflow-hidden">
+        <TableCell className="py-8 pl-10 relative z-10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shrink-0 shadow-lg group-hover/row:scale-110 transition-transform italic font-heading">
+              {passenger.name?.charAt(0).toUpperCase()}
             </div>
             <div>
-              <p className="text-gray-900 font-semibold text-sm leading-tight">{passenger.name}</p>
-              <p className="text-gray-400 text-xs mt-0.5">{passenger.email}</p>
+              <p className="text-foreground font-black text-sm uppercase tracking-tight italic leading-none mb-1.5 group-hover/row:text-amber-500 transition-colors">{passenger.name}</p>
+              <div className="flex items-center gap-2">
+                 <Mail className="w-3 h-3 text-muted-foreground opacity-40" />
+                 <p className="text-muted-foreground text-[9px] font-black uppercase tracking-widest italic opacity-40">{passenger.email}</p>
+              </div>
             </div>
           </div>
         </TableCell>
 
-        <TableCell className="text-gray-500 text-sm">
-          {passenger.phone ?? <span className="text-gray-300 italic">No phone</span>}
+        <TableCell className="py-8 relative z-10">
+           <div className="flex items-center gap-3">
+              <div className="p-2 bg-muted rounded-xl">
+                 <Phone className="w-3 h-3 text-amber-500 opacity-60" />
+              </div>
+              <p className="text-foreground text-[10px] font-black uppercase tracking-widest italic">
+                {passenger.phone ?? <span className="opacity-20">NOT DETECTED</span>}
+              </p>
+           </div>
         </TableCell>
 
-        <TableCell className="text-gray-500 text-sm">
-          {passenger.passengerProfile?.gender ?? <span className="text-gray-300">—</span>}
+        <TableCell className="py-8 relative z-10">
+           <div className="flex items-center gap-3">
+              <div className="p-2 bg-muted rounded-xl">
+                 <User className="w-3 h-3 text-blue-500 opacity-60" />
+              </div>
+              <p className="text-foreground text-[10px] font-black uppercase tracking-widest italic">
+                {passenger.passengerProfile?.gender ?? <span className="opacity-20">UNDETERMINED</span>}
+              </p>
+           </div>
         </TableCell>
 
-        <TableCell className="text-gray-500 text-sm">
-          {passenger.passengerProfile?.dateOfBirth ?? <span className="text-gray-300">—</span>}
+        <TableCell className="py-8 relative z-10">
+           <div className="flex items-center gap-3">
+              <div className="p-2 bg-muted rounded-xl">
+                 <Calendar className="w-3 h-3 text-emerald-500 opacity-60" />
+              </div>
+              <p className="text-foreground text-[10px] font-black uppercase tracking-widest italic">
+                {passenger.passengerProfile?.dateOfBirth ?? <span className="opacity-20">TBD</span>}
+              </p>
+           </div>
         </TableCell>
 
-        <TableCell>
-          <span className="text-xs font-medium text-gray-600 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-lg">
-            {passenger.role}
-          </span>
+        <TableCell className="py-8 relative z-10">
+           <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 shadow-lg">
+                 <ShieldCheck className="w-4 h-4" />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-600 italic">
+                {passenger.role}
+              </span>
+           </div>
         </TableCell>
 
-        <TableCell>
+        <TableCell className="py-8 relative z-10">
           <StatusBadge status="ACTIVE" />
         </TableCell>
 
-        <TableCell>
+        <TableCell className="py-8 pr-10 text-right relative z-10">
           <Button
             size="sm"
-            variant="outline"
+            variant="ghost"
             onClick={() => setDeleteOpen(true)}
-            className="border-gray-200 bg-gray-50 text-gray-400 hover:border-red-300 hover:text-red-500 hover:bg-red-50 h-8 px-3 text-xs gap-1.5 rounded-lg"
+            className="h-12 w-12 rounded-2xl bg-muted border border-border text-muted-foreground hover:bg-destructive hover:text-white hover:border-destructive transition-all duration-500 group/btn shadow-xl hover:-translate-y-1"
           >
-            <Trash2 className="w-3.5 h-3.5" />
-            Delete
+            <Trash2 className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
           </Button>
         </TableCell>
+        
+        <div className="absolute top-0 left-0 w-1 h-0 bg-amber-500 group-hover/row:h-full transition-all duration-500" />
       </TableRow>
 
       <DeleteConfirmModal

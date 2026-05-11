@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllUsers } from '@/src/services/dashboard-services/operators';
-import { Mail, Phone, Plus, ArrowRight } from 'lucide-react';
+import { Mail, Phone, Plus, ArrowRight, ShieldCheck, UserCheck, Activity, Globe, Zap, Database, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -9,74 +9,104 @@ export default async function AllOperators() {
   const operators = (res.data ?? []).filter((u: any) => u.role === 'OPERATOR');
 
   return (
-    <div className="min-h-screen bg-gray-50 relative overflow-hidden p-6 lg:p-12">
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gray-100 rounded-full blur-3xl pointer-events-none" />
+    <section className="min-h-screen bg-background relative overflow-hidden p-6 lg:p-12">
+      {/* Dynamic Background */}
+      <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-amber-500/[0.03] rounded-full blur-[140px] -z-10" />
+      <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-slate-500/[0.03] rounded-full blur-[140px] -z-10" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="mb-10 flex items-end justify-between">
+        <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-10">
           <div>
-            <p className="text-gray-400 text-sm font-semibold tracking-widest uppercase mb-3">— Management</p>
-            <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-2">All <span className="text-gray-500">Operators</span></h1>
-            <p className="text-gray-400 text-lg">Total {operators.length} operators</p>
+            <p className="text-amber-600 text-[10px] font-black tracking-[0.5em] uppercase mb-5 italic">— REGISTRY CONTROL</p>
+            <h1 className="text-5xl lg:text-7xl font-black text-foreground tracking-tighter font-heading uppercase italic">
+              OPERATOR <span className="text-amber-500">NETWORK</span>
+            </h1>
           </div>
           <Link href="/admin-dashboard/create-operator">
-            <Button className="flex items-center gap-2 bg-gray-900 hover:bg-gray-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm uppercase tracking-wider shadow-sm">
-              <Plus className="w-4 h-4" /> Create Operator
+            <Button className="h-16 px-10 bg-slate-900 hover:bg-slate-800 text-white rounded-[24px] flex items-center gap-4 shadow-2xl shadow-slate-900/40 group border-t border-white/10">
+              <Plus className="w-6 h-6 text-amber-500 group-hover:rotate-90 transition-transform duration-500" />
+              <span className="text-[12px] font-black uppercase tracking-widest italic">REGISTER AUTHORITY</span>
             </Button>
           </Link>
         </div>
 
         {operators.length === 0 ? (
-          <div className="flex items-center justify-center h-96">
-            <p className="text-gray-400 text-lg">No operators found</p>
+          <div className="flex flex-col items-center justify-center py-40 bg-card border border-border border-dashed rounded-[48px] grayscale opacity-40">
+             <UserCheck className="w-24 h-24 text-muted-foreground/20 mb-8" />
+             <p className="text-foreground font-black text-2xl font-heading uppercase italic tracking-tighter mb-4">NO ACTIVE AUTHORITIES DETECTED</p>
+             <p className="text-muted-foreground text-[11px] font-black uppercase tracking-[0.3em] italic">ONBOARD YOUR FIRST OPERATOR TO EXPAND OPERATIONS</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {operators.map((op: any) => (
-              <div key={op.id} className="group bg-white border border-gray-200 rounded-2xl p-6 hover:border-gray-300 transition-colors duration-300 shadow-sm">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-700 font-black text-lg">
+              <div key={op.id} className="group bg-card border border-border rounded-[48px] p-10 hover:border-amber-500/30 transition-all duration-700 hover:shadow-2xl hover:shadow-slate-900/[0.05] relative overflow-hidden flex flex-col">
+                <div className="flex items-center gap-6 mb-10 relative z-10">
+                  <div className="w-20 h-20 rounded-3xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-500 font-black text-3xl font-heading group-hover:scale-110 transition-transform duration-700 shadow-2xl italic group-hover:rotate-3">
                     {op.name?.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="text-gray-900 font-bold text-lg leading-tight">{op.name}</h3>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${op.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    <h3 className="text-foreground font-black text-2xl font-heading uppercase italic tracking-tighter leading-none mb-3 group-hover:text-amber-500 transition-colors duration-500">{op.name}</h3>
+                    <span className={`text-[9px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border transition-all duration-500 ${op.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)] group-hover:bg-emerald-500 group-hover:text-white' : 'bg-destructive/10 text-destructive border-destructive/20 group-hover:bg-destructive group-hover:text-white'}`}>
                       {op.status}
                     </span>
                   </div>
                 </div>
 
-                <div className="space-y-2 mb-4 p-3 bg-gray-50 border border-gray-100 rounded-lg">
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="w-3.5 h-3.5 text-gray-400" />
-                    <span className="text-gray-700">{op.email}</span>
+                <div className="space-y-6 mb-10 p-8 bg-muted/30 border border-border/50 rounded-[32px] group-hover:bg-muted/50 transition-colors duration-700 relative overflow-hidden">
+                  <div className="flex items-center gap-4">
+                    <div className="p-2.5 bg-muted rounded-xl">
+                       <Mail className="w-4 h-4 text-amber-600 opacity-60" />
+                    </div>
+                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] truncate italic">{op.email}</span>
                   </div>
                   {op.phone && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="w-3.5 h-3.5 text-gray-400" />
-                      <span className="text-gray-700">{op.phone}</span>
+                    <div className="flex items-center gap-4">
+                      <div className="p-2.5 bg-muted rounded-xl">
+                         <Phone className="w-4 h-4 text-amber-600 opacity-60" />
+                      </div>
+                      <span className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] italic">NODE: {op.phone}</span>
                     </div>
                   )}
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-amber-500/5 to-transparent rounded-full -mr-12 -mt-12" />
                 </div>
 
-                <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
-                  <span>Joined {new Date(op.createdAt).toLocaleDateString('en-BD')}</span>
-                  <div className="flex items-center gap-3">
-                    <span className={op.isVerified ? 'text-green-600' : 'text-gray-400'}>
-                      {op.isVerified ? '✓ Verified' : 'Unverified'}
-                    </span>
+                <div className="pt-10 border-t border-border/50 flex items-center justify-between mt-auto">
+                  <div className="flex flex-col gap-2">
+                     <p className="text-muted-foreground text-[9px] font-black uppercase tracking-[0.3em] opacity-40 italic leading-none">DEPLOYMENT DATE</p>
+                     <span className="text-foreground font-black text-xs uppercase tracking-tighter italic leading-none">{new Date(op.createdAt).toLocaleDateString('en-BD', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}</span>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
+                       {op.isVerified ? (
+                          <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                             <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                          </div>
+                       ) : (
+                          <Activity className="w-5 h-5 text-muted-foreground/30 animate-pulse" />
+                       )}
+                       <span className={`text-[9px] font-black uppercase tracking-[0.2em] italic ${op.isVerified ? 'text-emerald-600' : 'text-muted-foreground/30'}`}>
+                          {op.isVerified ? 'VERIFIED' : 'PENDING'}
+                       </span>
+                    </div>
                     <Link href={`/admin-dashboard/operators/${op.id}`}>
-                      <Button size="sm" className="bg-gray-900 hover:bg-gray-700 text-white font-bold text-xs h-7 px-3 rounded-lg">
-                        Details <ArrowRight className="w-3 h-3 ml-1" />
+                      <Button variant="ghost" size="sm" className="h-12 w-12 p-0 rounded-2xl bg-muted border border-border hover:bg-slate-900 hover:text-amber-500 transition-all duration-500 group/btn shadow-xl hover:-translate-y-1">
+                        <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
                   </div>
                 </div>
+                
+                {/* Hover Accent Decor */}
+                <div className="absolute top-0 left-0 w-1 h-0 bg-amber-500 group-hover:h-full transition-all duration-700" />
               </div>
             ))}
           </div>
         )}
+        
+        <div className="text-center mt-20 pt-10 border-t border-border/30">
+          <p className="text-muted-foreground text-[10px] font-black uppercase tracking-[0.5em] opacity-40 italic">MANAGING <span className="text-foreground font-black">{operators.length}</span> AUTHORIZED AUTHORITIES — SECURE LINK ACTIVE</p>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
