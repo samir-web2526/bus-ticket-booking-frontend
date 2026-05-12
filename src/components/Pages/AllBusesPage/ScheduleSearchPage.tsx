@@ -3,8 +3,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, MapPin, Calendar, Loader2, ArrowRight } from 'lucide-react';
+import { Search, Filter, MapPin, Calendar, Loader2, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import BusCard from './BusCard';
+import BusCardSkeleton from './BusCardSkeleton';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -16,7 +19,6 @@ import {
 import { motion } from 'framer-motion';
 
 import { Schedule, searchSchedules } from '@/src/services/schedule.service';
-import ScheduleCard from './ScheduleCard';
 import { getAllRoutes, Route } from '@/src/services/routes.service';
 import { useSearchParams } from 'next/navigation';
 
@@ -46,6 +48,10 @@ const ScheduleSearchPage: React.FC = () => {
     to: '',
     date: '',
   });
+  const [sortBy, setSortBy] = useState('departure');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     const loadRoutes = async () => {
@@ -85,6 +91,8 @@ const ScheduleSearchPage: React.FC = () => {
           search: searchTerm,
           page,
           limit: 12,
+          sortBy,
+          sortOrder,
         });
 
         if (result.error) {
@@ -93,6 +101,8 @@ const ScheduleSearchPage: React.FC = () => {
         } else {
           const schedulesData: Schedule[] = result.data || [];
           setSchedules(schedulesData);
+          setTotalPages(Math.ceil((result.meta?.total || 0) / 12));
+          setTotalCount(result.meta?.total || 0);
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Search failed';
@@ -107,7 +117,7 @@ const ScheduleSearchPage: React.FC = () => {
       const timer = setTimeout(performSearch, 500);
       return () => clearTimeout(timer);
     }
-  }, [filters.from, filters.to, filters.date, busType, page, searchTerm]);
+  }, [filters.from, filters.to, filters.date, busType, page, searchTerm, sortBy, sortOrder]);
 
   const handleFilterChange = (key: string, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -121,6 +131,15 @@ const ScheduleSearchPage: React.FC = () => {
     setFilters({ from: '', to: '', date: '' });
     setPage(1);
     setHasSearched(false);
+    setTotalPages(1);
+    setTotalCount(0);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleSearch = () => {
@@ -251,6 +270,33 @@ const ScheduleSearchPage: React.FC = () => {
           </div>
 
           <div className="flex gap-4 items-center flex-wrap">
+            <div className="flex gap-2">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-muted-foreground ml-1">Sort By</label>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="bg-muted/30 border-border text-foreground hover:border-amber-500/50 rounded-xl h-12 px-4 w-40 transition-all">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border rounded-xl shadow-lg">
+                    <SelectItem value="departure" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600 font-medium">Departure</SelectItem>
+                    <SelectItem value="price" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600 font-medium">Price</SelectItem>
+                    <SelectItem value="duration" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600 font-medium">Duration</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-muted-foreground ml-1">Order</label>
+                <Select value={sortOrder} onValueChange={setSortOrder}>
+                  <SelectTrigger className="bg-muted/30 border-border text-foreground hover:border-amber-500/50 rounded-xl h-12 px-4 w-32 transition-all">
+                    <SelectValue placeholder="Order" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border rounded-xl shadow-lg">
+                    <SelectItem value="asc" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600 font-medium">A-Z</SelectItem>
+                    <SelectItem value="desc" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600 font-medium">Z-A</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
             <div className="flex-1 relative min-w-[280px] group">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center pointer-events-none">
                 <Search className="w-5 h-5 text-amber-500 group-focus-within:scale-110 transition-transform" />
@@ -285,14 +331,9 @@ const ScheduleSearchPage: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 pb-32">
         {searching && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-40"
-          >
-            <Loader2 className="h-16 w-16 text-amber-500 animate-spin mb-8" />
-            <p className="text-muted-foreground font-medium text-base animate-pulse">Searching schedules...</p>
-          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <BusCardSkeleton count={8} />
+          </div>
         )}
 
         {error && !searching && (
@@ -354,7 +395,7 @@ const ScheduleSearchPage: React.FC = () => {
               </div>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {schedules.map((schedule, index) => (
                 <motion.div
                   key={schedule.id}
@@ -362,7 +403,7 @@ const ScheduleSearchPage: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
                 >
-                  <ScheduleCard
+                  <BusCard
                     id={schedule.id}
                     bus={schedule.bus}
                     route={schedule.route}
@@ -375,6 +416,64 @@ const ScheduleSearchPage: React.FC = () => {
                 </motion.div>
               ))}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-center justify-center gap-2 mt-12"
+              >
+                <Button
+                  variant="outline"
+                  onClick={() => handlePageChange(page - 1)}
+                  disabled={page === 1}
+                  className="h-10 w-10 p-0 rounded-lg border-border hover:bg-amber-500/10 hover:text-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (page <= 3) {
+                      pageNum = i + 1;
+                    } else if (page >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = page - 2 + i;
+                    }
+                    
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={page === pageNum ? "default" : "outline"}
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`h-10 w-10 p-0 rounded-lg ${
+                          page === pageNum
+                            ? 'bg-amber-500 text-white hover:bg-amber-600'
+                            : 'border-border hover:bg-amber-500/10 hover:text-amber-600'
+                        }`}
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  onClick={() => handlePageChange(page + 1)}
+                  disabled={page === totalPages}
+                  className="h-10 w-10 p-0 rounded-lg border-border hover:bg-amber-500/10 hover:text-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </motion.div>
+            )}
           </motion.div>
         )}
       </div>

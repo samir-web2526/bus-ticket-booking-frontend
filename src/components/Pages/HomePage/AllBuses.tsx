@@ -2,9 +2,17 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Star, ArrowRight, SlidersHorizontal, Loader2 } from 'lucide-react';
+import { Star, ArrowRight, SlidersHorizontal, MapPin, Users, Zap, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { getAllBuses } from '@/src/services/buses.service';
 import { useRouter } from 'next/navigation';
 
@@ -84,6 +92,9 @@ export default function BusesSection() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busType, setBusType] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
 
@@ -109,8 +120,37 @@ export default function BusesSection() {
     fetchBuses();
   }, []);
 
-  const filtered = busType === '' ? buses : buses.filter((b) => b.type === busType);
-  const displayed = showAll ? filtered : filtered.slice(0, 3);
+  const filtered = buses
+    .filter((bus) => {
+      const matchesType = busType ? bus.type === busType : true;
+      const matchesSearch = searchTerm ? 
+        bus.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        bus.operator.name.toLowerCase().includes(searchTerm.toLowerCase())
+        : true;
+      return matchesType && matchesSearch;
+    })
+    .sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'price':
+          comparison = a.pricePerSeat - b.pricePerSeat;
+          break;
+        case 'seats':
+          comparison = a.totalSeats - b.totalSeats;
+          break;
+        default:
+          comparison = a.name.localeCompare(b.name);
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison;
+    })
+    .slice(0, showAll ? buses.length : 8);
+
+  const displayed = filtered;
 
   return (
     <section ref={ref} className="bg-background py-24 px-6 lg:px-12 border-b border-border">
@@ -130,33 +170,87 @@ export default function BusesSection() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            <SlidersHorizontal className="h-4 w-4 text-muted-foreground mr-2" />
-            {filters.map((filter) => (
-              <button
-                key={filter.value}
-                onClick={() => {
-                  setBusType(filter.value);
-                  setShowAll(false);
-                }}
-                className={`px-6 py-2 rounded-full text-sm font-medium border transition-all duration-300 ${
-                  busType === filter.value
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
-                    : 'bg-background text-muted-foreground border-border hover:border-amber-400 hover:text-amber-600'
-                }`}
-              >
-                {filter.label}
-              </button>
-            ))}
+          <div className="flex flex-col gap-6 mb-8">
+            <div>
+              <h2 className="text-3xl font-bold text-foreground mb-2">Popular Buses</h2>
+              <p className="text-muted-foreground">Discover our most trusted bus services</p>
+            </div>
+            
+            <div className="flex flex-col lg:flex-row gap-4">
+              {/* Search Bar */}
+              <div className="flex-1 relative min-w-[280px]">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center pointer-events-none">
+                  <Search className="w-5 h-5 text-amber-500" />
+                </div>
+                <Input
+                  placeholder="Search buses or operators..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-12 bg-muted/30 border-border text-foreground placeholder:text-muted-foreground/40 focus-visible:ring-amber-500/30 rounded-xl h-12"
+                />
+              </div>
+              
+              {/* Sort Options */}
+              <div className="flex gap-2">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="bg-muted/30 border-border text-foreground hover:border-amber-500/50 rounded-xl h-12 w-32">
+                    <SelectValue placeholder="Sort" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border rounded-xl">
+                    <SelectItem value="name" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600">Name</SelectItem>
+                    <SelectItem value="price" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600">Price</SelectItem>
+                    <SelectItem value="seats" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600">Seats</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select value={sortOrder} onValueChange={setSortOrder}>
+                  <SelectTrigger className="bg-muted/30 border-border text-foreground hover:border-amber-500/50 rounded-xl h-12 w-28">
+                    <SelectValue placeholder="Order" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border-border rounded-xl">
+                    <SelectItem value="asc" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600">A-Z</SelectItem>
+                    <SelectItem value="desc" className="text-foreground focus:bg-amber-500/10 focus:text-amber-600">Z-A</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Filter Buttons */}
+              <div className="flex gap-2">
+                {filters.map((filter) => (
+                  <Button
+                    key={filter.value}
+                    variant={busType === filter.value ? 'default' : 'outline'}
+                    onClick={() => setBusType(filter.value)}
+                    className={`rounded-full ${
+                      busType === filter.value
+                        ? 'bg-amber-500 hover:bg-amber-600 text-white border-amber-500'
+                        : 'border-border hover:border-amber-500 hover:text-amber-600'
+                    }`}
+                  >
+                    {filter.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         </motion.div>
 
         {loading && (
-          <div className="flex items-center justify-center h-96">
-            <div className="text-center">
-              <Loader2 className="h-12 w-12 text-amber-500 animate-spin mx-auto mb-4" />
-              <p className="text-gray-400">Loading buses...</p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
+                <div className="h-48 bg-muted animate-pulse" />
+                <div className="p-5 space-y-3">
+                  <div className="h-6 bg-muted rounded animate-pulse" />
+                  <div className="h-4 bg-muted rounded animate-pulse w-2/3" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="h-4 bg-muted rounded animate-pulse" />
+                    <div className="h-4 bg-muted rounded animate-pulse" />
+                  </div>
+                  <div className="h-10 bg-muted rounded-xl animate-pulse" />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -176,7 +270,7 @@ export default function BusesSection() {
         )}
 
         {!loading && displayed.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {displayed.map((bus, i) => {
               const tag = getBusTag(bus.type);
               return (
@@ -187,63 +281,82 @@ export default function BusesSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="group bg-card border border-border rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500"
+                  className="group h-full"
                 >
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={getBusImage(bus.type)}
-                      alt={bus.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <Badge className={`absolute top-4 left-4 border text-xs font-medium ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
-                      {tag}
-                    </Badge>
-                    <div className="absolute top-4 right-4 bg-background/90 backdrop-blur-md text-foreground px-4 py-1.5 rounded-xl text-sm font-medium shadow-sm border border-border">
-                      {bus.totalSeats} seats
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="text-foreground font-bold text-xl leading-tight group-hover:text-amber-600 transition-colors">{bus.name}</h3>
-                        <p className="text-muted-foreground text-sm font-medium mt-1">{getBusLabel(bus.type)} Service</p>
+                  <div className="h-full flex flex-col overflow-hidden rounded-2xl bg-card border border-border shadow-lg hover:shadow-2xl transition-all duration-300">
+                    {/* Image Container */}
+                    <div className="relative h-48 overflow-hidden bg-muted">
+                      <img
+                        src={getBusImage(bus.type)}
+                        alt={bus.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      
+                      {/* Badge Overlay */}
+                      <div className="absolute top-3 right-3 z-10">
+                        <Badge className={`border text-xs font-medium ${tagColors[tag] ?? 'bg-muted text-muted-foreground border-border'}`}>
+                          {tag}
+                        </Badge>
                       </div>
-                      <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-100 rounded-xl px-3 py-1">
-                        <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
-                        <span className="text-amber-700 text-sm font-semibold">4.8</span>
-                      </div>
-                    </div>
 
-                    <div className="mb-6 p-4 bg-muted/30 border border-border rounded-2xl group-hover:bg-amber-50/30 group-hover:border-amber-100 transition-all">
-                      <p className="text-muted-foreground text-xs font-medium mb-2">Bus Operator</p>
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-sm font-semibold text-amber-600">
-                          {bus.operator.name.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="text-foreground font-bold text-sm">{bus.operator.name}</p>
-                          <p className="text-muted-foreground text-xs font-medium mt-0.5">{bus.operator.phone}</p>
+                      {/* Rating Overlay */}
+                      <div className="absolute bottom-3 left-3 z-10">
+                        <div className="flex items-center gap-1 bg-black/60 backdrop-blur-sm px-2 py-1 rounded-full">
+                          <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                          <span className="text-xs font-semibold text-white">4.8</span>
+                          <span className="text-xs text-white/70">(128)</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-6 border-t border-border">
-                      <div>
-                        <p className="text-muted-foreground text-xs font-medium mb-1">Price per seat</p>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-foreground font-bold text-2xl">৳{bus.pricePerSeat}</span>
-                          <span className="text-muted-foreground text-sm font-medium">/ seat</span>
+                    {/* Content */}
+                    <div className="flex-1 flex flex-col p-5">
+                      {/* Title & Type */}
+                      <div className="mb-3">
+                        <h3 className="font-bold text-lg text-foreground mb-1 line-clamp-1">{bus.name}</h3>
+                        <p className="text-sm text-muted-foreground">{getBusLabel(bus.type)} • {bus.number}</p>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                        Premium {getBusLabel(bus.type)} service with comfortable seating and modern amenities. Operated by {bus.operator.name}.
+                      </p>
+
+                      {/* Meta Info Grid */}
+                      <div className="grid grid-cols-2 gap-3 mb-4">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Users className="w-4 h-4 text-amber-500" />
+                          <span className="text-muted-foreground">{bus.totalSeats} seats</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Zap className="w-4 h-4 text-amber-500" />
+                          <span className="text-muted-foreground">{bus.type}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <MapPin className="w-4 h-4 text-amber-500" />
+                          <span className="text-muted-foreground">Multiple routes</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="text-muted-foreground">Available now</span>
                         </div>
                       </div>
+
+                      {/* Price */}
+                      <div className="mb-4">
+                        <p className="text-xs text-muted-foreground mb-1">Starting from</p>
+                        <p className="text-2xl font-bold text-amber-600">৳{bus.pricePerSeat}</p>
+                      </div>
+
+                      {/* Spacer */}
+                      <div className="flex-1" />
+
+                      {/* View Details Button */}
                       <Button
-                        size="sm"
                         onClick={() => router.push(`/find-buses?busType=${bus.type}&busName=${bus.name}`)}
-                        className="bg-slate-900 hover:bg-slate-800 text-white font-semibold h-12 px-6 rounded-2xl shadow-lg border-none group/btn transition-all active:scale-95"
+                        className="w-full h-11 rounded-xl font-semibold flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-300"
                       >
-                        Book Now
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                        View Details
+                        <ArrowRight className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>

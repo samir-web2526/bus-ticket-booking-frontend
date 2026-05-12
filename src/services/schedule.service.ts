@@ -19,6 +19,8 @@ export interface SearchQuery {
   page?: number;
   search?: string;
   limit?: number;
+  sortBy?: string;
+  sortOrder?: string;
 }
 
 // export interface Schedule {

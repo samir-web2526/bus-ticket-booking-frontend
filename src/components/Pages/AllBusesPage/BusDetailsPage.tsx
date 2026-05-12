@@ -1,8 +1,8 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   Clock,
@@ -15,6 +15,13 @@ import {
   CheckCircle,
   AlertCircle,
   Loader,
+  Info,
+  Settings,
+  Sparkles,
+  Armchair,
+  DollarSign,
+  Bus,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,10 +29,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { getBusById } from '@/src/services/buses.service';
 
+// Bus image helper
+const getBusImage = (type: string) => {
+  const images: Record<string, string> = {
+    'AC': 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800',
+    'NON_AC': 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=800',
+    'SLEEPER': 'https://images.unsplash.com/photo-1566251265329-97d350e66b37?w=800',
+    'VOLVO': 'https://images.unsplash.com/photo-1583904571364-6363d754921b?w=800',
+  };
+  return images[type] || images['AC'];
+};
+
 interface Bus {
   id: string;
   name: string;
   type: string;
+  number?: string;
   operator: {
     id: string;
     name: string;
@@ -223,118 +242,175 @@ const BusDetailsPage: React.FC = () => {
           >
             {/* Left Column - Main Details */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Bus Header Card */}
+              {/* Image Gallery */}
               <Card className="overflow-hidden border-0 shadow-lg">
-                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 border-b">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h2 className="text-3xl font-bold text-gray-900 mb-2">{bus.name}</h2>
-                      <p className="text-gray-600 flex items-center gap-2">
-                        <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">
-                          {bus.type}
-                        </span>
-                        <span className="text-gray-700">by {bus.operator.name}</span>
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      {bus.rating && (
-                        <div className="flex items-center gap-2 mb-2">
-                          <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                          <span className="text-2xl font-bold text-gray-900">{bus.rating}</span>
-                        </div>
-                      )}
-                      <p className="text-sm text-gray-600">({bus.reviews} reviews)</p>
+                <div className="relative h-80 overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100">
+                  <img 
+                    src={getBusImage(bus.type)} 
+                    alt={bus.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h2 className="text-4xl font-bold text-white mb-2">{bus.name}</h2>
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-white/20 text-white border-none backdrop-blur-sm">
+                        {bus.type}
+                      </Badge>
+                      <span className="text-white/80">by {bus.operator.name}</span>
                     </div>
                   </div>
                 </div>
-
-                <CardContent className="p-6">
-                  {/* Route and Timing */}
-                  <div className="mb-8">
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="text-center">
-                        <p className="text-sm text-gray-600 mb-1">Departure</p>
-                        <p className="text-3xl font-bold text-gray-900 mb-1">{bus.from}</p>
-                        <p className="text-lg font-semibold text-blue-600">{bus.departureTime}</p>
+                {/* Thumbnail Gallery */}
+                <div className="p-4 bg-gray-50 border-t">
+                  <div className="flex gap-3 overflow-x-auto pb-2">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden bg-gray-200 border-2 border-transparent hover:border-blue-500 cursor-pointer transition-all">
+                        <img 
+                          src={getBusImage(bus.type)} 
+                          alt={`View ${i}`}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-
-                      <div className="flex flex-col items-center justify-center">
-                        <Clock className="w-6 h-6 text-blue-500 mb-2" />
-                        <p className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
-                          {bus.duration}
-                        </p>
-                      </div>
-
-                      <div className="text-center">
-                        <p className="text-sm text-gray-600 mb-1">Arrival</p>
-                        <p className="text-3xl font-bold text-gray-900 mb-1">{bus.to}</p>
-                        <p className="text-lg font-semibold text-cyan-600">{bus.arrivalTime}</p>
-                      </div>
-                    </div>
+                    ))}
                   </div>
+                </div>
+              </Card>
 
-                  <Separator className="my-6" />
-
-                  {/* Amenities */}
-                  {bus.amenities && bus.amenities.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900 mb-4">Amenities</h3>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {bus.amenities.map((amenity, index) => (
-                          <motion.div
-                            key={index}
-                            whileHover={{ scale: 1.05 }}
-                            className="flex flex-col items-center justify-center p-4 bg-blue-50 rounded-lg border border-blue-100 hover:border-blue-300 transition-colors"
-                          >
-                            <div className="text-blue-600 mb-2">
-                              {amenityIcons[amenity.toLowerCase()] || <CheckCircle className="w-6 h-6" />}
-                            </div>
-                            <p className="text-sm font-semibold text-gray-700 text-center">{amenity}</p>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
+              {/* Description / Overview */}
+              <Card className="border-0 shadow-lg overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
+                  <CardTitle className="text-gray-900 flex items-center gap-2">
+                    <Info className="w-5 h-5 text-blue-600" />
+                    Description & Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <p className="text-gray-600 leading-relaxed mb-4">
+                    Experience a comfortable journey with our {bus.type} service from {bus.from} to {bus.to}. 
+                    This bus offers premium amenities and reliable service for all passengers.
+                  </p>
                   {bus.description && (
-                    <>
-                      <Separator className="my-6" />
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-2">Description</h3>
-                        <p className="text-gray-600 leading-relaxed">{bus.description}</p>
-                      </div>
-                    </>
+                    <p className="text-gray-600 leading-relaxed">{bus.description}</p>
                   )}
                 </CardContent>
               </Card>
 
-              {/* Operator Info Card */}
+              {/* Key Information / Specifications */}
               <Card className="border-0 shadow-lg overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50 pb-4">
-                  <CardTitle className="text-gray-900">Operator Information</CardTitle>
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
+                  <CardTitle className="text-gray-900 flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-blue-600" />
+                    Key Information & Specifications
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    {bus.operator.profileImage ? (
-                      <img
-                        src={bus.operator.profileImage}
-                        alt={bus.operator.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white font-bold text-xl">
-                        {bus.operator.name.charAt(0)}
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">{bus.operator.name}</h3>
-                      <p className="text-gray-600 mb-1">
-                        📧 {bus.operator.email}
-                      </p>
-                      <p className="text-gray-600">
-                        📱 {bus.operator.phone}
-                      </p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="p-4 bg-gray-50 rounded-xl text-center">
+                      <Users className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Total Seats</p>
+                      <p className="text-xl font-bold text-gray-900">{bus.totalSeats}</p>
                     </div>
+                    <div className="p-4 bg-gray-50 rounded-xl text-center">
+                      <Armchair className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Available</p>
+                      <p className="text-xl font-bold text-green-600">{bus.availableSeats}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-xl text-center">
+                      <DollarSign className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Price/Seat</p>
+                      <p className="text-xl font-bold text-gray-900">৳{bus.price}</p>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-xl text-center">
+                      <Bus className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Bus Number</p>
+                      <p className="text-xl font-bold text-gray-900">{bus.number}</p>
+                    </div>
+                  </div>
+                  <Separator className="my-6" />
+                  {/* Route and Timing */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">Route & Schedule</h3>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="text-center p-4 bg-blue-50 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">Departure</p>
+                        <p className="text-2xl font-bold text-gray-900 mb-1">{bus.from}</p>
+                        <p className="text-lg font-semibold text-blue-600">{bus.departureTime}</p>
+                      </div>
+
+                      <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl">
+                        <Clock className="w-6 h-6 text-blue-500 mb-2" />
+                        <p className="text-sm font-semibold text-gray-700 bg-white px-3 py-1 rounded-full">
+                          {bus.duration}
+                        </p>
+                      </div>
+
+                      <div className="text-center p-4 bg-cyan-50 rounded-xl">
+                        <p className="text-sm text-gray-600 mb-1">Arrival</p>
+                        <p className="text-2xl font-bold text-gray-900 mb-1">{bus.to}</p>
+                        <p className="text-lg font-semibold text-cyan-600">{bus.arrivalTime}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Amenities */}
+              {bus.amenities && bus.amenities.length > 0 && (
+                <Card className="border-0 shadow-lg overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
+                    <CardTitle className="text-gray-900 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-blue-600" />
+                      Amenities & Features
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {bus.amenities.map((amenity, index) => (
+                        <motion.div
+                          key={index}
+                          whileHover={{ scale: 1.05 }}
+                          className="flex flex-col items-center justify-center p-4 bg-blue-50 rounded-lg border border-blue-100 hover:border-blue-300 transition-colors"
+                        >
+                          <div className="text-blue-600 mb-2">
+                            {amenityIcons[amenity.toLowerCase()] || <CheckCircle className="w-6 h-6" />}
+                          </div>
+                          <p className="text-sm font-semibold text-gray-700 text-center">{amenity}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Related Buses */}
+              <Card className="border-0 shadow-lg overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
+                  <CardTitle className="text-gray-900 flex items-center gap-2">
+                    <Bus className="w-5 h-5 text-blue-600" />
+                    Related Buses on This Route
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {[1, 2].map((i) => (
+                      <Link key={i} href={`/buses/${bus.id}`}>
+                        <div className="p-4 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors cursor-pointer border border-transparent hover:border-blue-200">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-semibold text-gray-900">{bus.name} Express {i}</span>
+                            <Badge variant="outline" className="text-blue-600">{bus.type}</Badge>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-gray-600">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" /> {bus.duration || 'N/A'}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <DollarSign className="w-4 h-4" /> ৳{bus.price || 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -351,7 +427,7 @@ const BusDetailsPage: React.FC = () => {
                 <Card className="border-0 shadow-xl overflow-hidden">
                   <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6">
                     <h3 className="text-2xl font-bold mb-2">
-                      ৳{bus.price}
+                      ৳{bus?.price}
                     </h3>
                     <p className="text-blue-100">Per seat</p>
                   </div>
@@ -361,7 +437,7 @@ const BusDetailsPage: React.FC = () => {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-gray-700 font-semibold">Available Seats</span>
-                        <span className="text-2xl font-bold text-blue-600">{bus.availableSeats}</span>
+                        <span className="text-2xl font-bold text-blue-600">{bus?.availableSeats}</span>
                       </div>
                       <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
                         <motion.div
@@ -378,44 +454,6 @@ const BusDetailsPage: React.FC = () => {
 
                     <Separator />
 
-                    {/* Selected Seats Summary */}
-                    {selectedSeats.length > 0 && (
-                      <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                        <p className="text-sm font-semibold text-gray-700 mb-2">
-                          Selected Seats ({selectedSeats.length})
-                        </p>
-                        <p className="text-2xl font-bold text-blue-600 mb-2">
-                          ৳{bus.price * selectedSeats.length}
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedSeats.map((seat) => (
-                            <Badge key={seat} className="bg-blue-600">
-                              Seat {seat}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* User Role Alert */}
-                    {!isPassenger && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex gap-3"
-                      >
-                        <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-semibold text-yellow-900">
-                            Only passengers can book
-                          </p>
-                          <p className="text-xs text-yellow-700 mt-1">
-                            {userRole ? `You're logged in as ${userRole}` : 'Please log in as a passenger to book'}
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-
                     {/* Booking Button */}
                     <Button
                       onClick={handleBooking}
@@ -429,139 +467,11 @@ const BusDetailsPage: React.FC = () => {
                       {bookingLoading && <Loader className="w-4 h-4 animate-spin" />}
                       {bookingLoading ? 'Processing...' : 'Book Now'}
                     </Button>
-
-                    {!bus.isActive && (
-                      <p className="text-sm text-center text-red-600 font-semibold">
-                        This bus is currently inactive
-                      </p>
-                    )}
-
-                    {bus.availableSeats === 0 && (
-                      <p className="text-sm text-center text-orange-600 font-semibold">
-                        No seats available
-                      </p>
-                    )}
-
-                    {selectedSeats.length === 0 && isPassenger && bus.isActive && (
-                      <p className="text-xs text-center text-gray-600">
-                        Select seats below to proceed
-                      </p>
-                    )}
                   </CardContent>
                 </Card>
               </motion.div>
             </div>
           </motion.div>
-
-          {/* Seat Selection - Only for passengers */}
-          {isPassenger && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="mt-12"
-            >
-              <Card className="border-0 shadow-lg overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-cyan-50">
-                  <CardTitle className="text-gray-900">Select Your Seats</CardTitle>
-                  <CardDescription>Click on empty seats to select them</CardDescription>
-                </CardHeader>
-                <CardContent className="p-8">
-                  {/* Seat Layout Instructions */}
-                  <div className="mb-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-900 font-semibold">💡 Tip: Seats arranged as 2 left + aisle + 2 right</p>
-                  </div>
-
-                  <div className="flex justify-center overflow-x-auto">
-                    <div className="space-y-3">
-                      {/* Group seats by row */}
-                      {Array.from({ length: Math.ceil(bus.totalSeats / 4) }).map((_, rowIdx) => {
-                        const rowSeats = Array.from({ length: 4 }, (_, i) => rowIdx * 4 + i + 1).filter(
-                          (num) => num <= bus.totalSeats
-                        );
-
-                        return (
-                          <div key={rowIdx} className="flex items-center justify-center gap-4">
-                            {/* Left seats (2) */}
-                            <div className="flex gap-2">
-                              {rowSeats.slice(0, 2).map((seatNum) => {
-                                const isBooked = seatNum > bus.availableSeats;
-                                const isSelected = selectedSeats.includes(seatNum);
-
-                                return (
-                                  <motion.button
-                                    key={seatNum}
-                                    whileHover={!isBooked ? { scale: 1.1 } : {}}
-                                    whileTap={!isBooked ? { scale: 0.95 } : {}}
-                                    onClick={() => !isBooked && toggleSeat(seatNum)}
-                                    className={`w-12 h-12 rounded-lg font-bold text-sm transition-all duration-300 ${
-                                      isBooked
-                                        ? 'bg-red-500 text-white cursor-not-allowed border-2 border-red-600 shadow-md shadow-red-300'
-                                        : isSelected
-                                          ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg'
-                                          : 'bg-green-100 text-green-700 border-2 border-green-300 hover:border-green-400'
-                                    }`}
-                                  >
-                                    {seatNum}
-                                  </motion.button>
-                                );
-                              })}
-                            </div>
-
-                            {/* Aisle */}
-                            <div className="w-8 text-center text-xs text-gray-500 font-semibold">
-                              AISLE
-                            </div>
-
-                            {/* Right seats (2) */}
-                            <div className="flex gap-2">
-                              {rowSeats.slice(2, 4).map((seatNum) => {
-                                const isBooked = seatNum > bus.availableSeats;
-                                const isSelected = selectedSeats.includes(seatNum);
-
-                                return (
-                                  <motion.button
-                                    key={seatNum}
-                                    whileHover={!isBooked ? { scale: 1.1 } : {}}
-                                    whileTap={!isBooked ? { scale: 0.95 } : {}}
-                                    onClick={() => !isBooked && toggleSeat(seatNum)}
-                                    className={`w-12 h-12 rounded-lg font-bold text-sm transition-all duration-300 ${
-                                      isBooked
-                                        ? 'bg-red-500 text-white cursor-not-allowed border-2 border-red-600 shadow-md shadow-red-300'
-                                        : isSelected
-                                          ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg'
-                                          : 'bg-green-100 text-green-700 border-2 border-green-300 hover:border-green-400'
-                                    }`}
-                                  >
-                                    {seatNum}
-                                  </motion.button>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="flex justify-center gap-8 mt-8 pt-8 border-t">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-100 border-2 border-green-300 rounded" />
-                      <span className="text-sm text-gray-700">Available</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-cyan-600 rounded" />
-                      <span className="text-sm text-gray-700">Selected</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-red-500 border-2 border-red-600 rounded" />
-                      <span className="text-sm text-gray-700">Booked</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
         </div>
       )}
     </div>

@@ -4,6 +4,7 @@
 import { useEffect, useRef } from 'react';
 import { Bus, Users, UserCheck, TrendingUp, Activity, CheckCircle2, Route, ArrowUpRight, ArrowRight, Zap, Database, ShieldCheck, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const TYPE_LABELS: Record<string, string> = { AC: 'Premium AC', NON_AC: 'Standard', SLEEPER: 'Sleeper', DOUBLE_DECKER: 'Double Decker' };
 const TYPE_COLORS = ['#f59e0b', '#0f172a', '#10b981', '#3b82f6'];
@@ -23,6 +24,8 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
   const passengerRef = useRef<HTMLCanvasElement>(null);
   const fleetRef = useRef<HTMLCanvasElement>(null);
   const charts = useRef<any[]>([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     const init = () => {
@@ -242,7 +245,7 @@ export default function AdminDashboardClient({ stats, busTypeCount, topOperators
                     <p className="text-slate-600 text-sm font-medium mb-1">Recent Operators</p>
                     <h3 className="text-2xl font-bold tracking-tight">Latest Additions</h3>
                  </div>
-                 <button className="flex items-center gap-3 text-sm font-medium text-amber-600 hover:translate-x-2 transition-all duration-500 group/btn">View All <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" /></button>
+                 <button  onClick={() => router.push("/admin-dashboard/operators")} className="flex items-center gap-3 text-sm font-medium text-amber-600 hover:translate-x-2 transition-all duration-500 group/btn">View All <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" /></button>
               </div>
               {recentOperators.length === 0
                 ? <div className="flex-1 flex flex-col items-center justify-center py-20 grayscale opacity-20"><UserCheck className="w-16 h-16 mb-6" /><p className="text-muted-foreground text-sm font-medium">No recent operators</p></div>

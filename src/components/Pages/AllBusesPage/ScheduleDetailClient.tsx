@@ -346,6 +346,101 @@ export default function ScheduleDetailClient({
           </div>
         </motion.div>
 
+        {/* DESCRIPTION / OVERVIEW */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-card border border-border rounded-[40px] p-10 lg:p-12 shadow-2xl"
+        >
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center">
+              <Bus className="w-6 h-6 text-amber-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">About This Journey</h2>
+          </div>
+          <p className="text-muted-foreground leading-relaxed text-lg">
+            Experience a comfortable journey from {schedule.route?.sourceCity} to {schedule.route?.destinationCity} 
+            with our {schedule.bus?.type} service. This {schedule.bus?.name} offers premium amenities, 
+            reliable scheduling, and professional service. The journey covers {schedule.route?.distanceKm} km 
+            in approximately {Math.floor((schedule.route?.estimatedTimeMinutes ?? 0) / 60)} hours and {(schedule.route?.estimatedTimeMinutes ?? 0) % 60} minutes.
+          </p>
+        </motion.div>
+
+        {/* KEY INFORMATION / SPECIFICATIONS */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-card border border-border rounded-[40px] p-10 lg:p-12 shadow-2xl"
+        >
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center">
+              <Zap className="w-6 h-6 text-emerald-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">Key Information</h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="p-5 bg-muted/30 rounded-2xl border border-border/50 text-center">
+              <Bus className="w-6 h-6 text-amber-500 mx-auto mb-3" />
+              <p className="text-xs text-muted-foreground mb-1">Bus Type</p>
+              <p className="text-lg font-bold text-foreground">{schedule.bus?.type}</p>
+            </div>
+            <div className="p-5 bg-muted/30 rounded-2xl border border-border/50 text-center">
+              <Users className="w-6 h-6 text-amber-500 mx-auto mb-3" />
+              <p className="text-xs text-muted-foreground mb-1">Total Seats</p>
+              <p className="text-lg font-bold text-foreground">{schedule.bus?.totalSeats}</p>
+            </div>
+            <div className="p-5 bg-muted/30 rounded-2xl border border-border/50 text-center">
+              <MapPin className="w-6 h-6 text-amber-500 mx-auto mb-3" />
+              <p className="text-xs text-muted-foreground mb-1">Distance</p>
+              <p className="text-lg font-bold text-foreground">{schedule.route?.distanceKm} km</p>
+            </div>
+            <div className="p-5 bg-muted/30 rounded-2xl border border-border/50 text-center">
+              <Clock className="w-6 h-6 text-amber-500 mx-auto mb-3" />
+              <p className="text-xs text-muted-foreground mb-1">Duration</p>
+              <p className="text-lg font-bold text-foreground">
+                {Math.floor((schedule.route?.estimatedTimeMinutes ?? 0) / 60)}h {(schedule.route?.estimatedTimeMinutes ?? 0) % 60}m
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* RELATED SCHEDULES */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-card border border-border rounded-[40px] p-10 lg:p-12 shadow-2xl"
+        >
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center">
+              <Clock className="w-6 h-6 text-blue-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">Other Departures Today</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            {[1, 2].map((i) => (
+              <div 
+                key={i} 
+                className="p-5 bg-muted/20 rounded-2xl border border-border/50 hover:border-amber-500/30 hover:bg-amber-500/5 transition-all cursor-pointer"
+                onClick={() => router.push(`/schedules/${scheduleId}`)}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-bold text-foreground">{schedule.bus?.name} Express</span>
+                  <Badge className="bg-amber-500/10 text-amber-600 border-none">{schedule.bus?.type}</Badge>
+                </div>
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <span>{fmt(schedule.departure)}</span>
+                  <span className="text-amber-600 font-semibold">৳{schedule.bus?.pricePerSeat}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
         {/* ERROR MESSAGE */}
         <AnimatePresence>
           {error && (

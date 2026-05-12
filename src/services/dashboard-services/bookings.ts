@@ -50,6 +50,8 @@ export async function getOperatorBookings(){
     try{
         const cookieStore = cookies();
         const accessToken = (await cookieStore).get("accessToken")?.value;
+         console.log("accessToken:", accessToken);
+        console.log("URL:", `${API}/api/v1/bookings/operator`);
         const result = await fetch(`${API}/api/v1/bookings/operator`,{
             method:"GET",
             headers:{

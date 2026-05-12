@@ -16,7 +16,7 @@ export default async function OperatorBookingsPage() {
       </section>
     );
   }
-
+  
   const bookings = result.data?.data ?? [];
 
   return <OperatorBookingsClient bookings={bookings} />;
