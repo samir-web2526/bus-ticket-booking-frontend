@@ -1,231 +1,166 @@
-# 🚌 BusHub — Online Bus Ticket Booking System
+# BusHub Frontend
 
-BusHub is a full-stack bus ticket booking platform that allows passengers to search for bus schedules, book seats, and make payments online. Operators can manage their buses and schedules, while admins oversee the entire platform.
-
----
-
-## 🌐 Live URLs
-
-| Service | URL |
-|--------|-----|
-| Frontend | https://bus-ticket-booking-frontend-six.vercel.app |
-| Backend API | https://bus-ticket-booking-backend-six.vercel.app |
+A modern, full-stack bus ticket booking platform designed to streamline the travel experience for passengers, provide powerful management tools for operators, and ensure seamless platform oversight for administrators.
 
 ---
 
-## ✨ Features
+## 📖 Table of Contents
 
-### 👤 Passenger
-- Search bus schedules by route, date, and bus type
-- View available seats and pricing
-- Book tickets and make payments via Stripe
-- View booking history and ticket details
-
-### 🚍 Operator
-- Register and manage their own buses
-- Create and manage schedules for their buses
-- View bookings for their schedules
-
-### 🛡️ Admin
-- Manage all users, operators, buses, routes, and schedules
-- Full platform oversight and control
-
-### 🔒 General
-- JWT-based authentication with HTTP-only cookies
-- Role-based access control (ADMIN, OPERATOR, PASSENGER)
-- Fully responsive UI for mobile and desktop
-- Real-time schedule filtering and search
-- Automatic schedule expiry (past schedules hidden from public)
+- [About The Project](#about-the-project)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation & Setup](#installation--setup)
+- [Environment Variables](#environment-variables)
+- [Folder Structure](#folder-structure)
+- [Dependencies](#dependencies)
+- [Live Demo](#live-demo)
+- [Contact](#contact)
 
 ---
 
-## 🛠️ Technologies Used
+## About The Project
+
+BusHub is an intuitive bus ticket booking system that allows passengers to seamlessly search for schedules, book tickets, and make secure payments. The platform includes role-based dashboards, route and bus management for operators, administrative oversight features, and a modern responsive UI for an enhanced user experience across all devices.
+
+---
+
+## Features
+
+- Role-based dashboards for Admin, Operator, and Passenger
+- Advanced bus schedule search and discovery system with filtering
+- Secure JWT-based authentication
+- Fully responsive modern UI with sleek animations
+- Form handling and robust validation
+- Secure payment integration via Stripe
+- Protected routes and intuitive navigation
+- Real-time bus and route management
+
+---
+
+## Tech Stack
 
 ### Frontend
-| Technology | Purpose |
-|-----------|---------|
-| Next.js 14 (App Router) | React framework with server-side rendering |
-| TypeScript | Type safety |
-| Tailwind CSS | Utility-first styling |
-| shadcn/ui | UI component library |
-| Framer Motion | Animations |
-| React Hook Form | Form management |
-| Zod | Schema validation |
-| Sonner | Toast notifications |
-| Stripe.js | Payment integration |
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS v4
 
-### Backend
-| Technology | Purpose |
-|-----------|---------|
-| Node.js | Runtime environment |
-| Express.js | Web framework |
-| TypeScript | Type safety |
-| Prisma ORM | Database ORM |
-| PostgreSQL | Relational database |
-| JWT | Authentication tokens |
-| Stripe | Payment processing |
-| Zod | Request validation |
-| node-cron | Scheduled tasks |
+### UI & Libraries
+- Shadcn UI
+- Radix UI
+- Lucide React
+- Remixicon
+- Framer Motion
+
+### Form & Validation
+- React Hook Form
+- Zod
 
 ---
 
-## 🗂️ Project Structure
+## Installation & Setup
 
-```
-frontend/
-├── app/                    # Next.js App Router pages
-│   ├── (CommonLayout)/     # Public pages (Home, Find Buses, Routes)
-│   ├── (DashboardLayout)/  # Protected dashboard pages
-│   │   ├── admin/
-│   │   ├── operator/
-│   │   └── passenger/
-│   └── (AuthLayout)/       # Login, Register pages
-├── src/
-│   ├── components/         # Reusable UI components
-│   └── services/           # API service functions
-
-backend/
-├── src/
-│   ├── app/
-│   │   ├── modules/        # Feature modules
-│   │   │   ├── auth/
-│   │   │   ├── user/
-│   │   │   ├── bus/
-│   │   │   ├── route/
-│   │   │   ├── schedule/
-│   │   │   └── booking/
-│   │   ├── middlewares/
-│   │   └── utils/
-│   └── prisma/
-│       └── schema.prisma   # Database schema
-```
-
----
-
-## ⚙️ Setup Instructions
-
-### Prerequisites
-- Node.js v18+
-- PostgreSQL database
-- Stripe account (for payments)
-
----
-
-### 🔧 Backend Setup
+### Clone the repository
 
 ```bash
-# 1. Clone the repository
-git clone <backend-repo-url>
-cd backend
+git clone https://github.com/samir-web2526/bus-ticket-booking-frontend.git
+```
 
-# 2. Install dependencies
+### Navigate to the project folder
+
+```bash
+cd bus-ticket-booking-frontend
+```
+
+### Install dependencies
+
+```bash
 npm install
-
-# 3. Create environment file
-cp .env.example .env
 ```
 
-Fill in your `.env`:
+### Setup environment variables
+
+Create a `.env` file in the root directory and add the following:
+
 ```env
-DATABASE_URL="postgresql://user:password@localhost:5432/bushub"
-JWT_ACCESS_SECRET="your_access_secret"
-JWT_REFRESH_SECRET="your_refresh_secret"
-JWT_ACCESS_EXPIRES_IN="15m"
-JWT_REFRESH_EXPIRES_IN="7d"
-STRIPE_SECRET_KEY="sk_test_..."
-CLIENT_URL="http://localhost:3000"
-PORT=5000
-```
+# App URL
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-```bash
-# 4. Run Prisma migrations
-npx prisma migrate dev
-
-# 5. Start development server
-npm run dev
-```
-
----
-
-### 💻 Frontend Setup
-
-```bash
-# 1. Clone the repository
-git clone <frontend-repo-url>
-cd frontend
-
-# 2. Install dependencies
-npm install
-
-# 3. Create environment file
-cp .env.example .env.local
-```
-
-Fill in your `.env.local`:
-```env
+# Backend API
 NEXT_PUBLIC_BACKEND_URL="http://localhost:5000"
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 ```
 
+### Run the development server
+
 ```bash
-# 4. Start development server
 npm run dev
 ```
 
-App will be running at `http://localhost:3000`
+---
+
+## Environment Variables
+
+| Variable Name              | Description                     |
+| -------------------------- | ------------------------------- |
+| NEXT_PUBLIC_APP_URL        | Frontend application base URL   |
+| NEXT_PUBLIC_BACKEND_URL    | Backend API base URL            |
 
 ---
 
-## 🔐 Default Roles
+## Folder Structure
 
-| Role | Access |
-|------|--------|
-| `ADMIN` | Full platform control |
-| `OPERATOR` | Manage own buses & schedules |
-| `PASSENGER` | Search, book, and pay for tickets |
-
----
-
-## 📡 API Overview
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/auth/register` | Register a new user |
-| POST | `/api/v1/auth/login` | Login and get tokens |
-| GET | `/api/v1/buses` | Get all buses |
-| GET | `/api/v1/buses/my` | Get operator's own buses |
-| POST | `/api/v1/buses` | Create a new bus |
-| GET | `/api/v1/routes` | Get all routes (with schedules) |
-| GET | `/api/v1/routes/dropdown` | Get all routes for dropdown |
-| POST | `/api/v1/routes` | Create a new route |
-| GET | `/api/v1/schedules` | Search schedules |
-| POST | `/api/v1/schedules` | Create a schedule |
-| POST | `/api/v1/bookings` | Create a booking |
-| GET | `/api/v1/bookings/my` | Get passenger's bookings |
+```plaintext
+bus-ticket-booking-frontend/
+│
+├── src/
+│   ├── app/                 # Next.js App Router pages & layouts
+│   ├── components/          # Reusable UI components & pages
+│   ├── context/             # Global React contexts
+│   ├── hooks/               # Custom React hooks
+│   └── services/            # API service functions
+│
+├── public/                  # Static assets
+├── package.json             # Dependencies and scripts
+└── next.config.ts           # Next.js configuration
+```
 
 ---
 
-## 🚀 Deployment
+## Dependencies
 
-Both frontend and backend are deployed on **Vercel**.
-
-### Backend deployment notes
-- PostgreSQL is hosted on a cloud provider (e.g., Neon, Supabase, or Railway)
-- Environment variables are configured in Vercel dashboard
-- Prisma generates client at build time via `postinstall` script
-
-### Frontend deployment notes
-- All environment variables are set in Vercel dashboard
-- `NEXT_PUBLIC_BACKEND_URL` points to the deployed backend URL
+```json
+"dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@remixicon/react": "^4.9.0",
+    "autoprefixer": "^10.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.38.0",
+    "jsonwebtoken": "^9.0.3",
+    "jwt-decode": "^4.0.0",
+    "lucide-react": "^1.11.0",
+    "next": "16.1.7",
+    "next-themes": "^0.4.6",
+    "radix-ui": "^1.4.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-hook-form": "^7.72.1",
+    "shadcn": "^4.1.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
+    "tw-animate-css": "^1.4.0"
+}
+```
 
 ---
 
-## 👨‍💻 Author
+## Live Demo
 
-Developed as part of a full-stack web development assignment.
+🔗 Live Site: https://bus-ticket-booking-frontend-six.vercel.app/
 
 ---
 
-## 📄 License
+## Contact
 
-This project is for educational purposes only.
+- Portfolio: https://portfolio-kappa-weld-92.vercel.app/
+- Email: baishnabsamir26@gmail.com
